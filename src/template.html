@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= htmlWebpackPlugin.options.title %></title>
+  <link rel="stylesheet" href="https://cesium.com/downloads/cesiumjs/releases/1.91/Build/Cesium/Widgets/widgets.css">
+  <script src="https://cesium.com/downloads/cesiumjs/releases/1.91/Build/Cesium/Cesium.js"></script>
+</head>
+
+<body>
+  <div id="cesiumContainer"></div>
+  <div id="localContainer" class="transBg local_container">
+    <form id="localForm">
+      <select name="provinceCode" id="provinceSelect">
+        <option value="">请选择省份</option>
+        <!-- <option value="23">黑龙江</option> -->
+      </select>
+      <select name="cityCode" id="citySelect">
+        <option value="">请选择城市</option>
+      </select>
+      <select name="countyCode" id="countySelect">
+        <option value="">请选择区县</option>
+      </select>
+      <button type="submit" id="localSubmit">确认</button>
+    </form>
+  </div>
+
+  <div id="overallContainer" class="transBg overall_container">
+
+      <p>总计数据：<span id="overallNum">0000</span>条</p>
+      <p>街道数据：<span id="streetNum">0000</span>条</p>
+      <p>异常数据: <span id="warningNum">0000</span>条</p>
+      <p>待审核数据：<span id="uncheckedNum">0000</span>条</p>
+      <p>已核查/修改数据：<span id="checkedNum">0000</span>条</p>
+      <!-- <p>额外核查数据：<span id="extraNum">0000</span>条</p> -->
+      <p>跳过数据：<span id="skipNum">0</span>条</p>
+      <p>当前审查 街道/乡镇 : <span id="streetName"></span></p>
+
+  </div>
+
+  <div id="locSelectContainer" class="transBg locSelect_container">
+    <input type="text" id="localName" placeholder="社区/村庄 名字" class="transBg" autofocus="false">
+
+    <div>
+      <button id="checkType" class="transBg"> 编码 一 结果正确 </button>
+      <button id="checkGroup" class="transBg"> 编码 二 结果正确 </button>
+      <button id="checkHandle" class="transBg">手动选取</button>
+      <button id="skipLoc" class="transBg"> 跳过当前</button>
+      <button id="checkOverall" class="transBg" hidden>检查完毕</button>
+      <button id="overCheckDone" class="transBg" hidden>街道检查完毕</button>
+      <button id="handlerConfirm" class="transBg" hidden>确认选取</button>
+      <button id="overCheck" class="transBg" hidden>复核数据</button>
+    </div>
+
+
+    <div class="checkbox">
+      <input type="checkbox" name="showStreet" id="showStreet">
+      <label for="showStreet" id="streetLabel">显示当前街道 / 乡镇数据</label>
+    </div>
+  </div>
+
+  <div id="manuSelect" class="transBg">
+    <form id="manuSelectForm">
+      <input type="text" id="updateCode" class="transBg" placeholder="请输入手动修改的 小区/村庄 Code">
+      <button type="submit"> 修改 </button>
+      <p id="errorInfo"> </p>
+    </form>
+  </div>
+
+  <div id="changedInfo" class="transBg">
+    <p hidden> <span class="villageName">黑龙江什么区什么街道什么村</span> 的坐标更改为 <span class="location"> 124.2323 23.23232</span>
+    </p>
+  </div>
+</body>
+
+</html>

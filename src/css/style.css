@@ -1,0 +1,205 @@
+:root {
+  --color-half-black: rgba(0, 0, 0, .4);
+  --spotify-green: rgb(0, 214, 104);
+  --spotify-black: rgb(0, 0, 0)
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.transBg {
+  background: var(--color-half-black);
+  border: solid lightcyan 1px;
+  border-radius: 4px;
+  padding: 1rem;
+  color: aliceblue;
+  backdrop-filter: blur(4px);
+  ;
+}
+
+#cesiumContainer {
+  border: 0;
+  border-radius: 0px;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(1, 19, 45, 0.6);
+}
+
+.local_container,
+.overall_container {
+  position: absolute;
+  top: 1rem;
+}
+
+.local_container {
+  left: 1rem;
+}
+
+.local_container select {
+  min-width: 4rem;
+  height: 2rem;
+  padding: .5rem;
+  border: solid lightcyan 1px;
+  background: var(--color-half-black);
+  color: aliceblue;
+  margin-right: 1rem;
+}
+
+.local_container button {
+  cursor: pointer;
+  min-width: 4rem;
+  height: 2rem;
+  color: rgba(20, 34, 230);
+  background: rgba(240, 248, 255);
+  margin-left: 2rem;
+  font-weight: bolder;
+  border: solid rgba(20, 34, 230, 0.6) 1px;
+  border-radius: 2px;
+}
+
+.overall_container {
+  top: 3rem;
+  right: 1rem;
+}
+
+.overall_container p {
+  text-align: right;
+}
+
+.overall_container span {
+  min-width: 4rem;
+  margin: 0 1rem;
+  color: aqua;
+  font-weight: bolder;
+}
+
+.locSelect_container {
+  position: absolute;
+  bottom: 4rem;
+  max-width: 75vw;
+  min-width: 720px;
+  height: 80px;
+  right: calc(50vw - 360px);
+  display: flex;
+  /* justify-content: space-between; */
+  justify-content: center;
+  align-items: center;
+}
+
+.locSelect_container>div {
+  display: flex;
+  justify-content: space-between;
+  /* justify-content: center; */
+  align-items: center;
+}
+
+.locSelect_container button {
+  cursor: pointer;
+  width: 160px;
+  height: 40px;
+  border-radius: 4px;
+  margin: 0 1rem;
+  color: aliceblue;
+  padding: 0;
+  font-size: 1.25rem;
+  transition: all .36s ease-in-out;
+}
+
+.locSelect_container button:hover {
+  transform: scale(1.1);
+  transition: all .36s ease-in-out;
+  background: rgba(72, 72, 72, 0.2);
+  cursor: pointer;
+}
+
+.locSelect_container button:active {
+  transform: scale(0.95);
+  transition: all .36s ease-in-out;
+  background: rgba(72, 72, 72, 0.2);
+  cursor: pointer;
+}
+
+#checkType {
+  background: rgba(249, 76, 76, 0.8);
+}
+
+#checkGroup {
+  background: rgba(253, 216, 55, 0.8);
+}
+
+#handlerConfirm,
+#checkHandle {
+  background: rgba(13, 211, 79, 0.8);
+}
+
+#localName {
+  position: absolute;
+  top: -3rem;
+  left: 0;
+  height: 2rem;
+  width: auto;
+  min-width: 20rem;
+  box-sizing: border-box;
+}
+
+.errorData {
+  background: rgb(88, 88, 88);
+  cursor: not-allowed;
+}
+
+.checkbox {
+  position: absolute;
+  top: -2rem;
+  right: 0;
+}
+
+#changedInfo {
+  position: absolute;
+  left: 1rem;
+  top: 16rem;
+  min-height: 10rem;
+  max-height: 18rem;
+  width: 20rem;
+  overflow: auto;
+}
+
+#manuSelect {
+  position: absolute;
+  top: 7rem;
+  left: 1rem;
+}
+
+#updateCode {
+  height: 1.5rem;
+  width: 20rem;
+  padding: 4px;
+}
+
+#manuSelectForm button {
+  min-width: 4rem;
+  height: 2rem;
+  color: rgba(20, 34, 230);
+  background: rgba(240, 248, 255);
+  margin-left: 2rem;
+  font-weight: bolder;
+  border: solid rgba(20, 34, 230, 0.6) 1px;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.errorInfo {
+  color: red;
+}
+
+.warnInfo {
+  color: yellow;
+}
+
+.successInfo {
+  color: aqua;
+}
