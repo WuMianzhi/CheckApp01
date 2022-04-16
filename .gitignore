@@ -7,3 +7,6 @@ node_modules/*
 
 # 忽略测试文件夹内的内容
 src/test/*
+
+# 忽略笔记
+notes/*
