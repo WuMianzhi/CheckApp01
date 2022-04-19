@@ -356,7 +356,7 @@ function checkInit(warnData) {
       .addEventListener("click", handlerPicker, { once: true });
   } else {
     showInfo(
-      `当前区县已全部检查完成，此区域的街道数据至少已经复核 ${minCheckTime} 次，最多的已经复核了 ${maxCheckTime} 次，请检查下一区或者复核当前区县。`,
+      `当前 区/县 已全部检查完成，此 区/县 的 乡镇/街道 数据至少已经复核 ${minCheckTime} 次，最多的已经复核了 ${maxCheckTime} 次，请检查下一 区/县 或者复核当前 区/县。`,
       "errorInfo"
     );
 
@@ -444,8 +444,8 @@ function overCheckNextStreet() {
 }
 
 function overCheckViewUpdate() {
-  document.querySelector("#streetLabel").textContent = "显示当前 区/县 数据";
-  document.querySelector("#localName").placeholder = " 街道/乡镇 名字";
+  document.querySelector("#streetLabel").textContent = "显示当前 区/县/县级市 数据";
+  document.querySelector("#localName").placeholder = " 乡镇/街道 名字";
 }
 
 /**
