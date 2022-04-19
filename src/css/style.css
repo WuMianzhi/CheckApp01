@@ -67,16 +67,21 @@ body {
   right: 1rem;
 }
 
-.overall_container p {
-  text-align: right;
+.overall_container>div{
+  width: 12rem;
+  height: 12rem;
 }
 
-.overall_container span {
+/* .overall_container p {
+  text-align: right;
+} */
+
+/* .overall_container span {
   min-width: 4rem;
   margin: 0 1rem;
   color: aqua;
   font-weight: bolder;
-}
+} */
 
 .locSelect_container {
   position: absolute;

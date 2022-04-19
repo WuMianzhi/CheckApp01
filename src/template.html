@@ -30,6 +30,7 @@
 
   <div id="overallContainer" class="transBg overall_container">
 
+    <div hidden>
       <p>总计数据：<span id="overallNum">0000</span>条</p>
       <p>街道数据：<span id="streetNum">0000</span>条</p>
       <p>异常数据: <span id="warningNum">0000</span>条</p>
@@ -38,19 +39,21 @@
       <!-- <p>额外核查数据：<span id="extraNum">0000</span>条</p> -->
       <p>跳过数据：<span id="skipNum">0</span>条</p>
       <p>当前审查 街道/乡镇 : <span id="streetName"></span></p>
+    </div>
 
+    <div id="overviewFig"></div>
   </div>
 
   <div id="locSelectContainer" class="transBg locSelect_container">
     <input type="text" id="localName" placeholder="社区/村庄 名字" class="transBg" autofocus="false">
 
     <div>
-      <button id="checkType" class="transBg"> 编码 一 结果正确 </button>
-      <button id="checkGroup" class="transBg"> 编码 二 结果正确 </button>
+      <button id="checkType" class="transBg"> Pick 红色 </button>
+      <button id="checkGroup" class="transBg"> Pick 黄色 </button>
       <button id="checkHandle" class="transBg">手动选取</button>
       <button id="skipLoc" class="transBg"> 跳过当前</button>
       <button id="checkOverall" class="transBg" hidden>检查完毕</button>
-      <button id="overCheckDone" class="transBg" hidden>街道检查完毕</button>
+      <button id="overCheckDone" class="transBg" title="当前 街道/乡镇 检查完毕，前往下一街道" hidden>街道/乡镇 检查完毕</button>
       <button id="handlerConfirm" class="transBg" hidden>确认选取</button>
       <button id="overCheck" class="transBg" hidden>复核数据</button>
     </div>

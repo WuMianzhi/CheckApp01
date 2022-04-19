@@ -1,4 +1,5 @@
 import { viewer, handler } from "../cesium/cesiumInit";
+import * as echarts from "echarts";
 
 /**
  * 存储当前数据的变量
@@ -15,6 +16,85 @@ let current,
   overCheck = false;
 let minCheckTime = 9999999;
 let maxCheckTime = 0;
+
+// 绘制图表数据
+let overViewData = [
+  { value: 555, name: "正常数据" },
+  { value: 333, name: "异常数据" },
+  { value: 0, name: "跳过数据" },
+];
+
+// 初始化图表
+var overviewCharts = echarts.init(
+  document.getElementById("overviewFig"),
+  "chalk"
+);
+overviewCharts.setOption({
+  tooltip: {
+    trigger: "item",
+  },
+  series: [
+    {
+      name: "overView",
+      type: "pie",
+      radius: ["40%", "70%"],
+      avoidLabelOverlap: false,
+      itemStyle: {
+        borderRadius: 8,
+        // borderColor: '#000',
+        borderWidth: 2,
+      },
+      label: {
+        show: false,
+        position: "center",
+      },
+      emphasis: {
+        label: {
+          show: true,
+          fontSize: "10",
+          fontWeight: "bold",
+        },
+      },
+      labelLine: {
+        show: false,
+      },
+      color: ["#AEE6C4", "#DC647C", "#332A1D"],
+      // data: overViewData,
+    },
+  ],
+});
+
+// 更新图表
+function updateOverviewCharts() {
+  if (overCheck) {
+    // 修改 charts label 名称
+    overViewData[0].name = "待复核数据";
+    overViewData[1].name = "已复核数据";
+    overViewData[2].name = "标错数据";
+
+    overviewCharts.setOption({
+      series: {
+        name: "overView",
+        data: overViewData,
+        color: ["#6ec0dd", "#9edf85", "#f16766"],
+      },
+    });
+  } else {
+    // 修改 charts label 名称
+    overViewData[0].name = "正常数据";
+    overViewData[1].name = "异常数据";
+    overViewData[2].name = "跳过数据";
+
+    overviewCharts.setOption({
+      series: {
+        name: "overView",
+        data: overViewData,
+        color: ["#9edf85", "#fcc75f", "#f16766"],
+      },
+    });
+  }
+}
+
 /**
  * 设置当前数据总体情况
  * @param {Object} geocodeData
@@ -22,8 +102,6 @@ let maxCheckTime = 0;
 function overViewSet(geocodeData) {
   let allNum = geocodeData.length;
   let warnNum = 0;
-  let checkedNum = 0;
-  let uncheckedNum = 0;
   var preStreetCode = 0;
   // 重置某些数据
   minCheckTime = 9999999;
@@ -54,13 +132,9 @@ function overViewSet(geocodeData) {
     // console.log(locateData[]);
   }
 
-  uncheckedNum = warnNum;
-  document.querySelector("#overallNum").textContent = allNum;
-  document.querySelector("#warningNum").textContent = warnNum;
-  document.querySelector("#uncheckedNum").textContent = uncheckedNum;
-  document.querySelector("#checkedNum").textContent = checkedNum;
+  overViewData[0].value = allNum;
+  overViewData[1].value = warnNum;
 
-  // console.log(allDataByStreet);
   current = 0;
 
   checkInit(warnData);
@@ -184,6 +258,8 @@ function checkInit(warnData) {
     // 添加 entity
     // 判断是否解析出
     if (lon_raw > 60 && lon_raw < 160) {
+      // 更新总览视图
+      updateOverviewCharts();
       document.querySelector("#checkType").hidden = false;
       // 添加按 type 判断出的结果
       var type_location = viewer.entities.add({
@@ -287,6 +363,9 @@ function checkInit(warnData) {
 
     overCheckBtn.addEventListener("click", overCheckFn);
   }
+
+  // 更新 charts
+  updateOverviewCharts();
 }
 
 function overCheckFn() {
@@ -298,11 +377,13 @@ function overCheckFn() {
   curStreetDataID = 0;
   var overCheckKeys = Object.keys(allDataByStreet);
   curStreetData = allDataByStreet[overCheckKeys[curStreetDataID]];
-  document.querySelector("#streetNum").textContent = overCheckKeys.length;
 
   groupViewer(curStreetData);
 
   overCheckViewUpdate();
+  
+  // 更新 charts
+  updateOverviewCharts();
 
   // 视图更新
   document.querySelector("#updateCode").value = overCheckKeys[curStreetDataID];
@@ -321,12 +402,23 @@ function overCheckFn() {
  */
 function overCheckNextStreet() {
   viewer.entities.removeAll();
+  var overCheckKeys = Object.keys(allDataByStreet);
+
+  // 按街道数据更新图表
+  overViewData[0].value -= Object.keys(
+    allDataByStreet[overCheckKeys[curStreetDataID]]
+  ).length;
+
+  // console.log(allDataByStreet[overCheckKeys[curStreetDataID]]);
+  overViewData[1].value += Object.keys(
+    allDataByStreet[overCheckKeys[curStreetDataID]]
+  ).length;
+  console.log(overViewData);
+  updateOverviewCharts();
+
   curStreetDataID += 1;
-  // console.log(curStreetDataID);
-  document.querySelector("#checkedNum").textContent = curStreetDataID;
   document.querySelector("#showStreet").checked = false;
 
-  var overCheckKeys = Object.keys(allDataByStreet);
   // 溢出检测
   if (curStreetDataID < overCheckKeys.length) {
     document.querySelector("#updateCode").value =
@@ -554,12 +646,16 @@ document.querySelector("#manuSelectForm").addEventListener("submit", (e) => {
 // 监听跳过当前数据按钮
 document.querySelector("#skipLoc").addEventListener("click", () => {
   checkInit(warnData, ++current);
-  var skipNumDOM = document.querySelector("#skipNum");
+  overViewData[2].value++;
+  overViewData[1].value--;
+  updateOverviewCharts();
 
-  var skipNumDOMContent = parseInt(skipNumDOM.textContent);
-  skipNumDOMContent += 1;
-  console.log(skipNumDOMContent);
-  skipNumDOM.textContent = skipNumDOMContent;
+  // var skipNumDOM = document.querySelector("#skipNum");
+
+  // var skipNumDOMContent = parseInt(skipNumDOM.textContent);
+  // skipNumDOMContent += 1;
+  // console.log(skipNumDOMContent);
+  // skipNumDOM.textContent = skipNumDOMContent;
 });
 
 /**
@@ -576,10 +672,9 @@ function specialCheck() {
     document.querySelector("#localName").value = currentData.keyword;
     handlerPicker();
     // 防止剩余检查数目变负数
-    var uncheckedNumDOM = document.querySelector("#uncheckedNum");
-    var uncheckedNumContent = Number(uncheckedNumDOM.textContent);
-    uncheckedNumContent += 1;
-    uncheckedNumDOM.textContent = uncheckedNumContent;
+    overViewData[0].value--;
+    overViewData[1].value++;
+    updateOverviewCharts();
   } else {
     document.querySelector("#errorInfo").textContent = "小区/村庄 代码错误";
   }
@@ -590,18 +685,10 @@ function updateGeocode(warnData, lon, lat, code) {
   updateGeocodeDB(lon, lat, code)
     .then((res) => {
       if (res.success) {
-        // 修改数据概况
-        var uncheckedNumDOM = document.querySelector("#uncheckedNum");
-        var checkedNumDOM = document.querySelector("#checkedNum");
-
-        var uncheckedNumContent = uncheckedNumDOM.textContent;
-        var checkedNumContent = Number(checkedNumDOM.textContent);
-
-        uncheckedNumContent -= 1;
-        uncheckedNumDOM.textContent = uncheckedNumContent;
-
-        checkedNumContent += 1;
-        checkedNumDOM.textContent = checkedNumContent;
+        // 更新环形图显示
+        overViewData[0].value++;
+        overViewData[1].value--;
+        updateOverviewCharts();
 
         // 修改本地存储数据
         allDataByStreet[currentData.streetCode][currentData.code]["lon"] = lon;
@@ -622,7 +709,7 @@ function updateGeocode(warnData, lon, lat, code) {
           document.querySelector("#checkGroup").hidden = true;
         } else {
           if (
-            uncheckedNumContent > 0 &&
+            overViewData[1].value > 0 &&
             nextDataID < warnData.length &&
             warnData[nextDataID]["streetCode"] ===
               warnData[current]["streetCode"]
