@@ -6,10 +6,21 @@ const customGeocoders = [
 ];
 
 const viewer = new Cesium.Viewer("cesiumContainer", {
+  homeButton: false,
   timeline: false,
+  sceneModePicker: false,
   navigationHelpButton: false, //,//右上角的帮助按钮
   geocoder: customGeocoders, //使用定制的加强版地理编码器
 });
+
+document.querySelector(
+  "#cesiumContainer .cesium-viewer-animationContainer"
+).hidden = true;
+
+document.querySelector(
+  "#cesiumContainer .cesium-viewer-bottom"
+).style.display = 'none';
+
 // viewer.scene.postProcessStages.fxaa.enabled = false;
 
 // 更改分辨率

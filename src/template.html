@@ -29,45 +29,39 @@
   </div>
 
   <div id="overallContainer" class="transBg overall_container">
-
-    <div hidden>
-      <p>总计数据：<span id="overallNum">0000</span>条</p>
-      <p>街道数据：<span id="streetNum">0000</span>条</p>
-      <p>异常数据: <span id="warningNum">0000</span>条</p>
-      <p>待审核数据：<span id="uncheckedNum">0000</span>条</p>
-      <p>已核查/修改数据：<span id="checkedNum">0000</span>条</p>
-      <!-- <p>额外核查数据：<span id="extraNum">0000</span>条</p> -->
-      <p>跳过数据：<span id="skipNum">0</span>条</p>
-      <p>当前审查 街道/乡镇 : <span id="streetName"></span></p>
-    </div>
-
     <div id="overviewFig"></div>
   </div>
 
   <div id="locSelectContainer" class="transBg locSelect_container">
-    <input type="text" id="localName" placeholder="社区/村庄 名字" class="transBg" autofocus="false">
+    <input type="text" id="localName" placeholder="行政村/居委 名字" class="transBg" autofocus="false">
 
-    <div>
-      <button id="checkType" class="transBg"> Pick 红色 </button>
-      <button id="checkGroup" class="transBg"> Pick 黄色 </button>
-      <button id="checkHandle" class="transBg">手动选取</button>
-      <button id="skipLoc" class="transBg"> 跳过当前</button>
+    <div class="btn-group check-container " hidden>
+      <button id="checkType" class="transBg" hidden> Pick 红色 </button>
+      <button id="checkGroup" class="transBg" hidden> Pick 黄色 </button>
+      <button id="checkHandle" class="transBg" hidden>手动选取</button>
+      <button id="skipLoc" class="transBg" hidden> 跳过当前</button>
       <button id="checkOverall" class="transBg" hidden>检查完毕</button>
-      <button id="overCheckDone" class="transBg" title="当前 街道/乡镇 检查完毕，前往下一街道" hidden>街道/乡镇 检查完毕</button>
-      <button id="handlerConfirm" class="transBg" hidden>确认选取</button>
-      <button id="overCheck" class="transBg" hidden>复核数据</button>
     </div>
 
+    <div class=" btn-group handle-picker-container" hidden>
+      <button id="errorMark" title="将此数据标记为异常数据" class="overview-btn" hidden>标记异常</button>
+      <button id="handlerConfirm" class="transBg" hidden>确认选取</button>
+    </div>
+
+    <div class="btn-group overcheck-container" hidden>
+      <button id="overCheck" title="复核当区域数据" class="overview-btn" hidden>复核数据</button>
+      <button id="overCheckDone" title="当前 乡镇/街道 检查完毕，前往下一街道" class="overview-btn" hidden> 乡镇/街道 检查完毕</button>
+    </div>
 
     <div class="checkbox">
       <input type="checkbox" name="showStreet" id="showStreet">
-      <label for="showStreet" id="streetLabel">显示当前街道 / 乡镇数据</label>
+      <label for="showStreet" id="streetLabel">显示当前 乡镇/街道 数据</label>
     </div>
   </div>
 
   <div id="manuSelect" class="transBg">
     <form id="manuSelectForm">
-      <input type="text" id="updateCode" class="transBg" placeholder="请输入手动修改的 小区/村庄 Code">
+      <input type="text" id="updateCode" class="transBg" placeholder="请输入手动修改的 行政村/居委 Code">
       <button type="submit"> 修改 </button>
       <p id="errorInfo"> </p>
     </form>

@@ -72,17 +72,6 @@ body {
   height: 12rem;
 }
 
-/* .overall_container p {
-  text-align: right;
-} */
-
-/* .overall_container span {
-  min-width: 4rem;
-  margin: 0 1rem;
-  color: aqua;
-  font-weight: bolder;
-} */
-
 .locSelect_container {
   position: absolute;
   bottom: 4rem;
@@ -96,7 +85,16 @@ body {
   align-items: center;
 }
 
-.locSelect_container>div {
+.overview-btn{
+  width: auto;
+  color: rgba(20, 34, 230) !important;
+  font-size: 12pt !important;
+  font-weight: 700;
+  background: rgba(240, 248, 255);
+  border: 1px solid rgba(20, 34, 230);
+}
+
+.locSelect_container .check-container {
   display: flex;
   justify-content: space-between;
   /* justify-content: center; */
@@ -171,6 +169,14 @@ body {
   max-height: 18rem;
   width: 20rem;
   overflow: auto;
+  font-size: 8pt;
+}
+
+#changedInfo p{
+  margin: 0;
+  padding: 4px 0;
+  text-indent: 16pt;
+  border-bottom: 1px solid rgba(245, 245, 245, 0.5);
 }
 
 #manuSelect {
@@ -207,4 +213,8 @@ body {
 
 .successInfo {
   color: aqua;
+}
+
+#cesiumContainer .cesium-baseLayerPicker-dropDown-visible{
+  z-index: 9999;
 }

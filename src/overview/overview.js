@@ -1,4 +1,9 @@
 import { viewer, handler } from "../cesium/cesiumInit";
+import {
+  toggleCheckBtnGroup,
+  toggleOvercheckBtnGroup,
+  toggleHandlePickBtn,
+} from "./viewUpdate";
 import * as echarts from "echarts";
 
 /**
@@ -12,7 +17,6 @@ let current,
   curStreetData,
   curStreetDataID,
   allDataByStreet = {},
-  streetCheck = false,
   overCheck = false;
 let minCheckTime = 9999999;
 let maxCheckTime = 0;
@@ -29,6 +33,7 @@ var overviewCharts = echarts.init(
   document.getElementById("overviewFig"),
   "chalk"
 );
+
 overviewCharts.setOption({
   tooltip: {
     trigger: "item",
@@ -238,11 +243,12 @@ function showStreetData() {
  * @param {*} warnData
  */
 function checkInit(warnData) {
-  document.querySelector("#checkHandle").hidden = false;
-  document.querySelector("#overCheck").hidden = true;
-  document.querySelector("#skipLoc").hidden = false;
-
   if (current < warnData.length) {
+    // 显示检查数据按钮
+    toggleHandlePickBtn(true);
+    toggleOvercheckBtnGroup(true);
+    toggleCheckBtnGroup();
+
     viewer.entities.removeAll();
 
     currentData = warnData[current];
@@ -252,8 +258,8 @@ function checkInit(warnData) {
     let lon_raw = parseFloat(currentData.lon_raw);
     let lat_raw = parseFloat(currentData.lat_raw);
 
-    document.querySelector("#streetName").textContent = currentData.strt;
-    console.log(currentData);
+    // document.querySelector("#streetName").textContent = currentData.strt;
+    // console.log(currentData);
     document.querySelector("#localName").value = currentData.keyword;
     // 添加 entity
     // 判断是否解析出
@@ -353,14 +359,14 @@ function checkInit(warnData) {
       `当前区县已全部检查完成，此区域的街道数据至少已经复核 ${minCheckTime} 次，最多的已经复核了 ${maxCheckTime} 次，请检查下一区或者复核当前区县。`,
       "errorInfo"
     );
+
+    // 显示复核对应按钮
+    toggleHandlePickBtn(true);
+    toggleCheckBtnGroup(true);
+    toggleOvercheckBtnGroup();
+
+    // 绑定点击事件
     var overCheckBtn = document.querySelector("#overCheck");
-    overCheckBtn.hidden = false;
-
-    document.querySelector("#checkType").hidden = true;
-    document.querySelector("#checkGroup").hidden = true;
-    document.querySelector("#checkHandle").hidden = true;
-    document.querySelector("#skipLoc").hidden = true;
-
     overCheckBtn.addEventListener("click", overCheckFn);
   }
 
@@ -368,6 +374,9 @@ function checkInit(warnData) {
   updateOverviewCharts();
 }
 
+/**
+ *
+ */
 function overCheckFn() {
   // 初始化视图
   var overCheckDoneBtn = document.querySelector("#overCheckDone");
@@ -381,7 +390,7 @@ function overCheckFn() {
   groupViewer(curStreetData);
 
   overCheckViewUpdate();
-  
+
   // 更新 charts
   updateOverviewCharts();
 
@@ -396,6 +405,7 @@ function overCheckFn() {
 
   overCheckBtn.hidden = true;
 }
+
 /**
  * 复核数据时跳转至下一街道
  *
@@ -506,12 +516,11 @@ function handlerPicker() {
 function handlerConfirm(longitude, latitude) {
   currentData.lon = longitude;
   currentData.lat = latitude;
-
-  document.querySelector("#checkType").hidden = true;
-  document.querySelector("#checkGroup").hidden = true;
-  document.querySelector("#checkHandle").hidden = true;
-  document.querySelector("#handlerConfirm").hidden = false;
-
+  // 更新按钮
+  toggleCheckBtnGroup(true);
+  toggleOvercheckBtnGroup(true);
+  toggleHandlePickBtn();
+  document.getElementById("errorMark").hidden = false;
   var handlerPoint = viewer.entities.add({
     position: Cesium.Cartesian3.fromDegrees(longitude, latitude),
     billboard: {
@@ -530,25 +539,28 @@ function handlerConfirm(longitude, latitude) {
       pixelOffset: new Cesium.Cartesian2(0, 16),
     },
   });
-  // 再次手动选取
-  // document
-  //   .querySelector("#checkHandle")
-  //   .addEventListener("click", handlerPicker, { once: true });
 
   document
     .querySelector("#handlerConfirm")
     .addEventListener("click", confirmUpdate, { once: true });
 }
 
+/**
+ * 确认选取
+ */
 function confirmUpdate() {
-  console.log("update");
   // 取消对左键的监听
   handler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK);
   releaseClickListener();
-  document.querySelector("#checkType").hidden = false;
-  document.querySelector("#checkGroup").hidden = false;
-  document.querySelector("#checkHandle").hidden = false;
-  document.querySelector("#handlerConfirm").hidden = true;
+  // 更新按钮，回到之前的状态
+  toggleHandlePickBtn(true);
+  if (overCheck) {
+    toggleOvercheckBtnGroup();
+    document.getElementById("overCheck").hidden = true;
+    document.getElementById("overCheckDone").hidden = false;
+  } else {
+    toggleCheckBtnGroup();
+  }
   updateGeocode(warnData, currentData.lon, currentData.lat, currentData.code);
 }
 
@@ -649,13 +661,6 @@ document.querySelector("#skipLoc").addEventListener("click", () => {
   overViewData[2].value++;
   overViewData[1].value--;
   updateOverviewCharts();
-
-  // var skipNumDOM = document.querySelector("#skipNum");
-
-  // var skipNumDOMContent = parseInt(skipNumDOM.textContent);
-  // skipNumDOMContent += 1;
-  // console.log(skipNumDOMContent);
-  // skipNumDOM.textContent = skipNumDOMContent;
 });
 
 /**
@@ -680,6 +685,13 @@ function specialCheck() {
   }
 }
 
+/**
+ * 
+ * @param {*} warnData 
+ * @param {*} lon 
+ * @param {*} lat 
+ * @param {*} code 
+ */
 function updateGeocode(warnData, lon, lat, code) {
   // 更新数据库
   updateGeocodeDB(lon, lat, code)
@@ -696,7 +708,7 @@ function updateGeocode(warnData, lon, lat, code) {
 
         // 提示坐标修改
         showInfo(
-          `${currentData["keyword"]} 的坐标更改为 ${currentData["lon"]} ${currentData["lat"]}`,
+          `编号 ${currentData["code"]} ${currentData["keyword"]} 的坐标已更改`,
           "successInfo"
         );
 
