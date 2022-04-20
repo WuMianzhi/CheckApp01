@@ -115,7 +115,10 @@ function overViewSet(geocodeData) {
   allDataByStreet = {};
 
   for (let locateData of geocodeData) {
-    if (locateData.coordSource_group > 1 && locateData.checked == 0) {
+    if (
+      (locateData.coordSource_group > 1 && locateData.checked == 0) ||
+      locateData.warn > 0
+    ) {
       warnData.push(locateData);
       warnNum++;
     }
@@ -136,7 +139,7 @@ function overViewSet(geocodeData) {
     allDataByStreet[locateData["streetCode"]][locateData["code"]] = locateData;
     // console.log(locateData[]);
   }
-
+  console.log(warnData);
   overViewData[0].value = allNum;
   overViewData[1].value = warnNum;
 
@@ -375,7 +378,7 @@ function checkInit(warnData) {
 }
 
 /**
- *
+ * 复核
  */
 function overCheckFn() {
   // 初始化视图
@@ -443,8 +446,12 @@ function overCheckNextStreet() {
   }
 }
 
+/**
+ *
+ */
 function overCheckViewUpdate() {
-  document.querySelector("#streetLabel").textContent = "显示当前 区/县/县级市 数据";
+  document.querySelector("#streetLabel").textContent =
+    "显示当前 区/县/县级市 数据";
   document.querySelector("#localName").placeholder = " 乡镇/街道 名字";
 }
 
@@ -491,6 +498,11 @@ function updateGeocodeGroup() {
  * 手动拾取坐标
  */
 function handlerPicker() {
+  // 更新按钮
+  toggleCheckBtnGroup(true);
+  toggleOvercheckBtnGroup(true);
+  toggleHandlePickBtn();
+
   handler.setInputAction((click) => {
     var screenPosition = click.position;
     viewer.entities.removeAll();
@@ -520,6 +532,7 @@ function handlerConfirm(longitude, latitude) {
   toggleCheckBtnGroup(true);
   toggleOvercheckBtnGroup(true);
   toggleHandlePickBtn();
+
   document.getElementById("errorMark").hidden = false;
   var handlerPoint = viewer.entities.add({
     position: Cesium.Cartesian3.fromDegrees(longitude, latitude),
@@ -562,6 +575,37 @@ function confirmUpdate() {
     toggleCheckBtnGroup();
   }
   updateGeocode(warnData, currentData.lon, currentData.lat, currentData.code);
+}
+
+document.getElementById("errorMark").addEventListener("click", markedError);
+
+function markedError() {
+  markWarnData().then((res) => {
+    if (res.success) {
+      // 更新环形图显示
+      overViewData[0].value--;
+      overViewData[2].value++;
+      updateOverviewCharts();
+
+      // 提示坐标修改
+      showInfo(
+        `编号 ${currentData["code"]} ${currentData["keyword"]} 已标记为异常数据`,
+        "successInfo"
+      );
+
+      if (overCheck) {
+        toggleHandlePickBtn(true);
+        toggleOvercheckBtnGroup();
+        document.getElementById("overCheck").hidden = true;
+        document.getElementById("overCheckDone").hidden = false;
+      } else {
+        toggleHandlePickBtn(true);
+        toggleCheckBtnGroup();
+        checkInit(warnData, ++current);
+      }
+    }
+  });
+  console.log(currentData);
 }
 
 /**
@@ -672,7 +716,6 @@ function specialCheck() {
 
   if (street in allDataByStreet && code in allDataByStreet[street]) {
     currentData = allDataByStreet[street][code];
-    console.log(currentData);
     document.querySelector("#errorInfo").textContent = "请拾取坐标";
     document.querySelector("#localName").value = currentData.keyword;
     handlerPicker();
@@ -686,11 +729,11 @@ function specialCheck() {
 }
 
 /**
- * 
- * @param {*} warnData 
- * @param {*} lon 
- * @param {*} lat 
- * @param {*} code 
+ *
+ * @param {*} warnData
+ * @param {*} lon
+ * @param {*} lat
+ * @param {*} code
  */
 function updateGeocode(warnData, lon, lat, code) {
   // 更新数据库
@@ -803,6 +846,25 @@ async function updateStreetGeocodeDB(street) {
   const response = await fetch(url, {
     method: "POST",
     body: updateFD,
+  });
+
+  return response.json();
+}
+
+/**
+ * 在数据库中标记结果
+ * @returns
+ */
+async function markWarnData() {
+  let url = "http://mizhibd.com/checkApp/backend/warnMark.php";
+  let warnMarkFD = new FormData();
+  console.log(currentData);
+  warnMarkFD.append("code", currentData.code);
+  warnMarkFD.append("table", document.querySelector("#provinceSelect").value);
+
+  const response = await fetch(url, {
+    method: "POST",
+    body: warnMarkFD,
   });
 
   return response.json();

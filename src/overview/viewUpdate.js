@@ -45,6 +45,7 @@ function toggleHandlePickBtn(hidden = false) {
     "#locSelectContainer .handle-picker-container"
   ).hidden = hidden;
   document.querySelector("#handlerConfirm").hidden = hidden;
+  document.getElementById("errorMark").hidden = false;
 }
 
 export { toggleCheckBtnGroup, toggleOvercheckBtnGroup, toggleHandlePickBtn };
