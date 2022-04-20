@@ -1,4 +1,4 @@
-import { viewer, handler } from "../cesium/cesiumInit";
+import { viewer, handler, showPickEntityInfo } from "../cesium/cesiumInit";
 import {
   toggleCheckBtnGroup,
   toggleOvercheckBtnGroup,
@@ -182,10 +182,12 @@ function showStreetData() {
     } else {
       // 添加 entity
       // 判断是否解析出
-      if (currentData.lon_raw > 60 && currentData.lon_raw < 160) {
+      if (currentData.lon > 60 && currentData.lon_raw < 160) {
         // document.querySelector("#checkType").hidden = false;
         // 添加按 type 判断出的结果
         var type_location = viewer.entities.add({
+          id: locateData.code + "_" + Math.random() * 10000,
+          name: locateData.keyword,
           position: Cesium.Cartesian3.fromDegrees(
             currentData.lon_raw,
             currentData.lat_raw
@@ -213,6 +215,8 @@ function showStreetData() {
         // document.querySelector("#checkGroup").hidden = false;
         // 添加按 聚类 判断出的结果
         var type_location = viewer.entities.add({
+          id: locateData.code + "_" + Math.random() * 10000,
+          name: locateData.keyword,
           position: Cesium.Cartesian3.fromDegrees(
             currentData.lon_group,
             currentData.lat_group
@@ -233,6 +237,7 @@ function showStreetData() {
             verticalOrigin: Cesium.VerticalOrigin.TOP,
             pixelOffset: new Cesium.Cartesian2(0, 16),
           },
+          description: "sda",
         });
       }
 
@@ -263,7 +268,7 @@ function checkInit(warnData) {
 
     // document.querySelector("#streetName").textContent = currentData.strt;
     // console.log(currentData);
-    document.querySelector("#localName").value = currentData.keyword;
+    // document.querySelector("#localName").value = currentData.keyword;
     // 添加 entity
     // 判断是否解析出
     if (lon_raw > 60 && lon_raw < 160) {
@@ -272,6 +277,8 @@ function checkInit(warnData) {
       document.querySelector("#checkType").hidden = false;
       // 添加按 type 判断出的结果
       var type_location = viewer.entities.add({
+        id: currentData.code + "_" + Math.random() * 10000,
+        name: currentData.keyword,
         position: Cesium.Cartesian3.fromDegrees(
           currentData.lon_raw,
           currentData.lat_raw
@@ -304,6 +311,8 @@ function checkInit(warnData) {
       document.querySelector("#checkGroup").hidden = false;
       // 添加按 聚类 判断出的结果
       var type_location = viewer.entities.add({
+        id: currentData.code + "_" + Math.random() * 10000,
+        name: currentData.keyword,
         position: Cesium.Cartesian3.fromDegrees(
           currentData.lon_group,
           currentData.lat_group
@@ -401,8 +410,8 @@ function overCheckFn() {
   document.querySelector("#updateCode").value = overCheckKeys[curStreetDataID];
   var overCheckStreetKeys = Object.keys(curStreetData);
 
-  document.querySelector("#localName").value =
-    curStreetData[overCheckStreetKeys[0]].name;
+  // document.querySelector("#localName").value =
+  //   curStreetData[overCheckStreetKeys[0]].name;
 
   overCheckDoneBtn.addEventListener("click", overCheckNextStreet);
 
@@ -452,7 +461,7 @@ function overCheckNextStreet() {
 function overCheckViewUpdate() {
   document.querySelector("#streetLabel").textContent =
     "显示当前 区/县/县级市 数据";
-  document.querySelector("#localName").placeholder = " 乡镇/街道 名字";
+  // document.querySelector("#localName").placeholder = " 乡镇/街道 名字";
 }
 
 /**
@@ -503,6 +512,8 @@ function handlerPicker() {
   toggleOvercheckBtnGroup(true);
   toggleHandlePickBtn();
 
+  handler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK);
+
   handler.setInputAction((click) => {
     var screenPosition = click.position;
     viewer.entities.removeAll();
@@ -510,7 +521,6 @@ function handlerPicker() {
     var cartesian = viewer.camera.pickEllipsoid(screenPosition, ellipsoid);
     var ray = viewer.camera.getPickRay(screenPosition);
     var position = viewer.scene.globe.pick(ray, viewer.scene);
-
     if (cartesian && Cesium.defined(position)) {
       var cartographic = ellipsoid.cartesianToCartographic(cartesian);
       let longitude = Cesium.Math.toDegrees(cartographic.longitude).toFixed(6);
@@ -535,6 +545,8 @@ function handlerConfirm(longitude, latitude) {
 
   document.getElementById("errorMark").hidden = false;
   var handlerPoint = viewer.entities.add({
+    id: currentData.code + "_" + Math.ceil(Math.random() * 10000),
+    name: currentData.keyword,
     position: Cesium.Cartesian3.fromDegrees(longitude, latitude),
     billboard: {
       image: "http://mizhibd.com/checkApp/backend/ico/location-green.png",
@@ -586,7 +598,7 @@ function markedError() {
       overViewData[0].value--;
       overViewData[2].value++;
       updateOverviewCharts();
-
+      handler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK);
       // 提示坐标修改
       showInfo(
         `编号 ${currentData["code"]} ${currentData["keyword"]} 已标记为异常数据`,
@@ -613,6 +625,8 @@ function markedError() {
  * @param {*} streetLocalData
  */
 function groupViewer(streetLocalData, extra) {
+  handler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK);
+
   let imgURL = "http://mizhibd.com/checkApp/backend/ico/location-green.png";
   extra
     ? (imgURL = "http://mizhibd.com/checkApp/backend/ico/location-red.png")
@@ -622,6 +636,8 @@ function groupViewer(streetLocalData, extra) {
   var sum_lon = 0,
     sum_lat = 0,
     dataNum = 0;
+
+  // 添加 数据点群
   for (let locationData in streetLocalData) {
     let locateData = streetLocalData[locationData];
     // 记录并求平均值
@@ -630,6 +646,8 @@ function groupViewer(streetLocalData, extra) {
     dataNum++;
 
     let location_label = viewer.entities.add({
+      id: locateData.code + "_" + Math.random() * 10000,
+      name: locateData.keyword,
       position: Cesium.Cartesian3.fromDegrees(locateData.lon, locateData.lat),
       billboard: {
         image: imgURL,
@@ -647,10 +665,23 @@ function groupViewer(streetLocalData, extra) {
         pixelOffset: new Cesium.Cartesian2(0, 16),
         distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0, 15000),
       },
+      description: `  <table>
+                        <tbody>
+                          <tr><td>lon：</td><td>${locateData.lon}</td></tr>
+                          <tr><td>lat：</td><td>${locateData.lat}</td></tr>
+                          <tr><td>rural_area：</td><td>${locateData.Rural_Area}</td></tr>
+                          <tr><td>rural_population：</td><td>${locateData.Rural_Population}</td></tr>
+                          <tr><td>streetCode：</td><td>${locateData.name}</td></tr>
+                          <tr><td>checked：</td><td>${locateData.checked}</td></tr>
+                        </tbody>
+                      </table>`,
     });
   }
 
-  console.log(sum_lon, dataNum, sum_lat);
+  handler.setInputAction((click) => {
+    showPickEntityInfo(click);
+  }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+
   viewer.camera.flyTo({
     destination: Cesium.Cartesian3.fromDegrees(
       sum_lon / dataNum,
@@ -673,11 +704,9 @@ function streetGeocodeCheck(streetCode) {
   allCheckedBtn.hidden = false;
   allCheckedBtn.addEventListener("click", goToNextStreet, { once: true });
 
-  console.log(allDataByStreet[streetCode]);
   groupViewer(allDataByStreet[streetCode]);
   document.querySelector("#showStreet").checked = true;
   document.querySelector("#updateCode").value = streetCode;
-  console.log(allDataByStreet[streetCode]);
 }
 
 /**
@@ -717,7 +746,7 @@ function specialCheck() {
   if (street in allDataByStreet && code in allDataByStreet[street]) {
     currentData = allDataByStreet[street][code];
     document.querySelector("#errorInfo").textContent = "请拾取坐标";
-    document.querySelector("#localName").value = currentData.keyword;
+    // document.querySelector("#localName").value = currentData.keyword;
     handlerPicker();
     // 防止剩余检查数目变负数
     overViewData[0].value--;

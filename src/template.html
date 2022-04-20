@@ -33,7 +33,14 @@
   </div>
 
   <div id="locSelectContainer" class="transBg locSelect_container">
-    <input type="text" id="localName" placeholder="行政村/居委 名字" class="transBg" autofocus="false">
+    <!-- <input type="text" id="localName" placeholder="行政村/居委 名字" class="transBg" autofocus="false"> -->
+    <div id="manuSelect"  >
+      <form id="manuSelectForm">
+        <input type="text" id="updateCode" class="transBg" placeholder="请输入手动修改的 行政村/居委 Code">
+        <button type="submit" class="overview-btn"> 修改 </button>
+        <p id="errorInfo" hidden> </p>
+      </form>
+    </div>
 
     <div class="btn-group check-container " hidden>
       <button id="checkType" class="transBg" hidden> Pick 红色 </button>
@@ -57,14 +64,6 @@
       <input type="checkbox" name="showStreet" id="showStreet">
       <label for="showStreet" id="streetLabel">显示当前 乡镇/街道 数据</label>
     </div>
-  </div>
-
-  <div id="manuSelect" class="transBg">
-    <form id="manuSelectForm">
-      <input type="text" id="updateCode" class="transBg" placeholder="请输入手动修改的 行政村/居委 Code">
-      <button type="submit"> 修改 </button>
-      <p id="errorInfo"> </p>
-    </form>
   </div>
 
   <div id="changedInfo" class="transBg">

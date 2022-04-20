@@ -13,7 +13,8 @@ $checked = 1;
 $updatedInfo = array(
   'lon' => $lon,
   'lat' => $lat,
-  'checked' => $checked
+  'checked' => $checked,
+  'warn' => 0
 );
 
 $database->_update($table, $updatedInfo, "code = $code");
