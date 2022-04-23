@@ -527,7 +527,7 @@ function handlerPicker() {
       let latitude = Cesium.Math.toDegrees(cartographic.latitude).toFixed(6);
       // updateGeocode(warnData, longitude, latitude, currentData.code);
       handlerConfirm(longitude, latitude);
-      document.querySelector("#errorInfo").textContent = "";
+      // document.querySelector("#errorInfo").textContent = "";
     } else {
       console.warn("cesium undefined");
     }
@@ -544,6 +544,8 @@ function handlerConfirm(longitude, latitude) {
   toggleHandlePickBtn();
 
   document.getElementById("errorMark").hidden = false;
+
+  // 展示手动选取后的点
   var handlerPoint = viewer.entities.add({
     id: currentData.code + "_" + Math.ceil(Math.random() * 10000),
     name: currentData.keyword,
@@ -598,7 +600,9 @@ function markedError() {
       overViewData[0].value--;
       overViewData[2].value++;
       updateOverviewCharts();
+
       handler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK);
+
       // 提示坐标修改
       showInfo(
         `编号 ${currentData["code"]} ${currentData["keyword"]} 已标记为异常数据`,
@@ -615,6 +619,11 @@ function markedError() {
         toggleCheckBtnGroup();
         checkInit(warnData, ++current);
       }
+
+      // 重新绑定输入事件
+      handler.setInputAction((click) => {
+        showPickEntityInfo(click);
+      }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
     }
   });
   console.log(currentData);

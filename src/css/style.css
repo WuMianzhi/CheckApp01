@@ -14,11 +14,11 @@ body {
 
 .transBg {
   background: var(--color-half-black);
-  border: solid lightcyan 1px;
+  border: solid rgba(224, 255, 255, 0.6) 1px;
   border-radius: 4px;
   padding: 1rem;
   color: aliceblue;
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(1px);
   ;
 }
 
@@ -50,34 +50,23 @@ body {
   margin-right: 1rem;
 }
 
-.local_container button {
-  cursor: pointer;
-  min-width: 4rem;
-  height: 2rem;
-  color: rgba(20, 34, 230);
-  background: rgba(240, 248, 255);
-  margin-left: 2rem;
-  font-weight: bolder;
-  border: solid rgba(20, 34, 230, 0.6) 1px;
-  border-radius: 2px;
-}
-
 .overall_container {
-  top: 3rem;
-  right: 1rem;
+  top: 14rem;
+  left: 1rem;
+  padding: 0;
 }
 
 .overall_container>div {
-  width: 12rem;
-  height: 12rem;
+  width: 6rem;
+  height: 6rem;
 }
 
 .locSelect_container {
   position: absolute;
-  bottom: 4rem;
+  bottom: 1rem;
   max-width: 75vw;
   min-width: 720px;
-  height: 80px;
+  height: 32px;
   right: calc(50vw - 360px);
   display: flex;
   /* justify-content: space-between; */
@@ -85,13 +74,16 @@ body {
   align-items: center;
 }
 
+.local_container button,
 .overview-btn {
   width: auto;
-  color: rgba(20, 34, 230) !important;
+  min-width: 4rem;
+  height: 2rem;
+  color: rgba(240, 248, 255) !important;
   font-size: 12pt !important;
   font-weight: 700;
-  background: rgba(240, 248, 255);
-  border: 1px solid rgba(20, 34, 230);
+  background: rgba(240, 248, 255, 0.1);
+  border: 1px solid rgba(240, 248, 255, .6);
 }
 
 .locSelect_container .check-container {
@@ -100,6 +92,7 @@ body {
   /* justify-content: center; */
   align-items: center;
 }
+
 
 .locSelect_container button {
   cursor: pointer;
@@ -113,11 +106,16 @@ body {
   transition: all .36s ease-in-out;
 }
 
+.local_container button {
+  border-radius: 2px;
+}
+
+.local_container button:hover,
 .locSelect_container button:hover {
   transform: scale(1.1);
   transition: all .36s ease-in-out;
-  background: rgba(72, 72, 72, 0.2);
-  background-image: linear-gradient(#e86a6c88, #e46f5285);
+  background: #48b;
+  background-image: #48b;
   cursor: pointer;
 }
 
@@ -166,9 +164,8 @@ body {
   position: absolute;
   left: 1rem;
   top: 6rem;
-  min-height: 10rem;
-  max-height: 18rem;
-  width: 20rem;
+  height: 5rem;
+  width: 14rem;
   overflow: auto;
   font-size: 8pt;
 }
@@ -182,7 +179,7 @@ body {
 
 #manuSelect {
   position: absolute;
-  top: -4rem;
+  top: -3rem;
   left: 0;
 }
 
