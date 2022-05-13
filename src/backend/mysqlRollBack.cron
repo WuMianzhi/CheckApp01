@@ -1,0 +1,1 @@
+30 22 * * * /var/lib/mysql-files/backup/shell/mysql_dump_script.sh

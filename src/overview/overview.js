@@ -176,18 +176,18 @@ function showStreetData() {
     }
   } else {
     viewer.entities.removeAll();
-
     if (overCheck) {
       groupViewer(curStreetData);
     } else {
+      console.log('not over check');
       // 添加 entity
       // 判断是否解析出
       if (currentData.lon > 60 && currentData.lon_raw < 160) {
         // document.querySelector("#checkType").hidden = false;
         // 添加按 type 判断出的结果
         var type_location = viewer.entities.add({
-          id: locateData.code + "_" + Math.random() * 10000,
-          name: locateData.keyword,
+          id: currentData.code + "_" + Math.random() * 10000,
+          name: currentData.keyword,
           position: Cesium.Cartesian3.fromDegrees(
             currentData.lon_raw,
             currentData.lat_raw
@@ -208,6 +208,8 @@ function showStreetData() {
             pixelOffset: new Cesium.Cartesian2(0, 16),
           },
         });
+      } else {
+        console.log("error");
       }
 
       // 同上
@@ -215,8 +217,8 @@ function showStreetData() {
         // document.querySelector("#checkGroup").hidden = false;
         // 添加按 聚类 判断出的结果
         var type_location = viewer.entities.add({
-          id: locateData.code + "_" + Math.random() * 10000,
-          name: locateData.keyword,
+          id: currentData.code + "_" + Math.random() * 10000,
+          name: currentData.keyword,
           position: Cesium.Cartesian3.fromDegrees(
             currentData.lon_group,
             currentData.lat_group
@@ -239,6 +241,8 @@ function showStreetData() {
           },
           description: "sda",
         });
+      } else {
+        console.log("erroe");
       }
 
       console.log(currentData);
@@ -390,6 +394,8 @@ function checkInit(warnData) {
  * 复核
  */
 function overCheckFn() {
+  overCheck = true;
+
   // 初始化视图
   var overCheckDoneBtn = document.querySelector("#overCheckDone");
   overCheckDoneBtn.hidden = false;
@@ -690,7 +696,6 @@ function groupViewer(streetLocalData, extra) {
   handler.setInputAction((click) => {
     showPickEntityInfo(click);
   }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
-
   viewer.camera.flyTo({
     destination: Cesium.Cartesian3.fromDegrees(
       sum_lon / dataNum,
@@ -713,7 +718,7 @@ function streetGeocodeCheck(streetCode) {
   allCheckedBtn.hidden = false;
   allCheckedBtn.addEventListener("click", goToNextStreet, { once: true });
 
-  groupViewer(allDataByStreet[streetCode]);
+  groupViewer(allDataByStreet[currentData.streetCode]);
   document.querySelector("#showStreet").checked = true;
   document.querySelector("#updateCode").value = streetCode;
 }
@@ -850,7 +855,6 @@ async function updateGeocodeDB(lon, lat, code) {
     method: "POST",
     body: updateFD,
   });
-
   return response.json();
 }
 

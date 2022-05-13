@@ -69,6 +69,114 @@ const TIANDITUVECTOR = new Cesium.ProviderViewModel({
   },
 });
 
+const AMAPImage = new Cesium.ProviderViewModel({
+  name: "高德影像地图",
+  iconUrl: Cesium.buildModuleUrl(
+    "Widgets/Images/ImageryProviders/esriNationalGeographic.png"
+  ),
+  tooltip: "高德影像地图",
+  category: "高德（无偏移）",
+  creationFunction: function () {
+    return new Cesium.AmapImageryProvider({
+      style: "img",
+      crs: "WGS84",
+    });
+  },
+});
+
+const AMAPVector = new Cesium.ProviderViewModel({
+  name: "高德矢量地图",
+  iconUrl: Cesium.buildModuleUrl(
+    "Widgets/Images/ImageryProviders/esriNationalGeographic.png"
+  ),
+  tooltip: "高德矢量地图",
+  category: "高德（无偏移）",
+  creationFunction: function () {
+    return new Cesium.AmapImageryProvider({
+      style: "elec",
+      crs: "WGS84",
+    });
+  },
+});
+
+const AMAPVCva = new Cesium.ProviderViewModel({
+  name: "高德注记要素",
+  iconUrl: Cesium.buildModuleUrl(
+    "Widgets/Images/ImageryProviders/esriNationalGeographic.png"
+  ),
+  tooltip: "高德注记要素",
+  category: "高德（无偏移）",
+  creationFunction: function () {
+    if (timeSeriesImgeryObj != undefined) {
+      timeSeriesImgeryObj.timeImageFlag = 0; //不参与时序影像控制操作
+    }
+    return new Cesium.AmapImageryProvider({
+      style: "cva",
+      crs: "WGS84",
+    });
+  },
+});
+
+const baiduImg = new Cesium.ProviderViewModel({
+  name: "百度影像",
+  iconUrl: Cesium.buildModuleUrl(
+    "Widgets/Images/ImageryProviders/esriNationalGeographic.png"
+  ),
+  tooltip: "百度影像地图",
+  category: "百度（无偏移）",
+  creationFunction: function () {
+    return new Cesium.BaiduImageryProvider({
+      style: "img", // style: img、vec、normal、dark
+      crs: "WGS84", // 使用84坐标系，默认为：BD09
+    });
+  },
+});
+
+const baiduNormal = new Cesium.ProviderViewModel({
+  name: "百度常规",
+  iconUrl: Cesium.buildModuleUrl(
+    "Widgets/Images/ImageryProviders/esriNationalGeographic.png"
+  ),
+  tooltip: "百度常规地图",
+  category: "百度（无偏移）",
+  creationFunction: function () {
+    return new Cesium.BaiduImageryProvider({
+      style: "normal", // style: img、vec、normal、dark
+      crs: "WGS84", // 使用84坐标系，默认为：BD09
+    });
+  },
+});
+
+const baiduDark = new Cesium.ProviderViewModel({
+  name: "百度暗黑",
+  iconUrl: Cesium.buildModuleUrl(
+    "Widgets/Images/ImageryProviders/esriNationalGeographic.png"
+  ),
+  tooltip: "百度暗黑地图",
+  category: "百度（无偏移）",
+  creationFunction: function () {
+    return new Cesium.BaiduImageryProvider({
+      style: "dark", // style: img、vec、normal、dark
+      crs: "WGS84", // 使用84坐标系，默认为：BD09
+    });
+  },
+});
+
+const baiduNote = new Cesium.ProviderViewModel({
+  name: "百度注记",
+  iconUrl: Cesium.buildModuleUrl(
+    "Widgets/Images/ImageryProviders/esriNationalGeographic.png"
+  ),
+  tooltip: "百度注记地图",
+  category: "百度（无偏移）",
+  creationFunction: function () {
+    return new Cesium.BaiduImageryProvider({
+      style: "vec", // style: img、vec、normal、dark
+      crs: "WGS84", // 使用84坐标系，默认为：BD09
+    });
+  },
+});
+
 document.querySelector(
   "#cesiumContainer .cesium-viewer-animationContainer"
 ).hidden = true;
@@ -105,9 +213,24 @@ viewer.scene.imageryLayers.add(TIANDITUCN);
 
 var imageList = viewer.baseLayerPicker.viewModel.imageryProviderViewModels;
 viewer.baseLayerPicker.viewModel.selectedImagery = imageList[3];
-imageList.push(TIANDITUTERR);
-imageList.push(TIANDITUIMG);
-imageList.push(TIANDITUVECTOR);
+
+imageList.push(
+  ...[
+    TIANDITUTERR,
+    TIANDITUIMG,
+    TIANDITUVECTOR,
+    AMAPImage,
+    AMAPVector,
+    AMAPVCva,
+    baiduImg,
+    baiduNormal,
+    baiduDark,
+    baiduNote,
+  ]
+);
+// imageList.push(TIANDITUTERR);
+// imageList.push(TIANDITUIMG);
+// imageList.push(TIANDITUVECTOR);
 
 //天地图地理编码器
 function TiandituNominatimGeocoder() {}
