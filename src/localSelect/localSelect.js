@@ -40,6 +40,7 @@ function appendOpt(selectDom, optData) {
   selectDom.innerHTML = "";
   let option = document.createElement("option");
   option.innerText = "请选择";
+  option.value = "000000"
   selectDom.appendChild(option);
   // 添加选项
   for (let opt in optData) {

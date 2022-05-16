@@ -1,5 +1,6 @@
 import "./css/style.css";
 import { initLocalSelect, queryLocalData } from "./localSelect/localSelect.js";
+import { zipDataDownload } from "./localSelect/getZipData.js";
 
 initLocalSelect();
 
@@ -19,3 +20,5 @@ localForm.addEventListener("submit", (event) => {
     );
   }
 });
+
+document.querySelector("#dataDown").addEventListener("click", zipDataDownload);
