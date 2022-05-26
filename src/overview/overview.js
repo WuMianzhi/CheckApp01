@@ -17,7 +17,8 @@ let current,
   curStreetData,
   curStreetDataID,
   allDataByStreet = {},
-  overCheck = false;
+  overCheck = false,
+  notFly = false;
 let minCheckTime = 9999999;
 let maxCheckTime = 0;
 
@@ -179,7 +180,7 @@ function showStreetData() {
     if (overCheck) {
       groupViewer(curStreetData);
     } else {
-      console.log('not over check');
+      // console.log("not over check");
       // 添加 entity
       // 判断是否解析出
       if (currentData.lon > 60 && currentData.lon_raw < 160) {
@@ -395,7 +396,6 @@ function checkInit(warnData) {
  */
 function overCheckFn() {
   overCheck = true;
-
   // 初始化视图
   var overCheckDoneBtn = document.querySelector("#overCheckDone");
   overCheckDoneBtn.hidden = false;
@@ -404,7 +404,7 @@ function overCheckFn() {
   curStreetDataID = 0;
   var overCheckKeys = Object.keys(allDataByStreet);
   curStreetData = allDataByStreet[overCheckKeys[curStreetDataID]];
-
+  // document.querySelector("#showStreet").disabled = true;
   groupViewer(curStreetData);
 
   overCheckViewUpdate();
@@ -429,6 +429,8 @@ function overCheckFn() {
  *
  */
 function overCheckNextStreet() {
+  // document.querySelector("#showStreet").disabled = false;
+
   viewer.entities.removeAll();
   var overCheckKeys = Object.keys(allDataByStreet);
 
@@ -696,13 +698,16 @@ function groupViewer(streetLocalData, extra) {
   handler.setInputAction((click) => {
     showPickEntityInfo(click);
   }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
-  viewer.camera.flyTo({
-    destination: Cesium.Cartesian3.fromDegrees(
-      sum_lon / dataNum,
-      sum_lat / dataNum,
-      20000
-    ),
-  });
+
+  notFly
+    ? null
+    : viewer.camera.flyTo({
+        destination: Cesium.Cartesian3.fromDegrees(
+          sum_lon / dataNum,
+          sum_lat / dataNum,
+          20000
+        ),
+      });
 }
 
 /**
@@ -751,9 +756,10 @@ document.querySelector("#skipLoc").addEventListener("click", () => {
 });
 
 /**
- * 特殊点修改
+ * 输入 code 修改对应点
  */
 function specialCheck() {
+  // 获取 DOM 元素的值
   var code = document.querySelector("#updateCode").value;
   var street = Math.floor(code / 1000);
 
@@ -772,11 +778,11 @@ function specialCheck() {
 }
 
 /**
- *
- * @param {*} warnData
- * @param {*} lon
- * @param {*} lat
- * @param {*} code
+ * 更新数据
+ * @param {*} warnData 所有异常的数据
+ * @param {*} lon 经度
+ * @param {*} lat 纬度
+ * @param {*} code 修改点代码
  */
 function updateGeocode(warnData, lon, lat, code) {
   // 更新数据库
@@ -799,6 +805,7 @@ function updateGeocode(warnData, lon, lat, code) {
         );
 
         let nextDataID = current + 1;
+        // 如果是复核数据，重新添加数据
         if (overCheck) {
           viewer.entities.removeAll();
           groupViewer(curStreetData);

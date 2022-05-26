@@ -1,3 +1,7 @@
+
+/**
+ * 下载 zip 文件
+ */
 function zipDataDownload() {
   let provnCode = document.querySelector("#provinceSelect").value;
   let cityCode = document.querySelector("#citySelect").value;

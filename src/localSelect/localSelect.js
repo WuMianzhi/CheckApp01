@@ -19,6 +19,10 @@ function initLocalSelect() {
   });
 }
 
+/**
+ * 查询后端元素
+ * @param {*} localForm 
+ */
 function queryLocalData(localForm) {
   if (localForm) {
     fetch("http://mizhibd.com/checkApp/backend/query.php", { method: "POST", body: localForm })

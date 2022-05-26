@@ -1,11 +1,13 @@
 import tdtDemMapICON from "../assets/tdt/tdtDem.jpg";
 import tdtImageMapICON from "../assets/tdt/tdtImage.jpg";
 import tdtMapICON from "../assets/tdt/tdtMap.jpg";
+import { LngLatWidget } from "./locLabel";
 
 const CESIUMTOKEN =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJkY2U1MTEwOC05NWM2LTRlNjMtOTdlMi03NWRhZDc1NzI0ZTciLCJpZCI6NzAyNjMsImlhdCI6MTYzNDEyNDM3NX0.T5IFCKMuUEUi141stLGHka_pOjeu0wb8Pg6_QL0eKd0";
 Cesium.Ion.defaultAccessToken = CESIUMTOKEN;
 const customGeocoders = [
+  new Cesium.CartographicGeocoderService(),
   new TiandituNominatimGeocoder(), //天地图地理编码器
 ];
 
@@ -276,6 +278,10 @@ thirdPartyMapBtnIcon.classList.add("map-btn");
 thirdPartyMapBtn.appendChild(thirdPartyMapBtnIcon);
 thirdPartyMapBtn.addEventListener("click", openThirdMapService);
 cesiumViewerToolbar.appendChild(thirdPartyMapBtn);
+
+const lngLatScaleLabel = new LngLatWidget(viewer);
+lngLatScaleLabel.addCoordinateLabel();
+// lngLatScaleLabel.addScale();
 
 function showPickEntityInfo(movement) {
   var pick = viewer.scene.pick(movement.position);
