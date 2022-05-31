@@ -353,6 +353,13 @@ function checkInit(warnData) {
       ),
     });
 
+    // 在搜素框填入值
+    var cesiumInput = document.querySelector(
+      "#cesiumContainer .cesium-geocoder-input"
+    );
+    cesiumInput.value = currentData.keyword;
+    cesiumInput.classList.add("cesium-geocoder-input-wide");
+
     // 修改数据为按 type 分析得到的结果
     document
       .querySelector("#checkType")
