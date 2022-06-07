@@ -6,6 +6,8 @@ import { LngLatWidget } from "./locLabel";
 const CESIUMTOKEN =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJkY2U1MTEwOC05NWM2LTRlNjMtOTdlMi03NWRhZDc1NzI0ZTciLCJpZCI6NzAyNjMsImlhdCI6MTYzNDEyNDM3NX0.T5IFCKMuUEUi141stLGHka_pOjeu0wb8Pg6_QL0eKd0";
 Cesium.Ion.defaultAccessToken = CESIUMTOKEN;
+
+// 编码器
 const customGeocoders = [
   new Cesium.CartographicGeocoderService(),
   new TiandituNominatimGeocoder(), //天地图地理编码器
@@ -17,6 +19,57 @@ const viewer = new Cesium.Viewer("cesiumContainer", {
   sceneModePicker: false,
   navigationHelpButton: false, //,//右上角的帮助按钮
   geocoder: customGeocoders, //使用定制的加强版地理编码器
+});
+
+// 影像图层
+const ESRIIMG = new Cesium.ProviderViewModel({
+  name: "ESRI ArcGIS全球影像",
+  iconUrl: Cesium.buildModuleUrl(
+    "Widgets/Images/ImageryProviders/esriWorldImagery.png"
+  ),
+  tooltip: "ESRI ArcGIS影像图层",
+  category: "ESRI ArcGIS",
+  creationFunction: function () {
+    return new Cesium.ArcGisMapServerImageryProvider({
+      url: "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer",
+    });
+  },
+});
+
+const ESRIStreet = new Cesium.ProviderViewModel({
+  name: "ESRI ArcGIS街道地图",
+  iconUrl: Cesium.buildModuleUrl(
+    "Widgets/Images/ImageryProviders/esriWorldStreetMap.png"
+  ),
+  tooltip: "ESRI ArcGIS街道地图",
+  category: "ESRI ArcGIS",
+  creationFunction: function () {
+    if (timeSeriesImgeryObj != undefined) {
+      timeSeriesImgeryObj.timeImageFlag = 0; //不参与时序影像控制操作
+    }
+    return new Cesium.ArcGisMapServerImageryProvider({
+      url: "https://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer",
+      enablePickFeatures: false,
+    });
+  },
+});
+
+const ESRINation = new Cesium.ProviderViewModel({
+  name: "ESRI ArcGIS国家地理",
+  iconUrl: Cesium.buildModuleUrl(
+    "Widgets/Images/ImageryProviders/esriNationalGeographic.png"
+  ),
+  tooltip: "ESRI ArcGIS国家地理",
+  category: "ESRI ArcGIS",
+  creationFunction: function () {
+    if (timeSeriesImgeryObj != undefined) {
+      timeSeriesImgeryObj.timeImageFlag = 0; //不参与时序影像控制操作
+    }
+    return new Cesium.ArcGisMapServerImageryProvider({
+      url: "https://services.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/",
+      enablePickFeatures: false,
+    });
+  },
 });
 
 const TIANDITUTERR = new Cesium.ProviderViewModel({
@@ -179,6 +232,57 @@ const baiduNote = new Cesium.ProviderViewModel({
   },
 });
 
+const GOOGLEIMG = new Cesium.ProviderViewModel({
+  name: "Google影像",
+  iconUrl: "http://mizhibd.com/checkApp/backend/ico/tdtImage.jpg",
+  tooltip: "Google影像",
+  category: "Google",
+  creationFunction: function () {
+    return new Cesium.UrlTemplateImageryProvider({
+      //影像图 (中国范围无偏移)
+      url: "http://www.google.cn/maps/vt?lyrs=s&x={x}&y={y}&z={z}",
+      tilingScheme: new Cesium.WebMercatorTilingScheme(),
+      minimumLevel: 1,
+      maximumLevel: 20,
+      credit: "Google Earth",
+    });
+  },
+});
+
+const GOOGLEPATHIMG = new Cesium.ProviderViewModel({
+  name: "Google道路地图",
+  iconUrl: "http://mizhibd.com/checkApp/backend/ico/tdtImage.jpg",
+  tooltip: "Google道路地图",
+  category: "Google",
+  creationFunction: function () {
+    return new Cesium.UrlTemplateImageryProvider({
+      //带地名标注的影像图 (影像在中国范围无偏移，但注记有偏移)
+      url: "http://www.google.cn/maps/vt?lyrs=m&x={x}&y={y}&z={z}",
+      tilingScheme: new Cesium.WebMercatorTilingScheme(),
+      minimumLevel: 1,
+      maximumLevel: 200,
+      credit: "Google Earth",
+    });
+  },
+});
+
+const GOOGLEPATHPLUSIMG = new Cesium.ProviderViewModel({
+  name: "Google影像+道路",
+  iconUrl: "http://mizhibd.com/checkApp/backend/ico/tdtImage.jpg",
+  tooltip: "Google影像+道路",
+  category: "Google",
+  creationFunction: function () {
+    return new Cesium.UrlTemplateImageryProvider({
+      //道路图(道路在中国范围有偏移，无法消除)
+      url: "http://www.google.cn/maps/vt?lyrs=y&x={x}&y={y}&z={z}",
+      tilingScheme: new Cesium.WebMercatorTilingScheme(),
+      minimumLevel: 1,
+      maximumLevel: 200,
+      credit: "Google Earth",
+    });
+  },
+});
+
 document.querySelector(
   "#cesiumContainer .cesium-viewer-animationContainer"
 ).hidden = true;
@@ -188,7 +292,7 @@ document.querySelector("#cesiumContainer .cesium-viewer-bottom").style.display =
 
 // viewer.scene.postProcessStages.fxaa.enabled = false;
 
-// 更改分辨率
+// 更改注记分辨率
 var supportsImageRenderingPixelated =
   viewer.cesiumWidget._supportsImageRenderingPixelated;
 if (supportsImageRenderingPixelated) {
@@ -214,10 +318,12 @@ const TIANDITUCN = new Cesium.ImageryLayer(
 viewer.scene.imageryLayers.add(TIANDITUCN);
 
 var imageList = viewer.baseLayerPicker.viewModel.imageryProviderViewModels;
-viewer.baseLayerPicker.viewModel.selectedImagery = imageList[3];
 
 imageList.push(
   ...[
+    ESRIIMG,
+    ESRIStreet,
+    ESRINation,
     TIANDITUTERR,
     TIANDITUIMG,
     TIANDITUVECTOR,
@@ -228,8 +334,14 @@ imageList.push(
     baiduNormal,
     baiduDark,
     baiduNote,
+    GOOGLEIMG,
+    GOOGLEPATHIMG,
+    GOOGLEPATHPLUSIMG,
   ]
 );
+
+viewer.baseLayerPicker.viewModel.selectedImagery = ESRIIMG;
+
 // imageList.push(TIANDITUTERR);
 // imageList.push(TIANDITUIMG);
 // imageList.push(TIANDITUVECTOR);

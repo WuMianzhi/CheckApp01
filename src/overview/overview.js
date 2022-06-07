@@ -210,7 +210,7 @@ function showStreetData() {
           },
         });
       } else {
-        console.log("error");
+        console.log("Error!!! the  data is beyond China area");
       }
 
       // 同上
@@ -243,7 +243,7 @@ function showStreetData() {
           description: "sda",
         });
       } else {
-        console.log("erroe");
+        console.log("Error!!! the  data is beyond China area");
       }
 
       console.log(currentData);
@@ -504,7 +504,7 @@ function updateGeocodeType() {
   lon = currentData.lon_raw;
   lat = currentData.lat_raw;
 
-  updateGeocode(warnData, lon, lat, currentData.code);
+  updateGeocode(warnData, lon, lat, currentData.code, 1);
   releaseClickListener();
 }
 
@@ -514,7 +514,7 @@ function updateGeocodeType() {
 function updateGeocodeGroup() {
   lon = currentData.lon_group;
   lat = currentData.lat_group;
-  updateGeocode(warnData, lon, lat, currentData.code);
+  updateGeocode(warnData, lon, lat, currentData.code, 1);
   releaseClickListener();
 }
 
@@ -603,7 +603,13 @@ function confirmUpdate() {
   } else {
     toggleCheckBtnGroup();
   }
-  updateGeocode(warnData, currentData.lon, currentData.lat, currentData.code);
+  updateGeocode(
+    warnData,
+    currentData.lon,
+    currentData.lat,
+    currentData.code,
+    1
+  );
 }
 
 document.getElementById("errorMark").addEventListener("click", markedError);
@@ -651,10 +657,13 @@ function markedError() {
 function groupViewer(streetLocalData, extra) {
   handler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
-  let imgURL = "http://mizhibd.com/checkApp/backend/ico/location-green.png";
-  extra
-    ? (imgURL = "http://mizhibd.com/checkApp/backend/ico/location-red.png")
-    : null;
+  let normalImgURL =
+    "http://mizhibd.com/checkApp/backend/ico/location-green.png";
+  let safeImgURL = "http://mizhibd.com/checkApp/backend/ico/location-blue.png";
+  let warnImgURL = "http://mizhibd.com/checkApp/backend/ico/location-red.png";
+
+  let overImgURL = extra ? warnImgURL : normalImgURL;
+
   document.querySelector("#checkHandle").hidden = true;
   document.querySelector("#skipLoc").hidden = true;
   var sum_lon = 0,
@@ -668,6 +677,8 @@ function groupViewer(streetLocalData, extra) {
     sum_lon += parseFloat(locateData.lon);
     sum_lat += parseFloat(locateData.lat);
     dataNum++;
+
+    let imgURL = locateData.isHandle ? safeImgURL : overImgURL;
 
     let location_label = viewer.entities.add({
       id: locateData.code + "_" + Math.random() * 10000,
@@ -790,10 +801,11 @@ function specialCheck() {
  * @param {*} lon 经度
  * @param {*} lat 纬度
  * @param {*} code 修改点代码
+ * @param {Bloom} isHandle 是否是是手动选取的点
  */
-function updateGeocode(warnData, lon, lat, code) {
+function updateGeocode(warnData, lon, lat, code, isHandle = 0) {
   // 更新数据库
-  updateGeocodeDB(lon, lat, code)
+  updateGeocodeDB(lon, lat, code, isHandle)
     .then((res) => {
       if (res.success) {
         // 更新环形图显示
@@ -804,6 +816,9 @@ function updateGeocode(warnData, lon, lat, code) {
         // 修改本地存储数据
         allDataByStreet[currentData.streetCode][currentData.code]["lon"] = lon;
         allDataByStreet[currentData.streetCode][currentData.code]["lat"] = lat;
+        allDataByStreet[currentData.streetCode][currentData.code][
+          "isHandle"
+        ] = 1;
 
         // 提示坐标修改
         showInfo(
@@ -852,17 +867,19 @@ function updateGeocode(warnData, lon, lat, code) {
 
 /**
  * 更新数据库
- * @param {*} lon
- * @param {*} lat
- * @param {*} code
+ * @param {Number} lon
+ * @param {Number} lat
+ * @param {String} code
+ * @param {Boolean} isHandle 表示是否是手动处理后的
  * @returns
  */
-async function updateGeocodeDB(lon, lat, code) {
+async function updateGeocodeDB(lon, lat, code, isHandle = 0) {
   let url = "http://mizhibd.com/checkApp/backend/update.php";
   let updateFD = new FormData();
   updateFD.append("lon", lon);
   updateFD.append("lat", lat);
   updateFD.append("code", code);
+  updateFD.append("isHandle", isHandle);
   updateFD.append("table", document.querySelector("#provinceSelect").value);
 
   const response = await fetch(url, {

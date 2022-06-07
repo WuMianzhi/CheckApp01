@@ -7,6 +7,7 @@ $database = new Mysql();
 $lon = $_POST['lon'];
 $lat = $_POST['lat'];
 $code = $_POST['code'];
+$isHandle = $_POST['isHandle'];
 $table = $_POST['table'];
 $checked = 1;
 
@@ -14,6 +15,7 @@ $updatedInfo = array(
   'lon' => $lon,
   'lat' => $lat,
   'checked' => $checked,
+  'isHandle' => $isHandle,
   'warn' => 0
 );
 
