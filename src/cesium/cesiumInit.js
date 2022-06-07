@@ -5,7 +5,14 @@ import { LngLatWidget } from "./locLabel";
 
 const CESIUMTOKEN =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJkY2U1MTEwOC05NWM2LTRlNjMtOTdlMi03NWRhZDc1NzI0ZTciLCJpZCI6NzAyNjMsImlhdCI6MTYzNDEyNDM3NX0.T5IFCKMuUEUi141stLGHka_pOjeu0wb8Pg6_QL0eKd0";
+
 Cesium.Ion.defaultAccessToken = CESIUMTOKEN;
+Cesium.Camera.DEFAULT_VIEW_RECTANGLE = Cesium.Rectangle.fromDegrees(
+  73,
+  23,
+  135,
+  53
+);
 
 // 编码器
 const customGeocoders = [
@@ -16,7 +23,7 @@ const customGeocoders = [
 const viewer = new Cesium.Viewer("cesiumContainer", {
   homeButton: false,
   timeline: false,
-  sceneModePicker: false,
+  // sceneModePicker: false,
   navigationHelpButton: false, //,//右上角的帮助按钮
   geocoder: customGeocoders, //使用定制的加强版地理编码器
 });
