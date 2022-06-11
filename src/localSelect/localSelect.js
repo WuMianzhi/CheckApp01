@@ -12,23 +12,28 @@ function initLocalSelect() {
   // select 添加监听事件
   provinceSelect.addEventListener("change", (e) => {
     appendOpt(citySelect, cityData[e.target.value]);
+    document.querySelector("#showStreet").checked = false;
   });
 
   citySelect.addEventListener("change", (e) => {
     appendOpt(countySelect, countyData[e.target.value]);
+    document.querySelector("#showStreet").checked = false;
   });
 }
 
 /**
  * 查询后端元素
- * @param {*} localForm 
+ * @param {*} localForm
  */
 function queryLocalData(localForm) {
   if (localForm) {
-    fetch("http://mizhibd.com/checkApp/backend/query.php", { method: "POST", body: localForm })
+    fetch("http://mizhibd.com/checkApp/backend/query.php", {
+      method: "POST",
+      body: localForm,
+    })
       .then((response) => response.json())
       .then((data) => {
-        overViewSet(data.affected_rows)
+        overViewSet(data.affected_rows);
       });
   } else {
     console.log("没有数据呀，宝");
@@ -44,7 +49,7 @@ function appendOpt(selectDom, optData) {
   selectDom.innerHTML = "";
   let option = document.createElement("option");
   option.innerText = "请选择";
-  option.value = "000000"
+  option.value = "000000";
   selectDom.appendChild(option);
   // 添加选项
   for (let opt in optData) {
