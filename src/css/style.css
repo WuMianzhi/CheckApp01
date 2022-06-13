@@ -51,14 +51,14 @@ body {
 }
 
 .overall_container {
-  top: 14rem;
-  left: 1rem;
+  top: 6rem;
+  left: 18rem;
   padding: 0;
 }
 
 .overall_container>div {
-  width: 6rem;
-  height: 6rem;
+  width: 7rem;
+  height: 7rem;
 }
 
 .locSelect_container {

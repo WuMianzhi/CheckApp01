@@ -33,6 +33,7 @@ function queryLocalData(localForm) {
     })
       .then((response) => response.json())
       .then((data) => {
+        console.log(data.affected_rows);
         overViewSet(data.affected_rows);
       });
   } else {

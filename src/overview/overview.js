@@ -141,8 +141,8 @@ function overViewSet(geocodeData) {
     // console.log(locateData[]);
   }
   console.log(warnData);
-  overViewData[0].value = allNum;
-  overViewData[1].value = warnNum;
+  overViewData[0].value = geocodeData.length - warnData.length;
+  overViewData[1].value = warnData.length;
 
   current = 0;
 
@@ -208,6 +208,17 @@ function showStreetData() {
             verticalOrigin: Cesium.VerticalOrigin.TOP,
             pixelOffset: new Cesium.Cartesian2(0, 16),
           },
+          description: `  <table>
+                            <tbody>
+                              <tr><td>lon：</td><td>${currentData.lon_raw}</td></tr>
+                              <tr><td>lat：</td><td>${currentData.lat_raw}</td></tr>
+                              <tr><td>type：</td><td>${currentData.type}</td></tr>
+                              <tr><td>rural_area：</td><td>${currentData.Rural_Area}</td></tr>
+                              <tr><td>rural_population：</td><td>${currentData.Rural_Population}</td></tr>
+                              <tr><td>streetCode：</td><td>${currentData.name}</td></tr>
+                              <tr><td>checked：</td><td>${currentData.checked}</td></tr>
+                            </tbody>
+                          </table>`,
         });
       } else {
         console.log("Error!!! the  data is beyond China area");
@@ -240,7 +251,17 @@ function showStreetData() {
             verticalOrigin: Cesium.VerticalOrigin.TOP,
             pixelOffset: new Cesium.Cartesian2(0, 16),
           },
-          description: "sda",
+          description: `  <table>
+                            <tbody>
+                              <tr><td>lon：</td><td>${currentData.lon_group}</td></tr>
+                              <tr><td>lat：</td><td>${currentData.lat_group}</td></tr>
+                              <tr><td>type：</td><td>${currentData.type}</td></tr>
+                              <tr><td>rural_area：</td><td>${currentData.Rural_Area}</td></tr>
+                              <tr><td>rural_population：</td><td>${currentData.Rural_Population}</td></tr>
+                              <tr><td>streetCode：</td><td>${currentData.name}</td></tr>
+                              <tr><td>checked：</td><td>${currentData.checked}</td></tr>
+                            </tbody>
+                          </table>`,
         });
       } else {
         console.log("Error!!! the  data is beyond China area");
@@ -303,6 +324,17 @@ function checkInit(warnData) {
           verticalOrigin: Cesium.VerticalOrigin.TOP,
           pixelOffset: new Cesium.Cartesian2(0, 16),
         },
+        description: `  <table>
+                          <tbody>
+                            <tr><td>lon：</td><td>${currentData.lon_raw}</td></tr>
+                            <tr><td>lat：</td><td>${currentData.lat_raw}</td></tr>
+                            <tr><td>type：</td><td>${currentData.type}</td></tr>
+                            <tr><td>rural_area：</td><td>${currentData.Rural_Area}</td></tr>
+                            <tr><td>rural_population：</td><td>${currentData.Rural_Population}</td></tr>
+                            <tr><td>streetCode：</td><td>${currentData.name}</td></tr>
+                            <tr><td>checked：</td><td>${currentData.checked}</td></tr>
+                          </tbody>
+                        </table>`,
       });
     } else {
       document.querySelector("#checkType").hidden = true;
@@ -337,6 +369,17 @@ function checkInit(warnData) {
           backgroundColor: new Cesium.Color(0.2, 0.2, 0.2, 0.2),
           pixelOffset: new Cesium.Cartesian2(0, 16),
         },
+        description: `  <table>
+                          <tbody>
+                            <tr><td>lon：</td><td>${currentData.lon_group}</td></tr>
+                            <tr><td>lat：</td><td>${currentData.lat_group}</td></tr>
+                            <tr><td>type：</td><td>${currentData.type}</td></tr>
+                            <tr><td>rural_area：</td><td>${currentData.Rural_Area}</td></tr>
+                            <tr><td>rural_population：</td><td>${currentData.Rural_Population}</td></tr>
+                            <tr><td>streetCode：</td><td>${currentData.name}</td></tr>
+                            <tr><td>checked：</td><td>${currentData.checked}</td></tr>
+                          </tbody>
+                        </table>`,
       });
     } else {
       document.querySelector("#checkGroup").hidden = true;
@@ -704,6 +747,7 @@ function groupViewer(streetLocalData, extra) {
                         <tbody>
                           <tr><td>lon：</td><td>${locateData.lon}</td></tr>
                           <tr><td>lat：</td><td>${locateData.lat}</td></tr>
+                          <tr><td>type：</td><td>${locateData.type}</td></tr>
                           <tr><td>rural_area：</td><td>${locateData.Rural_Area}</td></tr>
                           <tr><td>rural_population：</td><td>${locateData.Rural_Population}</td></tr>
                           <tr><td>streetCode：</td><td>${locateData.name}</td></tr>
