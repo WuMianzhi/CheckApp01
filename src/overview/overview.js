@@ -18,7 +18,7 @@ let current,
   curStreetDataID,
   allDataByStreet = {},
   overCheck = false,
-  notFly = false;
+  changeView = true;
 let minCheckTime = 9999999;
 let maxCheckTime = 0;
 
@@ -388,11 +388,49 @@ function checkInit(warnData) {
       lat_group = lat_raw;
     }
 
+    // 两个结果都没有的话就定位到 0, 0
+    if (lon_group < 50 && lon_group > 170 && lon_raw < 50 && lon_raw > 170) {
+      console.log("都没有结果");
+      lon_raw = 0;
+      lat_raw = 0;
+      lon_group = 0;
+      lat_group = 0;
+    }
+
+    // 设置视角范围内的四个顶点
+    let westLng, eastLng, southLat, northLat, lngDiff, latDiff;
+    let minDiff = 0.01;
+
+    if (lon_group <= lon_raw) {
+      lngDiff = lon_raw - lon_group;
+      lngDiff = minDiff > lngDiff ? minDiff : lngDiff;
+      westLng = lon_group - lngDiff / 2;
+      eastLng = lon_raw + lngDiff / 2;
+    } else {
+      lngDiff = lon_group - lon_raw;
+      lngDiff = minDiff > lngDiff ? minDiff : lngDiff;
+      westLng = lon_raw - lngDiff / 2;
+      eastLng = lon_group + lngDiff / 2;
+    }
+
+    if (lat_group <= lat_raw) {
+      latDiff = lat_raw - lat_group;
+      latDiff = minDiff > latDiff ? minDiff : latDiff;
+      southLat = lat_group - latDiff / 2;
+      northLat = lat_raw + latDiff / 2;
+    } else {
+      latDiff = lat_group - lat_raw;
+      latDiff = minDiff > latDiff ? minDiff : latDiff;
+      southLat = lat_raw - latDiff / 2;
+      northLat = lat_group + latDiff / 2;
+    }
+
     viewer.camera.flyTo({
-      destination: Cesium.Cartesian3.fromDegrees(
-        (lon_group + lon_raw) / 2,
-        (lat_group + lat_raw) / 2,
-        10000
+      destination: Cesium.Rectangle.fromDegrees(
+        westLng,
+        southLat,
+        eastLng,
+        northLat
       ),
     });
 
@@ -452,11 +490,14 @@ function overCheckFn() {
 
   var overCheckBtn = document.querySelector("#overCheck");
   curStreetDataID = 0;
+
   var overCheckKeys = Object.keys(allDataByStreet);
   curStreetData = allDataByStreet[overCheckKeys[curStreetDataID]];
-  // document.querySelector("#showStreet").disabled = true;
+
+  // 添加街道数据
   groupViewer(curStreetData);
 
+  // 修改 checkbox label显示
   overCheckViewUpdate();
 
   // 更新 charts
@@ -466,9 +507,7 @@ function overCheckFn() {
   document.querySelector("#updateCode").value = overCheckKeys[curStreetDataID];
   var overCheckStreetKeys = Object.keys(curStreetData);
 
-  // document.querySelector("#localName").value =
-  //   curStreetData[overCheckStreetKeys[0]].name;
-
+  // 绑定跳转到下一街道事件
   overCheckDoneBtn.addEventListener("click", overCheckNextStreet);
 
   overCheckBtn.hidden = true;
@@ -479,6 +518,7 @@ function overCheckFn() {
  *
  */
 function overCheckNextStreet() {
+  changeView = true;
   // document.querySelector("#showStreet").disabled = false;
 
   viewer.entities.removeAll();
@@ -761,15 +801,17 @@ function groupViewer(streetLocalData, extra) {
     showPickEntityInfo(click);
   }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
-  notFly
-    ? null
-    : viewer.camera.flyTo({
-        destination: Cesium.Cartesian3.fromDegrees(
-          sum_lon / dataNum,
-          sum_lat / dataNum,
-          20000
-        ),
-      });
+  if (changeView) {
+    viewer.camera.flyTo({
+      destination: Cesium.Cartesian3.fromDegrees(
+        sum_lon / dataNum,
+        sum_lat / dataNum,
+        20000
+      ),
+    });
+  } else {
+    console.log("is overcheck not change view");
+  }
 }
 
 /**
@@ -788,12 +830,15 @@ function streetGeocodeCheck(streetCode) {
   groupViewer(allDataByStreet[currentData.streetCode]);
   document.querySelector("#showStreet").checked = true;
   document.querySelector("#updateCode").value = streetCode;
+
+  changeView = false;
 }
 
 /**
  * 检查完毕，去下一条街道
  */
 function goToNextStreet() {
+  changeView = true;
   document.querySelector("#checkType").hidden = false;
   document.querySelector("#checkGroup").hidden = false;
   var allCheckedBtn = document.querySelector("#checkOverall");
@@ -874,6 +919,7 @@ function updateGeocode(warnData, lon, lat, code, isHandle = 0) {
         // 如果是复核数据，重新添加数据
         if (overCheck) {
           viewer.entities.removeAll();
+          changeView = false;
           groupViewer(curStreetData);
 
           document.querySelector("#checkType").hidden = true;

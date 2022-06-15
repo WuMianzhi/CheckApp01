@@ -21,7 +21,7 @@ const provinceData = {
   "44_guangdong": "广东省",
   "45_guangxi": "广西壮族自治区",
   "46_hainan": "海南省",
-  "50_chongqing": "重庆市",
+  "50_chongqin": "重庆市",
   "51_sichuan": "四川省",
   "52_guizhou": "贵州省",
   "53_yunnan": "云南省",
@@ -307,7 +307,7 @@ const cityData = {
     4604: "儋州市",
     4690: "省直辖县级行政区划",
   },
-  "50_chongqing": { 5001: "市辖区", 5002: "县" },
+  "50_chongqin": { 5001: "市辖区", 5002: "县" },
   "51_sichuan": {
     5101: "成都市",
     5103: "自贡市",
