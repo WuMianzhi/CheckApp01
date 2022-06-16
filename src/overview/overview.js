@@ -744,24 +744,36 @@ function groupViewer(streetLocalData, extra) {
     "http://mizhibd.com/checkApp/backend/ico/location-green.png";
   let safeImgURL = "http://mizhibd.com/checkApp/backend/ico/location-blue.png";
   let warnImgURL = "http://mizhibd.com/checkApp/backend/ico/location-red.png";
+  let safeBgColor = new Cesium.Color(0.0, 0.55, 1, 0.2);
+  let normalBgColor = new Cesium.Color(0.0, 0.83, 0.41, 0.2);
 
   let overImgURL = extra ? warnImgURL : normalImgURL;
 
   document.querySelector("#checkHandle").hidden = true;
   document.querySelector("#skipLoc").hidden = true;
-  var sum_lon = 0,
-    sum_lat = 0,
-    dataNum = 0;
+
+  let westLng = Number.MAX_SAFE_INTEGER,
+    eastLng = Number.MIN_SAFE_INTEGER,
+    southLat = Number.MAX_SAFE_INTEGER,
+    northLat = Number.MIN_SAFE_INTEGER;
 
   // 添加 数据点群
   for (let locationData in streetLocalData) {
     let locateData = streetLocalData[locationData];
-    // 记录并求平均值
-    sum_lon += parseFloat(locateData.lon);
-    sum_lat += parseFloat(locateData.lat);
-    dataNum++;
 
+    // 求点群的经纬度范围
+    westLng = parseFloat(westLng < locateData.lon ? westLng : locateData.lon);
+    eastLng = parseFloat(eastLng > locateData.lon ? eastLng : locateData.lon);
+    southLat = parseFloat(
+      southLat < locateData.lat ? southLat : locateData.lat
+    );
+    northLat = parseFloat(
+      northLat > locateData.lat ? northLat : locateData.lat
+    );
+
+    // 判断采用的图标样式
     let imgURL = locateData.isHandle ? safeImgURL : overImgURL;
+    let labelBgColor = locateData.isHandle ? safeBgColor : normalBgColor;
 
     let location_label = viewer.entities.add({
       id: locateData.code + "_" + Math.random() * 10000,
@@ -776,7 +788,7 @@ function groupViewer(streetLocalData, extra) {
         text: `${locateData.name}_${locateData.strt}_${locateData.code}`,
         font: "14pt monospace",
         style: Cesium.LabelStyle.FILL_AND_OUTLINE,
-        backgroundColor: new Cesium.Color(0.0, 0.83, 0.41, 0.2),
+        backgroundColor: labelBgColor,
         showBackground: true,
         outlineWidth: 2,
         verticalOrigin: Cesium.VerticalOrigin.TOP,
@@ -803,10 +815,11 @@ function groupViewer(streetLocalData, extra) {
 
   if (changeView) {
     viewer.camera.flyTo({
-      destination: Cesium.Cartesian3.fromDegrees(
-        sum_lon / dataNum,
-        sum_lat / dataNum,
-        20000
+      destination: Cesium.Rectangle.fromDegrees(
+        westLng - (eastLng - westLng) / 2,
+        southLat - (northLat - southLat) / 2,
+        eastLng + (eastLng - westLng) / 2,
+        northLat + (northLat - southLat) / 2
       ),
     });
   } else {

@@ -45,13 +45,26 @@
 
 ## Todo
 
-- 视角问题
 - 标识重叠点
 - 统一图标样式
 
 ## 更新日志
 
-### 2022/6/14
+### 修正视角
+
+- 由中心点改为 rectangle，保证所有的点都在屏幕显示范围内
+```javascript
+  viewer.camera.flyTo({
+    destination: Cesium.Rectangle.fromDegrees(
+      westLng - (eastLng - westLng) / 2,
+      southLat - (northLat - southLat) / 2,
+      eastLng + (eastLng - westLng) / 2,
+      northLat + (northLat - southLat) / 2
+    ),
+  });
+```
+
+### 2022/6/15
 
 - 补全湖北省数据
 - 点位复合时禁止视角自动移动
