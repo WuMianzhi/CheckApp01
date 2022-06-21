@@ -422,4 +422,66 @@ function openThirdMapService() {
   window.open("https://ditu.amap.com/");
 }
 
-export { viewer, handler, showPickEntityInfo };
+/**
+ *
+ * @param {*} addViewer
+ * @param {*} provnCode
+ */
+function addProvnceBorderLine(addViewer, provnCode) {
+  let provnBorderLinePromise = Cesium.KmlDataSource.load(
+    `http://124.89.71.141:8061/TownshipBoundary/line/kml/${provnCode}_Line.kml`,
+    {
+      camera: addViewer.scene.camera,
+      canvas: addViewer.scene.canvas,
+      clampToGround: true,
+    }
+  );
+
+  addViewer.entities.removeAll();
+  addViewer.dataSources.removeAll();
+
+  provnBorderLinePromise.then(function (dataSource) {
+    addViewer.dataSources.add(dataSource);
+    let boerderline = dataSource.entities;
+
+    // Get the array of entities
+    var boerderlineEntities = dataSource.entities.values;
+    for (var i = 0; i < boerderlineEntities.length; i++) {
+      var entity = boerderlineEntities[i];
+
+      if (Cesium.defined(entity.polyline)) {
+        entity.polyline.width = 2;
+        entity.polyline.material = Cesium.Color.fromRandom({
+          red: 0.1,
+          maximumGreen: 0.9,
+          minimumBlue: 0.8,
+          alpha: 0.6,
+        });
+      }
+    }
+
+    console.log("borderLine data added");
+  });
+}
+
+/**
+ *
+ * @param {cesiumViewer} addViewer
+ * @param {String} provnCode
+ * @returns
+ */
+function addProvnceBorderLineImg(addViewer, provnCode) {
+  let provnBorderLineImg = new Cesium.ArcGisMapServerImageryProvider({
+    id: "tem",
+    url: `http://124.89.71.141:6081/arcgis/rest/services/ChinaTownBoundary/${provnCode}/MapServer`,
+  });
+
+  return addViewer.imageryLayers.addImageryProvider(provnBorderLineImg);
+}
+export {
+  viewer,
+  handler,
+  showPickEntityInfo,
+  addProvnceBorderLine,
+  addProvnceBorderLineImg,
+};

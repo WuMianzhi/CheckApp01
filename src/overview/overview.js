@@ -109,6 +109,7 @@ function overViewSet(geocodeData) {
   let allNum = geocodeData.length;
   let warnNum = 0;
   var preStreetCode = 0;
+  let locArray = [];
   // 重置某些数据
   minCheckTime = 9999999;
   maxCheckTime = 0;
@@ -116,6 +117,7 @@ function overViewSet(geocodeData) {
   allDataByStreet = {};
 
   for (let locateData of geocodeData) {
+    // 检测异常数据，将异常数据存储到特定数组中
     if (
       (locateData.coordSource_group > 1 && locateData.checked == 0) ||
       locateData.warn > 0
@@ -123,11 +125,15 @@ function overViewSet(geocodeData) {
       warnData.push(locateData);
       warnNum++;
     }
+
+    // 按街道分组
     locateData["streetCode"] = Math.floor(locateData["code"] / 1000);
     if (locateData["streetCode"] != preStreetCode) {
       allDataByStreet[locateData["streetCode"]] = {};
       preStreetCode = locateData["streetCode"];
     }
+
+    allDataByStreet[locateData["streetCode"]][locateData["code"]] = locateData;
 
     // 找出复核最少的次数
     minCheckTime > locateData["checked"]
@@ -137,10 +143,27 @@ function overViewSet(geocodeData) {
     maxCheckTime < locateData["checked"]
       ? (maxCheckTime = locateData["checked"])
       : null;
-    allDataByStreet[locateData["streetCode"]][locateData["code"]] = locateData;
+
+    let locStr = `${parseFloat(locateData.lon).toFixed(5)}_${parseFloat(
+      locateData.lon
+    ).toFixed(5)}`;
+    // 查找重复数据
+    if (locArray.indexOf(locStr) === -1) {
+      locArray.push(locStr);
+      allDataByStreet[locateData["streetCode"]][
+        locateData["code"]
+      ].repeate = false;
+    } else {
+      console.log("repeate");
+      allDataByStreet[locateData["streetCode"]][
+        locateData["code"]
+      ].repeate = true;
+    }
     // console.log(locateData[]);
   }
-  console.log(warnData);
+  console.log(locArray);
+  // console.log(warnData);
+  console.log(allDataByStreet);
   overViewData[0].value = geocodeData.length - warnData.length;
   overViewData[1].value = warnData.length;
 
@@ -774,11 +797,23 @@ function groupViewer(streetLocalData, extra) {
     // 判断采用的图标样式
     let imgURL = locateData.isHandle ? safeImgURL : overImgURL;
     let labelBgColor = locateData.isHandle ? safeBgColor : normalBgColor;
+    // 不偏移
+    let showlng = parseFloat(locateData.lon);
+    let showlat = parseFloat(locateData.lat);
+
+    // 重复数据偏移特殊处理
+    if (locateData.repeate) {
+      // 使用警告图标
+      imgURL = warnImgURL;
+      // 坐标随机偏移 10 到 200 米
+      showlng += Math.random() * 0.002 + 0.0001;
+      showlat += Math.random() * 0.002 + 0.0001;
+    }
 
     let location_label = viewer.entities.add({
       id: locateData.code + "_" + Math.random() * 10000,
       name: locateData.keyword,
-      position: Cesium.Cartesian3.fromDegrees(locateData.lon, locateData.lat),
+      position: Cesium.Cartesian3.fromDegrees(showlng, showlat),
       billboard: {
         image: imgURL,
         width: 32,
