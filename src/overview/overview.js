@@ -148,7 +148,7 @@ function overViewSet(geocodeData) {
       locateData.lon
     ).toFixed(5)}`;
     // 查找重复数据
-    if (locArray.indexOf(locStr) === -1) {
+    if (locArray.indexOf(locStr) === -1 || locateData.isHandle != 0) {
       locArray.push(locStr);
       allDataByStreet[locateData["streetCode"]][
         locateData["code"]
@@ -194,7 +194,7 @@ function showStreetData() {
         groupViewer(allDataByStreet[otherData], true);
       }
     } else {
-      groupViewer(allDataByStreet[currentData.streetCode], false);
+      groupViewer(allDataByStreet[currentData.streetCode], true);
       document.querySelector("#checkHandle").hidden = false;
       document.querySelector("#skipLoc").hidden = false;
     }
@@ -225,9 +225,11 @@ function showStreetData() {
             text: `${currentData.name}_${currentData.strt}_${currentData.code}`,
             font: "14pt monospace",
             style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+            fillColor: new Cesium.Color(228 / 255, 32 / 255, 71 / 255), // 填充颜色
+            outlineColor: Cesium.Color.WHITE, // 外边线颜色
+            outlineWidth: 4.0,
             backgroundColor: new Cesium.Color(0.2, 0.2, 0.2, 0.2),
             showBackground: true,
-            outlineWidth: 2,
             verticalOrigin: Cesium.VerticalOrigin.TOP,
             pixelOffset: new Cesium.Cartesian2(0, 16),
           },
@@ -270,7 +272,9 @@ function showStreetData() {
             style: Cesium.LabelStyle.FILL_AND_OUTLINE,
             showBackground: true,
             backgroundColor: new Cesium.Color(0.2, 0.2, 0.2, 0.2),
-            outlineWidth: 2,
+            fillColor: new Cesium.Color(252 / 255, 203 / 255, 47 / 255), // 填充颜色
+            outlineColor: Cesium.Color.WHITE, // 外边线颜色
+            outlineWidth: 4.0,
             verticalOrigin: Cesium.VerticalOrigin.TOP,
             pixelOffset: new Cesium.Cartesian2(0, 16),
           },
@@ -341,9 +345,11 @@ function checkInit(warnData) {
           text: `${currentData.name}_${currentData.strt}_${currentData.code}`,
           font: "14pt monospace",
           style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+          fillColor: new Cesium.Color(228 / 255, 32 / 255, 71 / 255), // 填充颜色
+          outlineColor: Cesium.Color.WHITE, // 外边线颜色
+          outlineWidth: 4.0,
           backgroundColor: new Cesium.Color(0.2, 0.2, 0.2, 0.2),
           showBackground: true,
-          outlineWidth: 2,
           verticalOrigin: Cesium.VerticalOrigin.TOP,
           pixelOffset: new Cesium.Cartesian2(0, 16),
         },
@@ -385,9 +391,11 @@ function checkInit(warnData) {
         label: {
           text: `${currentData.name}_${currentData.strt}_${currentData.code}`,
           font: "14pt monospace",
+          fillColor: new Cesium.Color(252 / 255, 203 / 255, 47 / 255), // 填充颜色
+          outlineColor: Cesium.Color.WHITE, // 外边线颜色
+          outlineWidth: 4.0,
           style: Cesium.LabelStyle.FILL_AND_OUTLINE,
           showBackground: true,
-          outlineWidth: 2,
           verticalOrigin: Cesium.VerticalOrigin.TOP,
           backgroundColor: new Cesium.Color(0.2, 0.2, 0.2, 0.2),
           pixelOffset: new Cesium.Cartesian2(0, 16),
@@ -679,10 +687,12 @@ function handlerConfirm(longitude, latitude) {
     label: {
       text: `${currentData.name}_${currentData.strt}_${currentData.code}`,
       font: "14pt monospace",
+      fillColor: new Cesium.Color(36 / 255, 210 / 255, 156 / 255), // 填充颜色
+      outlineColor: Cesium.Color.WHITE, // 外边线颜色
+      outlineWidth: 4.0,
       style: Cesium.LabelStyle.FILL_AND_OUTLINE,
       backgroundColor: new Cesium.Color(0.2, 0.2, 0.2, 0.2),
       showBackground: true,
-      outlineWidth: 2,
       verticalOrigin: Cesium.VerticalOrigin.TOP,
       pixelOffset: new Cesium.Cartesian2(0, 16),
     },
@@ -762,15 +772,24 @@ function markedError() {
  */
 function groupViewer(streetLocalData, extra) {
   handler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK);
-
+  // 样式区分
+  let subImgURL = "http://mizhibd.com/checkApp/backend/ico/location-purple.png";
   let normalImgURL =
     "http://mizhibd.com/checkApp/backend/ico/location-green.png";
   let safeImgURL = "http://mizhibd.com/checkApp/backend/ico/location-blue.png";
-  let warnImgURL = "http://mizhibd.com/checkApp/backend/ico/location-red.png";
+  let warnImgURL = "http://mizhibd.com/checkApp/backend/ico/location-rose.png";
+
+  let subBgColor = new Cesium.Color(246 / 255, 209 / 255, 253 / 255, 0.2);
   let safeBgColor = new Cesium.Color(0.0, 0.55, 1, 0.2);
   let normalBgColor = new Cesium.Color(0.0, 0.83, 0.41, 0.2);
 
-  let overImgURL = extra ? warnImgURL : normalImgURL;
+  let subTextColor = new Cesium.Color(246 / 255, 209 / 255, 253 / 255, 0.6);
+  let safeTextColor = new Cesium.Color(0.0, 0.55, 1, 0.6);
+  let normalTextColor = new Cesium.Color(0.0, 0.83, 0.41, 0.6);
+
+  let overImgURL = extra ? subImgURL : normalImgURL;
+  let overBgColor = extra ? subBgColor : normalBgColor;
+  let overTextColor = extra ? subTextColor : normalTextColor;
 
   document.querySelector("#checkHandle").hidden = true;
   document.querySelector("#skipLoc").hidden = true;
@@ -796,16 +815,18 @@ function groupViewer(streetLocalData, extra) {
 
     // 判断采用的图标样式
     let imgURL = locateData.isHandle ? safeImgURL : overImgURL;
-    let labelBgColor = locateData.isHandle ? safeBgColor : normalBgColor;
+    let labelBgColor = locateData.isHandle ? safeBgColor : overBgColor;
+    let textColor = locateData.isHandle ? safeTextColor : overTextColor;
+
     // 不偏移
     let showlng = parseFloat(locateData.lon);
     let showlat = parseFloat(locateData.lat);
 
     // 重复数据偏移特殊处理
-    if (locateData.repeate) {
+    if (locateData.repeate && locateData.isHandle == 0) {
       // 使用警告图标
       imgURL = warnImgURL;
-      // 坐标随机偏移 10 到 200 米
+      // 坐标随机偏移 10 到 20 米
       showlng += Math.random() * 0.002 + 0.0001;
       showlat += Math.random() * 0.002 + 0.0001;
     }
@@ -820,12 +841,14 @@ function groupViewer(streetLocalData, extra) {
         height: 32,
       },
       label: {
-        text: `${locateData.name}_${locateData.strt}_${locateData.code}`,
+        text: `${locateData.name}`,
         font: "14pt monospace",
         style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+        fillColor: textColor, // 填充颜色
+        outlineColor: Cesium.Color.WHITE, // 外边线颜色
+        outlineWidth: 4.0,
         backgroundColor: labelBgColor,
         showBackground: true,
-        outlineWidth: 2,
         verticalOrigin: Cesium.VerticalOrigin.TOP,
         pixelOffset: new Cesium.Cartesian2(0, 16),
         distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0, 15000),
@@ -838,6 +861,8 @@ function groupViewer(streetLocalData, extra) {
                           <tr><td>rural_area：</td><td>${locateData.Rural_Area}</td></tr>
                           <tr><td>rural_population：</td><td>${locateData.Rural_Population}</td></tr>
                           <tr><td>streetCode：</td><td>${locateData.name}</td></tr>
+                          <tr><td>streetCode：</td><td>${locateData.strt}</td></tr>
+                          <tr><td>streetCode：</td><td>${locateData.code}</td></tr>
                           <tr><td>checked：</td><td>${locateData.checked}</td></tr>
                         </tbody>
                       </table>`,
@@ -848,13 +873,16 @@ function groupViewer(streetLocalData, extra) {
     showPickEntityInfo(click);
   }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
+  let lngDiff = eastLng - westLng < 0.02 ? 0.02 : eastLng - westLng;
+  let latDiff = northLat - southLat < 0.02 ? 0.02 : northLat - southLat;
+
   if (changeView) {
     viewer.camera.flyTo({
       destination: Cesium.Rectangle.fromDegrees(
-        westLng - (eastLng - westLng) / 2,
-        southLat - (northLat - southLat) / 2,
-        eastLng + (eastLng - westLng) / 2,
-        northLat + (northLat - southLat) / 2
+        westLng - lngDiff / 2,
+        southLat - latDiff / 2,
+        eastLng + lngDiff / 2,
+        northLat + latDiff / 2
       ),
     });
   } else {

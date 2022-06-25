@@ -4,6 +4,7 @@ import { zipDataDownload } from "./localSelect/getZipData.js";
 import {
   addProvnceBorderLineImg,
   viewer,
+  toggleBorderLineLayer,
 } from "./cesium/cesiumInit.js";
 
 initLocalSelect();
@@ -18,12 +19,14 @@ localForm.addEventListener("submit", (event) => {
     const localFormData = new FormData(localForm);
     queryLocalData(localFormData);
     let provnCode = document.querySelector("#provinceSelect").value;
-    if (tempImgLayer === tempImgLayer) {
+    let layerAlpha = 1;
+    if (tempImgLayer != null) {
+      layerAlpha = tempImgLayer.alpha;
       viewer.imageryLayers.remove(tempImgLayer);
       tempImgLayer = null;
     }
     tempImgLayer = addProvnceBorderLineImg(viewer, provnCode.split("_")[0]);
-
+    tempImgLayer.alpha = layerAlpha;
     // addProvnceBorderLine(viewer, provnCode.split("_")[0]);
   } else {
     alert(
@@ -34,3 +37,8 @@ localForm.addEventListener("submit", (event) => {
 });
 
 document.querySelector("#dataDown").addEventListener("click", zipDataDownload);
+document
+  .querySelector("#borderLayerToggleBtn")
+  .addEventListener("click", () => {
+    toggleBorderLineLayer(tempImgLayer);
+  });

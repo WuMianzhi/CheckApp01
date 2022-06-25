@@ -387,9 +387,9 @@ var cesiumViewerToolbar = document.querySelector(
   "#cesiumContainer .cesium-viewer-toolbar"
 );
 
+// 添加跳转三方地图按钮
 var thirdPartyMapBtn = document.createElement("div");
-thirdPartyMapBtn.classList.add("cesium-button");
-thirdPartyMapBtn.classList.add("cesium-toolbar-button");
+thirdPartyMapBtn.classList.add("cesium-button", "cesium-toolbar-button");
 
 var thirdPartyMapBtnIcon = document.createElement("div");
 thirdPartyMapBtnIcon.classList.add("map-btn");
@@ -397,6 +397,17 @@ thirdPartyMapBtnIcon.classList.add("map-btn");
 thirdPartyMapBtn.appendChild(thirdPartyMapBtnIcon);
 thirdPartyMapBtn.addEventListener("click", openThirdMapService);
 cesiumViewerToolbar.appendChild(thirdPartyMapBtn);
+
+// 控制边界显示
+var borderControllMapBtn = document.createElement("div");
+borderControllMapBtn.id = "borderLayerToggleBtn";
+borderControllMapBtn.classList.add("cesium-button", "cesium-toolbar-button");
+
+var borderControllBtnIcon = document.createElement("div");
+borderControllBtnIcon.classList.add("border-btn");
+
+borderControllMapBtn.appendChild(borderControllBtnIcon);
+cesiumViewerToolbar.appendChild(borderControllMapBtn);
 
 const lngLatScaleLabel = new LngLatWidget(viewer);
 lngLatScaleLabel.addCoordinateLabel();
@@ -478,10 +489,19 @@ function addProvnceBorderLineImg(addViewer, provnCode) {
 
   return addViewer.imageryLayers.addImageryProvider(provnBorderLineImg);
 }
+
+function toggleBorderLineLayer(layer) {
+  console.log(layer);
+  if (Cesium.defined(layer)) {
+    layer.alpha = layer.alpha == 0 ? 1 : 0;
+  }
+}
+
 export {
   viewer,
   handler,
   showPickEntityInfo,
   addProvnceBorderLine,
   addProvnceBorderLineImg,
+  toggleBorderLineLayer,
 };

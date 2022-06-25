@@ -218,6 +218,13 @@ body {
   background-image: url('../assets/map.svg');
 }
 
+.border-btn {
+  width: 100%;
+  height: 100%;
+  background-size: contain;
+  background-image: url('../assets/border_inner.png');
+}
+
 #cesiumContainer .cesium-baseLayerPicker-dropDown-visible {
   z-index: 9999;
 }
