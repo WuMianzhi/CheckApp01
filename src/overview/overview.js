@@ -249,36 +249,40 @@ function showStreetData() {
         console.log("Error!!! the  data is beyond China area");
       }
 
+      let lngGroup = 0,
+        latGroup = 0;
       // 同上
       if (currentData.lon_group > 60 && currentData.lon_group < 160) {
-        // document.querySelector("#checkGroup").hidden = false;
-        // 添加按 聚类 判断出的结果
-        var type_location = viewer.entities.add({
-          id: currentData.code + "_" + Math.random() * 10000,
-          name: currentData.keyword,
-          position: Cesium.Cartesian3.fromDegrees(
-            currentData.lon_group,
-            currentData.lat_group
-          ),
-          billboard: {
-            image:
-              "http://mizhibd.com/checkApp/backend/ico/location-yellow.png",
-            width: 32,
-            height: 32,
-          },
-          label: {
-            text: `${currentData.name}_${currentData.strt}_${currentData.code}`,
-            font: "14pt monospace",
-            style: Cesium.LabelStyle.FILL_AND_OUTLINE,
-            showBackground: true,
-            backgroundColor: new Cesium.Color(0.2, 0.2, 0.2, 0.2),
-            fillColor: new Cesium.Color(252 / 255, 203 / 255, 47 / 255), // 填充颜色
-            outlineColor: Cesium.Color.WHITE, // 外边线颜色
-            outlineWidth: 4.0,
-            verticalOrigin: Cesium.VerticalOrigin.TOP,
-            pixelOffset: new Cesium.Cartesian2(0, 16),
-          },
-          description: `  <table>
+        lngGroup = currentData.lon_group;
+        latGroup = currentData.lat_group;
+      } else {
+        console.log("Error!!! the  data is beyond China area");
+      }
+      console.log(lngGroup, latGroup);
+      // document.querySelector("#checkGroup").hidden = false;
+      // 添加按 聚类 判断出的结果
+      var type_location = viewer.entities.add({
+        id: currentData.code + "_" + Math.random() * 10000,
+        name: currentData.keyword,
+        position: Cesium.Cartesian3.fromDegrees(lngGroup, latGroup),
+        billboard: {
+          image: "http://mizhibd.com/checkApp/backend/ico/location-yellow.png",
+          width: 32,
+          height: 32,
+        },
+        label: {
+          text: `${currentData.name}_${currentData.strt}_${currentData.code}`,
+          font: "14pt monospace",
+          style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+          showBackground: true,
+          backgroundColor: new Cesium.Color(0.2, 0.2, 0.2, 0.2),
+          fillColor: new Cesium.Color(252 / 255, 203 / 255, 47 / 255), // 填充颜色
+          outlineColor: Cesium.Color.WHITE, // 外边线颜色
+          outlineWidth: 4.0,
+          verticalOrigin: Cesium.VerticalOrigin.TOP,
+          pixelOffset: new Cesium.Cartesian2(0, 16),
+        },
+        description: `  <table>
                             <tbody>
                               <tr><td>lon：</td><td>${currentData.lon_group}</td></tr>
                               <tr><td>lat：</td><td>${currentData.lat_group}</td></tr>
@@ -289,11 +293,7 @@ function showStreetData() {
                               <tr><td>checked：</td><td>${currentData.checked}</td></tr>
                             </tbody>
                           </table>`,
-        });
-      } else {
-        console.log("Error!!! the  data is beyond China area");
-      }
-
+      });
       console.log(currentData);
     }
   }
@@ -323,37 +323,54 @@ function checkInit(warnData) {
     // console.log(currentData);
     // document.querySelector("#localName").value = currentData.keyword;
     // 添加 entity
-    // 判断是否解析出
-    if (lon_raw > 60 && lon_raw < 160) {
-      // 更新总览视图
-      updateOverviewCharts();
-      document.querySelector("#checkType").hidden = false;
-      // 添加按 type 判断出的结果
-      var type_location = viewer.entities.add({
-        id: currentData.code + "_" + Math.random() * 10000,
-        name: currentData.keyword,
-        position: Cesium.Cartesian3.fromDegrees(
-          currentData.lon_raw,
-          currentData.lat_raw
-        ),
-        billboard: {
-          image: "http://mizhibd.com/checkApp/backend/ico/location-red.png",
-          width: 32,
-          height: 32,
-        },
-        label: {
-          text: `${currentData.name}_${currentData.strt}_${currentData.code}`,
-          font: "14pt monospace",
-          style: Cesium.LabelStyle.FILL_AND_OUTLINE,
-          fillColor: new Cesium.Color(228 / 255, 32 / 255, 71 / 255), // 填充颜色
-          outlineColor: Cesium.Color.WHITE, // 外边线颜色
-          outlineWidth: 4.0,
-          backgroundColor: new Cesium.Color(0.2, 0.2, 0.2, 0.2),
-          showBackground: true,
-          verticalOrigin: Cesium.VerticalOrigin.TOP,
-          pixelOffset: new Cesium.Cartesian2(0, 16),
-        },
-        description: `  <table>
+
+    // 两个结果都没有的话就定位到 0, 0
+    if (
+      (lon_group < 50 || lon_group > 170) &&
+      (lon_raw < 50 || lon_raw > 170)
+    ) {
+      showInfo("未解析出");
+      document.querySelector("#checkGroup").hidden = true;
+      document.querySelector("#checkType").hidden = true;
+
+      console.log("都没有结果");
+      lon_raw = 0;
+      lat_raw = 0;
+      lon_group = 0;
+      lat_group = 0;
+    } else {
+      console.log(lon_raw, lat_raw, lon_group, lat_group);
+      // 判断是否解析出
+      if (lon_raw > 60 && lon_raw < 160) {
+        // 更新总览视图
+        updateOverviewCharts();
+        document.querySelector("#checkType").hidden = false;
+        // 添加按 type 判断出的结果
+        var type_location = viewer.entities.add({
+          id: currentData.code + "_" + Math.random() * 10000,
+          name: currentData.keyword,
+          position: Cesium.Cartesian3.fromDegrees(
+            currentData.lon_raw,
+            currentData.lat_raw
+          ),
+          billboard: {
+            image: "http://mizhibd.com/checkApp/backend/ico/location-red.png",
+            width: 32,
+            height: 32,
+          },
+          label: {
+            text: `${currentData.name}_${currentData.strt}_${currentData.code}`,
+            font: "14pt monospace",
+            style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+            fillColor: new Cesium.Color(228 / 255, 32 / 255, 71 / 255), // 填充颜色
+            outlineColor: Cesium.Color.WHITE, // 外边线颜色
+            outlineWidth: 4.0,
+            backgroundColor: new Cesium.Color(0.2, 0.2, 0.2, 0.2),
+            showBackground: true,
+            verticalOrigin: Cesium.VerticalOrigin.TOP,
+            pixelOffset: new Cesium.Cartesian2(0, 16),
+          },
+          description: `  <table>
                           <tbody>
                             <tr><td>lon：</td><td>${currentData.lon_raw}</td></tr>
                             <tr><td>lat：</td><td>${currentData.lat_raw}</td></tr>
@@ -364,43 +381,44 @@ function checkInit(warnData) {
                             <tr><td>checked：</td><td>${currentData.checked}</td></tr>
                           </tbody>
                         </table>`,
-      });
-    } else {
-      document.querySelector("#checkType").hidden = true;
-      showInfo("方法一未解析出");
-      lon_raw = lon_group;
-      lat_raw = lat_group;
-    }
+        });
+      } else {
+        document.querySelector("#checkType").hidden = true;
+        showInfo("方法一未解析出");
+        lon_raw = lon_group;
+        lat_raw = lat_group;
+      }
 
-    // 同上
-    if (lon_group > 60 && lon_group < 160) {
-      document.querySelector("#checkGroup").hidden = false;
-      // 添加按 聚类 判断出的结果
-      var type_location = viewer.entities.add({
-        id: currentData.code + "_" + Math.random() * 10000,
-        name: currentData.keyword,
-        position: Cesium.Cartesian3.fromDegrees(
-          currentData.lon_group,
-          currentData.lat_group
-        ),
-        billboard: {
-          image: "http://mizhibd.com/checkApp/backend/ico/location-yellow.png",
-          width: 32,
-          height: 32,
-        },
-        label: {
-          text: `${currentData.name}_${currentData.strt}_${currentData.code}`,
-          font: "14pt monospace",
-          fillColor: new Cesium.Color(252 / 255, 203 / 255, 47 / 255), // 填充颜色
-          outlineColor: Cesium.Color.WHITE, // 外边线颜色
-          outlineWidth: 4.0,
-          style: Cesium.LabelStyle.FILL_AND_OUTLINE,
-          showBackground: true,
-          verticalOrigin: Cesium.VerticalOrigin.TOP,
-          backgroundColor: new Cesium.Color(0.2, 0.2, 0.2, 0.2),
-          pixelOffset: new Cesium.Cartesian2(0, 16),
-        },
-        description: `  <table>
+      // 同上
+      if (lon_group > 60 && lon_group < 160) {
+        document.querySelector("#checkGroup").hidden = false;
+        // 添加按 聚类 判断出的结果
+        var type_location = viewer.entities.add({
+          id: currentData.code + "_" + Math.random() * 10000,
+          name: currentData.keyword,
+          position: Cesium.Cartesian3.fromDegrees(
+            currentData.lon_group,
+            currentData.lat_group
+          ),
+          billboard: {
+            image:
+              "http://mizhibd.com/checkApp/backend/ico/location-yellow.png",
+            width: 32,
+            height: 32,
+          },
+          label: {
+            text: `${currentData.name}_${currentData.strt}_${currentData.code}`,
+            font: "14pt monospace",
+            fillColor: new Cesium.Color(252 / 255, 203 / 255, 47 / 255), // 填充颜色
+            outlineColor: Cesium.Color.WHITE, // 外边线颜色
+            outlineWidth: 4.0,
+            style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+            showBackground: true,
+            verticalOrigin: Cesium.VerticalOrigin.TOP,
+            backgroundColor: new Cesium.Color(0.2, 0.2, 0.2, 0.2),
+            pixelOffset: new Cesium.Cartesian2(0, 16),
+          },
+          description: `  <table>
                           <tbody>
                             <tr><td>lon：</td><td>${currentData.lon_group}</td></tr>
                             <tr><td>lat：</td><td>${currentData.lat_group}</td></tr>
@@ -411,59 +429,65 @@ function checkInit(warnData) {
                             <tr><td>checked：</td><td>${currentData.checked}</td></tr>
                           </tbody>
                         </table>`,
+        });
+      } else {
+        document.querySelector("#checkGroup").hidden = true;
+        showInfo("方法二未解析出结果");
+        lon_group = lon_raw;
+        lat_group = lat_raw;
+      }
+
+      // 设置视角范围内的四个顶点
+      let westLng, eastLng, southLat, northLat, lngDiff, latDiff;
+      let minDiff = 0.01;
+
+      if (lon_group <= lon_raw) {
+        lngDiff = lon_raw - lon_group;
+        lngDiff = minDiff > lngDiff ? minDiff : lngDiff;
+        westLng = lon_group - lngDiff / 2;
+        eastLng = lon_raw + lngDiff / 2;
+      } else {
+        lngDiff = lon_group - lon_raw;
+        lngDiff = minDiff > lngDiff ? minDiff : lngDiff;
+        westLng = lon_raw - lngDiff / 2;
+        eastLng = lon_group + lngDiff / 2;
+      }
+
+      if (lat_group <= lat_raw) {
+        latDiff = lat_raw - lat_group;
+        latDiff = minDiff > latDiff ? minDiff : latDiff;
+        southLat = lat_group - latDiff / 2;
+        northLat = lat_raw + latDiff / 2;
+      } else {
+        latDiff = lat_group - lat_raw;
+        latDiff = minDiff > latDiff ? minDiff : latDiff;
+        southLat = lat_raw - latDiff / 2;
+        northLat = lat_group + latDiff / 2;
+      }
+
+      viewer.camera.flyTo({
+        destination: Cesium.Rectangle.fromDegrees(
+          westLng,
+          southLat,
+          eastLng,
+          northLat
+        ),
       });
-    } else {
-      document.querySelector("#checkGroup").hidden = true;
-      showInfo("方法二未解析出结果");
-      lon_group = lon_raw;
-      lat_group = lat_raw;
+
+      // 修改数据为按 type 分析得到的结果
+      document
+        .querySelector("#checkType")
+        .addEventListener("click", updateGeocodeType, {
+          once: true,
+        });
+
+      // 修改数据为按 group 聚类得到的结果
+      document
+        .querySelector("#checkGroup")
+        .addEventListener("click", updateGeocodeGroup, {
+          once: true,
+        });
     }
-
-    // 两个结果都没有的话就定位到 0, 0
-    if (lon_group < 50 && lon_group > 170 && lon_raw < 50 && lon_raw > 170) {
-      console.log("都没有结果");
-      lon_raw = 0;
-      lat_raw = 0;
-      lon_group = 0;
-      lat_group = 0;
-    }
-
-    // 设置视角范围内的四个顶点
-    let westLng, eastLng, southLat, northLat, lngDiff, latDiff;
-    let minDiff = 0.01;
-
-    if (lon_group <= lon_raw) {
-      lngDiff = lon_raw - lon_group;
-      lngDiff = minDiff > lngDiff ? minDiff : lngDiff;
-      westLng = lon_group - lngDiff / 2;
-      eastLng = lon_raw + lngDiff / 2;
-    } else {
-      lngDiff = lon_group - lon_raw;
-      lngDiff = minDiff > lngDiff ? minDiff : lngDiff;
-      westLng = lon_raw - lngDiff / 2;
-      eastLng = lon_group + lngDiff / 2;
-    }
-
-    if (lat_group <= lat_raw) {
-      latDiff = lat_raw - lat_group;
-      latDiff = minDiff > latDiff ? minDiff : latDiff;
-      southLat = lat_group - latDiff / 2;
-      northLat = lat_raw + latDiff / 2;
-    } else {
-      latDiff = lat_group - lat_raw;
-      latDiff = minDiff > latDiff ? minDiff : latDiff;
-      southLat = lat_raw - latDiff / 2;
-      northLat = lat_group + latDiff / 2;
-    }
-
-    viewer.camera.flyTo({
-      destination: Cesium.Rectangle.fromDegrees(
-        westLng,
-        southLat,
-        eastLng,
-        northLat
-      ),
-    });
 
     // 在搜素框填入值
     var cesiumInput = document.querySelector(
@@ -471,20 +495,6 @@ function checkInit(warnData) {
     );
     cesiumInput.value = currentData.keyword;
     cesiumInput.classList.add("cesium-geocoder-input-wide");
-
-    // 修改数据为按 type 分析得到的结果
-    document
-      .querySelector("#checkType")
-      .addEventListener("click", updateGeocodeType, {
-        once: true,
-      });
-
-    // 修改数据为按 group 聚类得到的结果
-    document
-      .querySelector("#checkGroup")
-      .addEventListener("click", updateGeocodeGroup, {
-        once: true,
-      });
 
     // 手动选取
     document
@@ -830,10 +840,13 @@ function groupViewer(streetLocalData, extra) {
       showlng += Math.random() * 0.002 + 0.0001;
       showlat += Math.random() * 0.002 + 0.0001;
     }
-
+    locateData.type > 200
+      ? console.log(locateData.keyword)
+      : console.log(locateData.keyword + "*");
     let location_label = viewer.entities.add({
       id: locateData.code + "_" + Math.random() * 10000,
-      name: locateData.keyword,
+      name:
+        locateData.type > 200 ? locateData.keyword : locateData.keyword + "*",
       position: Cesium.Cartesian3.fromDegrees(showlng, showlat),
       billboard: {
         image: imgURL,
@@ -841,7 +854,7 @@ function groupViewer(streetLocalData, extra) {
         height: 32,
       },
       label: {
-        text: `${locateData.name}`,
+        text: locateData.type > 200 ? locateData.name : " * " + locateData.name + " * ",
         font: "14pt monospace",
         style: Cesium.LabelStyle.FILL_AND_OUTLINE,
         fillColor: textColor, // 填充颜色
