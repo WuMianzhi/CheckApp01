@@ -845,8 +845,7 @@ function groupViewer(streetLocalData, extra) {
       : console.log(locateData.keyword + "*");
     let location_label = viewer.entities.add({
       id: locateData.code + "_" + Math.random() * 10000,
-      name:
-        locateData.type > 200 ? locateData.keyword : locateData.keyword + "*",
+      name: locateData.keyword,
       position: Cesium.Cartesian3.fromDegrees(showlng, showlat),
       billboard: {
         image: imgURL,
@@ -854,7 +853,10 @@ function groupViewer(streetLocalData, extra) {
         height: 32,
       },
       label: {
-        text: locateData.type > 200 ? locateData.name : " * " + locateData.name + " * ",
+        text:
+          locateData.type > 200
+            ? locateData.name
+            : " * " + locateData.name + " * ",
         font: "14pt monospace",
         style: Cesium.LabelStyle.FILL_AND_OUTLINE,
         fillColor: textColor, // 填充颜色

@@ -8,7 +8,7 @@ function zipDataDownload() {
   let cityCode = document.querySelector("#citySelect").value;
   // let countyCode = document.querySelector("#countySelect").value;
   let countyCode = '000000';
-  let countyName = cityData[cityCode];
+  let countyName = cityData[provnCode][cityCode];
 
   let preprocessUrl = `http://47.103.109.107:8000/dataExport/?provnCode=${provnCode}&cityCode=${cityCode}&countyCode=${countyCode}`;
 
@@ -20,7 +20,7 @@ function zipDataDownload() {
       if (data.zipUrl) {
         let downA = document.createElement("a");
         downA.href = data.zipUrl;
-        downA.download = countyCode + "_" + countyName;
+        downA.download = cityCode + "_" + countyName;
         downA.click();
       }
       console.log(data);
