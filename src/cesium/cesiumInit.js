@@ -1,3 +1,4 @@
+// import Viewer from "cesium/Source/Widgets/Viewer/Viewer";
 import tdtDemMapICON from "../assets/tdt/tdtDem.jpg";
 import tdtImageMapICON from "../assets/tdt/tdtImage.jpg";
 import tdtMapICON from "../assets/tdt/tdtMap.jpg";
@@ -322,12 +323,32 @@ const TIANDITUCN = new Cesium.ImageryLayer(
     maximumLevel: 18,
   })
 );
+
+// 土地覆盖图层
+const SentinelLandCover2021 = new Cesium.ImageryLayer(
+  new Cesium.UrlTemplateImageryProvider({
+    url:
+      //下面加载的图像年份：2021（time=1609502400000%2C1641038400000）。此处注意时间的设定。
+      "https://env1.arcgis.com/arcgis/rest/services/Sentinel2_10m_LandCover/ImageServer/exportImage?bbox={westDegrees}%2C{southDegrees}%2C{eastDegrees}%2C{northDegrees}&bboxSR=&size={width}%2C{height}&time=1609502400000%2C1641038400000&format=jpgpng&f=image", //不显示边界线
+    pickFeaturesUrl:
+      //点击查询，显示图例
+      "https://env1.arcgis.com/arcgis/rest/services/Sentinel2_10m_LandCover/ImageServer/legend?bandIds=&renderingRule=&f=html",
+    getFeatureInfoFormats: [
+      new Cesium.GetFeatureInfoFormat("html", "text/html"),
+      new Cesium.GetFeatureInfoFormat("json", "application/geojson"),
+    ],
+    enablePickFeatures: false,
+  })
+);
+SentinelLandCover2021.alpha = 0.2;
+viewer.scene.imageryLayers.add(SentinelLandCover2021);
 viewer.scene.imageryLayers.add(TIANDITUCN);
 
 var imageList = viewer.baseLayerPicker.viewModel.imageryProviderViewModels;
 
 imageList.push(
   ...[
+    // SentinelLandCover2021,
     ESRIIMG,
     ESRIStreet,
     ESRINation,
@@ -401,6 +422,7 @@ cesiumViewerToolbar.appendChild(thirdPartyMapBtn);
 // 控制边界显示
 var borderControllMapBtn = document.createElement("div");
 borderControllMapBtn.id = "borderLayerToggleBtn";
+borderControllMapBtn.title = "边界数据";
 borderControllMapBtn.classList.add("cesium-button", "cesium-toolbar-button");
 
 var borderControllBtnIcon = document.createElement("div");
@@ -408,6 +430,87 @@ borderControllBtnIcon.classList.add("border-btn");
 
 borderControllMapBtn.appendChild(borderControllBtnIcon);
 cesiumViewerToolbar.appendChild(borderControllMapBtn);
+
+var villageBorderControllMapBtn = document.createElement("div");
+villageBorderControllMapBtn.title = "村级边界数据（多边形）";
+villageBorderControllMapBtn.id = "villageBorderLayerToggleBtn";
+villageBorderControllMapBtn.classList.add(
+  "cesium-button",
+  "cesium-toolbar-button"
+);
+
+var villageBorderControllBtnIcon = document.createElement("div");
+villageBorderControllBtnIcon.classList.add("village-border-btn");
+
+villageBorderControllMapBtn.appendChild(villageBorderControllBtnIcon);
+cesiumViewerToolbar.appendChild(villageBorderControllMapBtn);
+
+// 控制图层透明度
+var SentinelLandCover2021AlphaControlContainer = document.createElement("div");
+SentinelLandCover2021AlphaControlContainer.className =
+  "sentinel-landCover-2021-alpha-control-container";
+var SentinelLandCover2021AlphaControl = document.createElement("input");
+SentinelLandCover2021AlphaControl.type = "range";
+SentinelLandCover2021AlphaControl.min = 0;
+SentinelLandCover2021AlphaControl.max = 100;
+SentinelLandCover2021AlphaControl.value = 20;
+SentinelLandCover2021AlphaControl.classList.add("sentinel-land-cover-2021");
+SentinelLandCover2021AlphaControl.addEventListener("change", (e) => {
+  SentinelLandCover2021.alpha = e.target.value / 100;
+});
+
+var SentinelLandCover2021AlphaLabel = document.createElement("label");
+SentinelLandCover2021AlphaLabel.innerText = "LandCover Layer Alpha: ";
+SentinelLandCover2021AlphaControlContainer.appendChild(
+  SentinelLandCover2021AlphaLabel
+);
+SentinelLandCover2021AlphaControlContainer.appendChild(
+  SentinelLandCover2021AlphaControl
+);
+cesiumViewerToolbar.appendChild(SentinelLandCover2021AlphaControlContainer);
+
+// 乡村边界控制
+let villageBorderImgLayer = addProvnceVillageBorderLineImg(viewer, 42);
+villageBorderImgLayer.alpha = 0.5;
+var VillageBorderAlphaControlContainer = document.createElement("div");
+VillageBorderAlphaControlContainer.className =
+  "village-border-alpha-control-container";
+var VillageBorderAlphaControl = document.createElement("input");
+VillageBorderAlphaControl.id = "villageBorderImgLayerControl";
+VillageBorderAlphaControl.type = "range";
+VillageBorderAlphaControl.min = 0;
+VillageBorderAlphaControl.max = 100;
+VillageBorderAlphaControl.value = 50;
+VillageBorderAlphaControl.classList.add("sentinel-land-cover-2021");
+
+var VillageBorderAlphaLabel = document.createElement("label");
+VillageBorderAlphaLabel.innerText = "Village Border Layer Alpha: ";
+VillageBorderAlphaControlContainer.appendChild(VillageBorderAlphaLabel);
+VillageBorderAlphaControlContainer.appendChild(VillageBorderAlphaControl);
+cesiumViewerToolbar.appendChild(VillageBorderAlphaControlContainer);
+
+// 一键控制显示/隐藏
+var landCoverShowBtn = document.createElement("div");
+landCoverShowBtn.id = "lanCoverToggleBtn";
+landCoverShowBtn.classList.add("cesium-button", "cesium-toolbar-button");
+landCoverShowBtn.title = "Sentinel-2 LandCover 2021";
+
+var landCoverShowBtnIcon = document.createElement("div");
+landCoverShowBtnIcon.classList.add("landcover-btn", "active-btn");
+
+landCoverShowBtn.appendChild(landCoverShowBtnIcon);
+cesiumViewerToolbar.appendChild(landCoverShowBtn);
+
+landCoverShowBtn.addEventListener("click", () => {
+  SentinelLandCover2021.show = !SentinelLandCover2021.show;
+  // if (SentinelLandCover2021.alpha == 0) {
+  //   SentinelLandCover2021AlphaControl.value = 20;
+  //   SentinelLandCover2021.alpha = 0.2;
+  // } else {
+  //   SentinelLandCover2021AlphaControl.value = 0;
+  //   SentinelLandCover2021.alpha = 0;
+  // }
+});
 
 const lngLatScaleLabel = new LngLatWidget(viewer);
 lngLatScaleLabel.addCoordinateLabel();
@@ -490,12 +593,44 @@ function addProvnceBorderLineImg(addViewer, provnCode) {
   return addViewer.imageryLayers.addImageryProvider(provnBorderLineImg);
 }
 
-function toggleBorderLineLayer(layer) {
+/**
+ *
+ * @param {cesiumViewer} addViewer
+ * @param {String} provnCode
+ * @returns
+ */
+function addProvnceVillageBorderLineImg(addViewer, provnCode, index = 0) {
+  let provnBorderLineImg = new Cesium.ArcGisMapServerImageryProvider({
+    id: "tem",
+    url: `http://124.89.71.141:6081/arcgis/rest/services/ChinaCountyBoundary/${provnCode}/MapServer`,
+  });
+
+  return addViewer.imageryLayers.addImageryProvider(provnBorderLineImg, index);
+}
+
+function toggleBorderLineLayer(layer, defaultAlpha = 1) {
   console.log(layer);
   if (Cesium.defined(layer)) {
-    layer.alpha = layer.alpha == 0 ? 1 : 0;
+    layer.show = !layer.show;
+    // layer.alpha = layer.alpha == 0 ? defaultAlpha : 0;
   }
 }
+
+// 控制注记显示
+var zhujiControllMapBtn = document.createElement("div");
+zhujiControllMapBtn.id = "borderLayerToggleBtn";
+zhujiControllMapBtn.title = "显示/关闭 注记";
+zhujiControllMapBtn.classList.add("cesium-button", "cesium-toolbar-button");
+
+var zhujiControllBtnIcon = document.createElement("div");
+zhujiControllBtnIcon.classList.add("zhuji-btn");
+
+zhujiControllMapBtn.appendChild(zhujiControllBtnIcon);
+cesiumViewerToolbar.appendChild(zhujiControllMapBtn);
+
+zhujiControllMapBtn.addEventListener("click", () => {
+  TIANDITUCN.show = !TIANDITUCN.show;
+});
 
 export {
   viewer,
@@ -504,4 +639,6 @@ export {
   addProvnceBorderLine,
   addProvnceBorderLineImg,
   toggleBorderLineLayer,
+  addProvnceVillageBorderLineImg,
+  villageBorderImgLayer,
 };

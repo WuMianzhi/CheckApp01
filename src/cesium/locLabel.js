@@ -13,7 +13,7 @@ class LngLatWidget {
     coordinatePanel.setAttribute("title", "经纬度");
     coordinatePanel.setAttribute(
       "style",
-      "position: absolute; bottom: 32px; right: 5px; color: white; opacity: 0.6; background-color: #bababa99; padding: 0px 5px 1px 5px; border-radius: 4px; font-size: 12px; text-shadow: 2px 2px 1px #000000;"
+      "position: absolute; bottom: 2px; right: 2rem; color: white; opacity: 0.6; background-color: #bababa99; padding: 0px 5px 1px 5px; border-radius: 4px; font-size: 12px; text-shadow: 2px 2px 1px #000000;"
     );
     coordinatePanel.innerHTML = "";
 
