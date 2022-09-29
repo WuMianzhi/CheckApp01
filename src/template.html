@@ -6,8 +6,8 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= htmlWebpackPlugin.options.title %></title>
-  <link rel="stylesheet" href="https://cesium.com/downloads/cesiumjs/releases/1.91/Build/Cesium/Widgets/widgets.css">
-  <script src="https://cesium.com/downloads/cesiumjs/releases/1.91/Build/Cesium/Cesium.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cesium@1.97.0/Build/Cesium/Widgets/widgets.css">
+  <script src="https://cdn.jsdelivr.net/npm/cesium@1.97.0/Build/Cesium/Cesium.js"></script>
   <script src="http://mizhibd.com/checkApp/backend/cesium-map.js"></script>
 </head>
 
@@ -26,7 +26,23 @@
         <option value="000000">请选择区县</option>
       </select>
       <button type="submit" id="localSubmit">确认</button>
-      <button type="button" id="dataDown">数据下载</button>
+      <button type="button" id="dataDown"> 数据下载</button>
+      <div class="loading hidden" id="loadingHint">
+        <div class="right">
+          <div class="wave"></div>
+          <div class="wave"></div>
+          <div class="wave"></div>
+          <div class="wave"></div>
+          <div class="wave"></div>
+          <div class="wave"></div>
+          <div class="wave"></div>
+          <div class="wave"></div>
+          <div class="wave"></div>
+          <div class="wave"></div>
+        </div>
+      </div>
+      <a href="http://" id="errorTips" class="hidden">尝试这个链接</a>
+
     </form>
   </div>
 
@@ -53,6 +69,7 @@
     </div>
 
     <div class=" btn-group handle-picker-container" hidden>
+      <button id="cancelHandle" title="取消手动选取" class="overview-btn" hidden>取消</button>
       <button id="errorMark" title="将此数据标记为异常数据" class="overview-btn" hidden>标记异常</button>
       <button id="handlerConfirm" class="transBg" hidden>确认选取</button>
     </div>

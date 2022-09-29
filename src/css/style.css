@@ -223,7 +223,8 @@ body {
   width: 100%;
   height: 100%;
   background-size: contain;
-  background-image: url('../assets/border_inner.png');
+  background-image: url('../assets/village-border.png');
+
 }
 
 .zhuji-btn {
@@ -241,23 +242,48 @@ body {
   width: 100%;
   height: 100%;
   background-size: contain;
-  background-image: url('../assets/village-border.png');
+  background-image: url('../assets/border_inner.png');
+
 }
 
 .landcover-btn {
   width: 100%;
   height: 100%;
-  /* box-sizing: border-box;
-  padding: 4px; */
   background-clip: padding-box;
-  background-size: 1.5rem;
   background-repeat: no-repeat;
-  background-image: url('../assets/land.svg');
+  background-image: url('../assets/ESRI_landuse.png');
   background-position: center;
+}
+
+.ESA-landcover-btn {
+  width: 100%;
+  height: 100%;
+  background-clip: padding-box;
+  background-size: 2rem;
+  background-repeat: no-repeat;
+  background-image: url('../assets/ESA_landuse.png');
+  background-position: center;
+  border-radius: 10px;
+}
+
+.WSF-2019-btn {
+  width: 100%;
+  height: 100%;
+  background-clip: padding-box;
+  background-size: 2rem;
+  background-repeat: no-repeat;
+  background-image: url('../assets/WSF.png');
+  background-position: center;
+  border-radius: 10px;
 }
 
 #cesiumContainer .cesium-baseLayerPicker-dropDown-visible {
   z-index: 9999;
+}
+
+.cesium-infoBox {
+  top: 4rem;
+  /* width: 20%; */
 }
 
 .cesium-viewer-toolbar {
@@ -270,29 +296,185 @@ body {
   fill: aqua;
 }
 
+.alpha-control,
 .sentinel-land-cover-2021 {
   display: block;
-  width: 14rem;
+  width: 8rem;
+}
+
+.alpha-control-container {
+  position: absolute;
+  top: 4.8rem;
+  text-align: right;
+  padding: 4px;
+  border-radius: 4px;
+  background-color: rgba(40, 40, 40, .7);
+  transform-origin: top left;
+  transform: rotate(0.25turn);
 }
 
 .sentinel-landCover-2021-alpha-control-container {
-  position: absolute;
-  top: 3rem;
-  right: 4px;
-  width: 14rem;
-  text-align: right;
-  padding: 4px;
-  border-radius: 4px;
-  background-color: rgba(40, 40, 40, .7);
+  right: -3.6rem;
 }
 
 .village-border-alpha-control-container {
-  position: absolute;
-  top: 7rem;
-  right: 4px;
-  width: 14rem;
-  text-align: right;
-  padding: 4px;
-  border-radius: 4px;
-  background-color: rgba(40, 40, 40, .7);
+  right: -1.3rem;
+}
+
+.ESA-landcover-alpha-control-container {
+  right: -6.1rem;
+}
+
+.WSF-2019-alpha-control-container {
+  right: -8.4rem;
+}
+
+.loading {
+  display: inline-block;
+  /* margin-top: 1rem; */
+}
+
+.right {
+  display: flex;
+  /* height: 100%; */
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0);
+}
+
+.hidden {
+  display: none;
+}
+
+.wave {
+  width: 2px;
+  height: 20px;
+  background: linear-gradient(45deg, cyan, #fff);
+  margin: 2px;
+  animation: wave 1s linear infinite;
+  border-radius: 20px;
+}
+
+.wave:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.wave:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+.wave:nth-child(4) {
+  animation-delay: 0.3s;
+}
+
+.wave:nth-child(5) {
+  animation-delay: 0.4s;
+}
+
+.wave:nth-child(6) {
+  animation-delay: 0.5s;
+}
+
+.wave:nth-child(7) {
+  animation-delay: 0.6s;
+}
+
+.wave:nth-child(8) {
+  animation-delay: 0.7s;
+}
+
+.wave:nth-child(9) {
+  animation-delay: 0.8s;
+}
+
+.wave:nth-child(10) {
+  animation-delay: 0.9s;
+}
+
+.cesium-viewer-toolbar {
+  display: flex;
+  max-width: 480px;
+  flex-flow: row wrap;
+  justify-content: end;
+}
+
+.cesium-viewer-geocoderContainer .cesium-geocoder-input-wide,
+.cesium-viewer-geocoderContainer .cesium-geocoder-input:focus,
+.cesium-viewer-geocoderContainer .cesium-geocoder-input {
+  padding-left: 4px;
+  width: 250px;
+}
+
+@keyframes wave {
+  0% {
+    transform: scale(0);
+  }
+
+  50% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(0);
+  }
+}
+
+@media screen and (max-width: 960px) {
+
+  .local_container {
+    display: none;
+  }
+
+  #changedInfo {
+    top: 1rem;
+    height: 2.5rem;
+    width: 12rem;
+    /* overflow: hidden; */
+  }
+
+  #changedInfo p {
+    font-size: smaller;
+  }
+
+  .overall_container {
+    left: 1rem;
+  }
+
+  .village-border-alpha-control-container,
+  .sentinel-landCover-2021-alpha-control-container {
+    font-size: small;
+  }
+
+  .locSelect_container {
+    font-size: small;
+  }
+
+  .cesium-infoBox {
+    width: 18rem;
+  }
+}
+
+@media screen and (min-width:960px) and (max-width: 1100px) {
+  .local_container {
+    padding: .5rem;
+  }
+
+  #changedInfo {
+    display: none;
+  }
+
+  .overall_container {
+    top: 4.5rem;
+    left: 1rem;
+    padding: 0;
+  }
+
+  .cesium-infoBox {
+    width: 20rem;
+  }
+}
+
+#errorTips {
+  text-decoration: none;
+  color: rgb(73, 238, 235);
 }

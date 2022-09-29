@@ -318,7 +318,11 @@ function checkInit(warnData) {
     let lat_group = parseFloat(currentData.lat_group);
     let lon_raw = parseFloat(currentData.lon_raw);
     let lat_raw = parseFloat(currentData.lat_raw);
-
+    // console.log(lon_raw, lat_raw, lon_group, lat_group);
+    lon_group = isNaN(lon_group) ? 0 : lon_group;
+    lat_group = isNaN(lat_group) ? 0 : lat_group;
+    lon_raw = isNaN(lon_raw) ? 0 : lon_raw;
+    lat_raw = isNaN(lat_raw) ? 0 : lat_raw;
     // document.querySelector("#streetName").textContent = currentData.strt;
     // console.log(currentData);
     // document.querySelector("#localName").value = currentData.keyword;
@@ -339,7 +343,6 @@ function checkInit(warnData) {
       lon_group = 0;
       lat_group = 0;
     } else {
-      console.log(lon_raw, lat_raw, lon_group, lat_group);
       // 判断是否解析出
       if (lon_raw > 60 && lon_raw < 160) {
         // 更新总览视图
@@ -494,6 +497,9 @@ function checkInit(warnData) {
       "#cesiumContainer .cesium-geocoder-input"
     );
     cesiumInput.value = currentData.keyword;
+    cesiumInput.select();
+    document.execCommand("copy");
+    // navigator.clipboard.writeText(cesiumInput.value);
     cesiumInput.classList.add("cesium-geocoder-input-wide");
 
     // 手动选取
@@ -675,14 +681,15 @@ function handlerPicker() {
 
 /** 手动确认 */
 function handlerConfirm(longitude, latitude) {
-  currentData.lon = longitude;
-  currentData.lat = latitude;
+  // currentData.lon = longitude;
+  // currentData.lat = latitude;
   // 更新按钮
   toggleCheckBtnGroup(true);
   toggleOvercheckBtnGroup(true);
   toggleHandlePickBtn();
 
   document.getElementById("errorMark").hidden = false;
+  document.getElementById("cancelHandle").hidden = false;
 
   // 展示手动选取后的点
   var handlerPoint = viewer.entities.add({
@@ -708,15 +715,23 @@ function handlerConfirm(longitude, latitude) {
     },
   });
 
-  document
-    .querySelector("#handlerConfirm")
-    .addEventListener("click", confirmUpdate, { once: true });
+  document.querySelector("#handlerConfirm").addEventListener(
+    "click",
+    () => {
+      confirmUpdate(longitude, latitude);
+    },
+    {
+      once: true,
+    }
+  );
 }
 
 /**
  * 确认选取
  */
-function confirmUpdate() {
+function confirmUpdate(lng, lat) {
+  currentData.lon = lng;
+  currentData.lat = lat;
   // 取消对左键的监听
   handler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK);
   releaseClickListener();
@@ -729,13 +744,7 @@ function confirmUpdate() {
   } else {
     toggleCheckBtnGroup();
   }
-  updateGeocode(
-    warnData,
-    currentData.lon,
-    currentData.lat,
-    currentData.code,
-    1
-  );
+  updateGeocode(warnData, lng, lat, currentData.code, 1);
 }
 
 document.getElementById("errorMark").addEventListener("click", markedError);
@@ -756,14 +765,13 @@ function markedError() {
         "successInfo"
       );
 
+      toggleHandlePickBtn(true);
+      toggleCheckBtnGroup();
+
       if (overCheck) {
-        toggleHandlePickBtn(true);
-        toggleOvercheckBtnGroup();
         document.getElementById("overCheck").hidden = true;
         document.getElementById("overCheckDone").hidden = false;
       } else {
-        toggleHandlePickBtn(true);
-        toggleCheckBtnGroup();
         checkInit(warnData, ++current);
       }
 
@@ -776,6 +784,29 @@ function markedError() {
   console.log(currentData);
 }
 
+document.getElementById("cancelHandle").addEventListener("click", cancelHandle);
+
+function cancelHandle() {
+  releaseClickListener();
+  toggleHandlePickBtn(true);
+  toggleOvercheckBtnGroup();
+
+  if (overCheck) {
+    document.getElementById("overCheck").hidden = true;
+    document.getElementById("overCheckDone").hidden = false;
+    viewer.entities.removeAll();
+    changeView = false;
+    groupViewer(curStreetData);
+  } else {
+    checkInit(warnData, current);
+  }
+
+  handler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK);
+  // 重新绑定输入事件
+  handler.setInputAction((click) => {
+    showPickEntityInfo(click);
+  }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+}
 /**
  * 在 viewer 中添加 编码点
  * @param {*} streetLocalData
@@ -875,9 +906,9 @@ function groupViewer(streetLocalData, extra) {
                           <tr><td>type：</td><td>${locateData.type}</td></tr>
                           <tr><td>rural_area：</td><td>${locateData.Rural_Area}</td></tr>
                           <tr><td>rural_population：</td><td>${locateData.Rural_Population}</td></tr>
-                          <tr><td>streetCode：</td><td>${locateData.name}</td></tr>
+                          <tr><td>Name：</td><td>${locateData.name}</td></tr>
                           <tr><td>streetCode：</td><td>${locateData.strt}</td></tr>
-                          <tr><td>streetCode：</td><td>${locateData.code}</td></tr>
+                          <tr><td>Code：</td><td>${locateData.code}</td></tr>
                           <tr><td>checked：</td><td>${locateData.checked}</td></tr>
                         </tbody>
                       </table>`,
