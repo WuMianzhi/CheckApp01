@@ -223,7 +223,7 @@ body {
   width: 100%;
   height: 100%;
   background-size: contain;
-  background-image: url('../assets/village-border.png');
+  background-image: url('../assets/village-border.svg');
 
 }
 
@@ -242,7 +242,7 @@ body {
   width: 100%;
   height: 100%;
   background-size: contain;
-  background-image: url('../assets/border_inner.png');
+  background-image: url('../assets/border-inner.svg');
 
 }
 
@@ -293,7 +293,7 @@ body {
 
 .active-btn {
   stroke: aquamarine;
-  fill: aqua;
+  /* fill: aqua; */
 }
 
 .alpha-control,
@@ -477,4 +477,10 @@ body {
 #errorTips {
   text-decoration: none;
   color: rgb(73, 238, 235);
+}
+
+.inactive{
+  filter:invert(70%) ;
+  /* filter: grayscale(20%); */
+  /* backdrop-filter: grayscale(90%); */
 }

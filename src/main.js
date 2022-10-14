@@ -20,7 +20,10 @@ localForm.addEventListener("submit", (event) => {
 
   if (handler) {
     const localFormData = new FormData(localForm);
+    // 查询数据
     queryLocalData(localFormData);
+
+    // 按省份添加边界数据
     let provnCode = document.querySelector("#provinceSelect").value;
     let layerAlpha = 1,
       borderLayerAlpha = 0.5;
@@ -35,8 +38,9 @@ localForm.addEventListener("submit", (event) => {
       provnCode.split("_")[0],
       1
     );
+    tempVillageImgLayer.show = false;
     tempVillageImgLayer.alpha = borderLayerAlpha;
-    console.log(tempImgLayer, layerAlpha);
+
     if (tempImgLayer != null) {
       layerAlpha = tempImgLayer.alpha;
       viewer.imageryLayers.remove(tempImgLayer);
@@ -45,7 +49,6 @@ localForm.addEventListener("submit", (event) => {
     tempImgLayer = addProvnceBorderLineImg(viewer, provnCode.split("_")[0]);
     tempImgLayer.alpha = layerAlpha;
 
-    // addProvnceBorderLine(viewer, provnCode.split("_")[0]);
   } else {
     alert(
       "An unknown or unaccepted payment type was selected. Please try again.",
@@ -63,7 +66,10 @@ document
 
 document
   .querySelector("#villageBorderLayerToggleBtn")
-  .addEventListener("click", () => {
+  .addEventListener("click", (e) => {
+    e.target.classList.contains("inactive")
+      ? e.target.classList.remove("inactive")
+      : e.target.classList.add("inactive");
     toggleBorderLineLayer(tempVillageImgLayer, 0.5);
   });
 
@@ -71,5 +77,4 @@ document
   .querySelector("#villageBorderImgLayerControl")
   .addEventListener("change", (e) => {
     tempVillageImgLayer.alpha = e.target.value / 100;
-    console.log(tempVillageImgLayer.alpha);
   });

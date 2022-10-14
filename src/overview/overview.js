@@ -24,8 +24,8 @@ let maxCheckTime = 0;
 
 // 绘制图表数据
 let overViewData = [
-  { value: 555, name: "正常数据" },
-  { value: 333, name: "异常数据" },
+  { value: 0, name: "正常数据" },
+  { value: 0, name: "异常数据" },
   { value: 0, name: "跳过数据" },
 ];
 
@@ -166,6 +166,7 @@ function overViewSet(geocodeData) {
   console.log(allDataByStreet);
   overViewData[0].value = geocodeData.length - warnData.length;
   overViewData[1].value = warnData.length;
+  overViewData[2].value = 0;
 
   current = 0;
 

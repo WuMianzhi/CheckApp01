@@ -33,8 +33,10 @@ function queryLocalData(localForm) {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.affected_rows);
         overViewSet(data.affected_rows);
+        document
+          .querySelector("#borderLayerToggleBtn>div")
+          .classList.remove("inactive");
       });
   } else {
     console.log("没有数据呀，宝");

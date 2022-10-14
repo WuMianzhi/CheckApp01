@@ -406,6 +406,7 @@ viewer.scene.imageryLayers.add(SentinelLandCover2021);
 viewer.scene.imageryLayers.add(ESALandCover);
 viewer.scene.imageryLayers.add(WSF2019);
 
+SentinelLandCover2021.show = false;
 ESALandCover.show = false;
 WSF2019.show = false;
 viewer.scene.imageryLayers.add(TIANDITUCN);
@@ -639,6 +640,7 @@ function addAlphaControner(
   alphaControl.max = 100;
   alphaControl.value = defaultAlpha;
   alphaControl.classList.add("alpha-control");
+  alphaControl.disabled = true;
   alphaControl.addEventListener("change", (e) => {
     changFn(e);
   });
@@ -678,7 +680,7 @@ addAlphaControner(
   (e) => {
     ESALandCover.alpha = e.target.value / 100;
   },
-  "villageBorderImgLayerControl"
+  "ESALandcoverAlphaControl"
 );
 
 // ESA landcover 透明度控制
@@ -704,8 +706,10 @@ addIconInCesiumToolbar(
 // 控制乡镇级别边界显示
 addIconInCesiumToolbar(
   "borderLayerToggleBtn",
-  ["border-btn", "active-btn"],
-  () => {},
+  ["border-btn", "active-btn", "inactive"],
+  (e) => {
+
+  },
   "乡镇边界数据"
 );
 
@@ -713,25 +717,47 @@ addIconInCesiumToolbar(
 addIconInCesiumToolbar(
   "borderLayerToggleBtn",
   ["zhuji-btn", "active-btn"],
-  () => {
+  (e) => {
+    e.target.classList.contains("inactive")
+      ? e.target.classList.remove("inactive")
+      : e.target.classList.add("inactive");
+
     TIANDITUCN.show = !TIANDITUCN.show;
   },
   "显示/关闭 注记"
 );
 
-// 控制村级别边界显示
+// 控制村级别边界显示, 这里在后面加载进数据再写
 addIconInCesiumToolbar(
   "villageBorderLayerToggleBtn",
-  ["village-border-btn", "active-btn"],
-  () => {},
+  ["village-border-btn", "active-btn", "inactive"],
+  (e) => {
+    e.target.classList.contains("inactive")
+      ? e.target.classList.remove("inactive")
+      : e.target.classList.add("inactive");
+
+    document.querySelector("#villageBorderImgLayerControl").disabled =
+      !document.querySelector("#villageBorderImgLayerControl").disabled;
+    // document.querySelector("#ESRILandcoverAlphaControl").disabled =
+    //   !document.querySelector("#ESRILandcoverAlphaControl").disabled;
+
+    // SentinelLandCover2021.show = !SentinelLandCover2021.show;
+  },
   "村级边界数据"
 );
 
 // 控制 ESRI landuse 图层显示/隐藏
 addIconInCesiumToolbar(
   "ESRILandcoverBtn",
-  ["landcover-btn", "active-btn"],
-  () => {
+  ["landcover-btn", "active-btn", "inactive"],
+  (e) => {
+    e.target.classList.contains("inactive")
+      ? e.target.classList.remove("inactive")
+      : e.target.classList.add("inactive");
+
+    document.querySelector("#ESRILandcoverAlphaControl").disabled =
+      !document.querySelector("#ESRILandcoverAlphaControl").disabled;
+
     SentinelLandCover2021.show = !SentinelLandCover2021.show;
     // console.log("click");
   },
@@ -741,8 +767,15 @@ addIconInCesiumToolbar(
 // 控制 ESA landuse 图层显示/隐藏
 addIconInCesiumToolbar(
   "ESALandcover",
-  ["ESA-landcover-btn", "active-btn"],
-  () => {
+  ["ESA-landcover-btn", "active-btn", "inactive"],
+  (e) => {
+    e.target.classList.contains("inactive")
+      ? e.target.classList.remove("inactive")
+      : e.target.classList.add("inactive");
+
+    document.querySelector("#ESALandcoverAlphaControl").disabled =
+      !document.querySelector("#ESALandcoverAlphaControl").disabled;
+
     ESALandCover.show = !ESALandCover.show;
   },
   "ESA WorldCover"
@@ -751,10 +784,16 @@ addIconInCesiumToolbar(
 // 控制 全球居住地足迹 图层显示/隐藏
 addIconInCesiumToolbar(
   "WSF2019",
-  ["WSF-2019-btn", "active-btn"],
-  () => {
+  ["WSF-2019-btn", "active-btn", "inactive"],
+  (e) => {
+    e.target.classList.contains("inactive")
+      ? e.target.classList.remove("inactive")
+      : e.target.classList.add("inactive");
+
+    document.querySelector("#WSF2019ImgLayerControl").disabled =
+      !document.querySelector("#WSF2019ImgLayerControl").disabled;
+
     WSF2019.show = !WSF2019.show;
-    console.log("全球居住地足迹WSF2019");
   },
   "全球居住地足迹WSF2019"
 );
