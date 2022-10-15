@@ -48,7 +48,6 @@ localForm.addEventListener("submit", (event) => {
     }
     tempImgLayer = addProvnceBorderLineImg(viewer, provnCode.split("_")[0]);
     tempImgLayer.alpha = layerAlpha;
-
   } else {
     alert(
       "An unknown or unaccepted payment type was selected. Please try again.",
@@ -65,7 +64,7 @@ document
   });
 
 document
-  .querySelector("#villageBorderLayerToggleBtn")
+  .querySelector("#villageBorderLayerToggleBtn>div")
   .addEventListener("click", (e) => {
     e.target.classList.contains("inactive")
       ? e.target.classList.remove("inactive")

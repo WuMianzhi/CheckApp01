@@ -272,7 +272,7 @@ body {
   background-clip: padding-box;
   background-size: 2rem;
   background-repeat: no-repeat;
-  background-image: url('../assets/WSF.png');
+  background-image: url('../assets/WSF-c.png');
   background-position: center;
   border-radius: 10px;
 }
@@ -282,7 +282,7 @@ body {
 }
 
 .cesium-infoBox {
-  top: 4rem;
+  top: 6rem;
   /* width: 20%; */
 }
 
@@ -480,7 +480,7 @@ body {
 }
 
 .inactive{
-  filter:invert(70%) ;
-  /* filter: grayscale(20%); */
+  /* filter:invert(70%) ; */
+  filter: grayscale(90%);
   /* backdrop-filter: grayscale(90%); */
 }

@@ -37,6 +37,12 @@ function queryLocalData(localForm) {
         document
           .querySelector("#borderLayerToggleBtn>div")
           .classList.remove("inactive");
+
+        document
+          .querySelector("#villageBorderLayerToggleBtn>div")
+          .classList.add("inactive");
+
+        document.querySelector("#villageBorderImgLayerControl").disabled = true;
       });
   } else {
     console.log("没有数据呀，宝");

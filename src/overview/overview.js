@@ -106,13 +106,12 @@ function updateOverviewCharts() {
  * @param {Object} geocodeData
  */
 function overViewSet(geocodeData) {
-  let allNum = geocodeData.length;
   let warnNum = 0;
   var preStreetCode = 0;
   let locArray = [];
   // 重置某些数据
-  minCheckTime = 9999999;
-  maxCheckTime = 0;
+  minCheckTime = Infinity;
+  maxCheckTime = -Infinity;
   warnData = [];
   allDataByStreet = {};
 
@@ -139,6 +138,7 @@ function overViewSet(geocodeData) {
     minCheckTime > locateData["checked"]
       ? (minCheckTime = locateData["checked"])
       : null;
+
     // 找出复核最多的次数
     maxCheckTime < locateData["checked"]
       ? (maxCheckTime = locateData["checked"])
@@ -147,6 +147,7 @@ function overViewSet(geocodeData) {
     let locStr = `${parseFloat(locateData.lon).toFixed(5)}_${parseFloat(
       locateData.lon
     ).toFixed(5)}`;
+    
     // 查找重复数据
     if (locArray.indexOf(locStr) === -1 || locateData.isHandle != 0) {
       locArray.push(locStr);
@@ -161,9 +162,9 @@ function overViewSet(geocodeData) {
     }
     // console.log(locateData[]);
   }
-  console.log(locArray);
+  // console.log(locArray);
   // console.log(warnData);
-  console.log(allDataByStreet);
+  // console.log(allDataByStreet);
   overViewData[0].value = geocodeData.length - warnData.length;
   overViewData[1].value = warnData.length;
   overViewData[2].value = 0;
