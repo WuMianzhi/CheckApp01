@@ -1,6 +1,6 @@
 import "./css/style.css";
-import { initLocalSelect, queryLocalData } from "./localSelect/localSelect.js";
-import { zipDataDownload } from "./localSelect/getZipData.js";
+import { queryLocalData } from "./localSelect/localSelect.js";
+// import { zipDataDownload } from "./localSelect/getZipData.js";
 import {
   addProvnceVillageBorderLineImg,
   addProvnceBorderLineImg,
@@ -9,9 +9,15 @@ import {
   villageBorderImgLayer,
 } from "./cesium/cesiumInit.js";
 
-initLocalSelect();
+window.onload = function () {  
+  import("./localSelect/localSelect.js").then(({ initLocalSelect }) => {
+    initLocalSelect();
+  });
+}
+
 let tempImgLayer = null,
   tempVillageImgLayer = villageBorderImgLayer;
+
 const localForm = document.querySelector("#localForm");
 localForm.addEventListener("submit", (event) => {
   event.preventDefault();
@@ -20,6 +26,10 @@ localForm.addEventListener("submit", (event) => {
 
   if (handler) {
     const localFormData = new FormData(localForm);
+    // import("./localSelect/localSelect.js").then(({ initLocalSelect }) => {
+    //   initLocalSelect();
+    // });
+
     // 查询数据
     queryLocalData(localFormData);
 
@@ -56,7 +66,13 @@ localForm.addEventListener("submit", (event) => {
   }
 });
 
-document.querySelector("#dataDown").addEventListener("click", zipDataDownload);
+// 异步导入
+document.querySelector("#dataDown").addEventListener("click", function () {
+  import("./localSelect/getZipData.js").then(({ zipDataDownload }) => {
+    zipDataDownload();
+  });
+});
+
 document
   .querySelector("#borderLayerToggleBtn")
   .addEventListener("click", () => {
