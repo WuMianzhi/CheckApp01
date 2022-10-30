@@ -254,13 +254,7 @@ body {
 }
 
 .WSF-2019-btn {
-  background-clip: padding-box;
-  background-size: 2rem;
-  background-repeat: no-repeat;
   background-image: url('../assets/WSF-c.png');
-  background-position: center;
-  border-radius: 10px;
-
 }
 
 #cesiumContainer .cesium-baseLayerPicker-dropDown-visible {
@@ -275,11 +269,6 @@ body {
 .cesium-viewer-toolbar {
   top: 1rem;
   align-self: right;
-}
-
-.active-btn {
-  stroke: aquamarine;
-  /* fill: aqua; */
 }
 
 .alpha-control,
@@ -462,7 +451,5 @@ body {
 }
 
 .inactive {
-  /* filter:invert(70%) ; */
   filter: grayscale(90%);
-  /* backdrop-filter: grayscale(90%); */
 }

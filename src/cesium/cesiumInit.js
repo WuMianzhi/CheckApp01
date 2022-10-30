@@ -62,154 +62,6 @@ if (supportsImageRenderingPixelated) {
   viewer.resolutionScale = vtxf_dpr;
 }
 
-// 添加全球注记
-const TIANDITUCN = new Cesium.ImageryLayer(
-  new Cesium.WebMapTileServiceImageryProvider({
-    url: "http://{s}.tianditu.gov.cn/cia_w/wmts?tk=f364d1865beaaa4303e9e5bf9c2b0ee1",
-    layer: "cia",
-    style: "default",
-    format: "tiles",
-    tileMatrixSetID: "w",
-    subdomains: ["t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7"],
-    maximumLevel: 18,
-  })
-);
-
-// 土地覆盖图层
-const SentinelLandCover2021 = new Cesium.ImageryLayer(
-  new Cesium.UrlTemplateImageryProvider({
-    url:
-      //下面加载的图像年份：2021（time=1609502400000%2C1641038400000）。此处注意时间的设定。
-      "https://env1.arcgis.com/arcgis/rest/services/Sentinel2_10m_LandCover/ImageServer/exportImage?bbox={westDegrees}%2C{southDegrees}%2C{eastDegrees}%2C{northDegrees}&bboxSR=&size={width}%2C{height}&time=1609502400000%2C1641038400000&format=jpgpng&f=image", //不显示边界线
-    pickFeaturesUrl:
-      //点击查询，显示图例
-      "https://env1.arcgis.com/arcgis/rest/services/Sentinel2_10m_LandCover/ImageServer/legend?bandIds=&renderingRule=&f=html",
-    getFeatureInfoFormats: [
-      new Cesium.GetFeatureInfoFormat("html", "text/html"),
-      new Cesium.GetFeatureInfoFormat("json", "application/geojson"),
-    ],
-    enablePickFeatures: false,
-  })
-);
-SentinelLandCover2021.alpha = 0.2;
-
-// 全球土地覆盖: European Space Agency WorldCover 2020 Land Cover
-const ESALandCover = new Cesium.ImageryLayer(
-  new Cesium.WebMapTileServiceImageryProvider({
-    url: "https://services.terrascope.be/wmts/v2?",
-    layer: "WORLDCOVER_2020_MAP",
-    style: "default",
-    format: "image/png",
-    tileMatrixSetID: "EPSG:3857",
-    tileMatrixLabels: [
-      "EPSG:3857:0",
-      "EPSG:3857:1",
-      "EPSG:3857:2",
-      "EPSG:3857:3",
-      "EPSG:3857:4",
-      "EPSG:3857:5",
-      "EPSG:3857:6",
-      "EPSG:3857:7",
-      "EPSG:3857:8",
-      "EPSG:3857:9",
-      "EPSG:3857:10",
-      "EPSG:3857:11",
-      "EPSG:3857:12",
-      "EPSG:3857:13",
-      "EPSG:3857:14",
-      "EPSG:3857:15",
-      "EPSG:3857:16",
-      "EPSG:3857:17",
-      "EPSG:3857:18",
-      "EPSG:3857:19",
-      "EPSG:3857:20",
-      "EPSG:3857:21",
-      "EPSG:3857:22",
-      "EPSG:3857:23",
-      "EPSG:3857:24",
-      "EPSG:3857:25",
-      "EPSG:3857:26",
-      "EPSG:3857:27",
-      "EPSG:3857:28",
-      "EPSG:3857:29",
-      "EPSG:3857:30",
-    ],
-    credit: "ESA WorldCover 10m 2020",
-  })
-);
-ESALandCover.alpha = 0.2;
-
-//全球土地覆盖: European Space Agency WorldCover 2021 Land Cover
-const ESALandCover2021 = new Cesium.ImageryLayer(
-  new Cesium.WebMapTileServiceImageryProvider({
-    url: "https://services.terrascope.be/wmts/v2?",
-    layer: "WORLDCOVER_2021_MAP",
-    style: "default",
-    format: "image/png",
-    tileMatrixSetID: "EPSG:3857",
-    tileMatrixLabels: [
-      "EPSG:3857:0",
-      "EPSG:3857:1",
-      "EPSG:3857:2",
-      "EPSG:3857:3",
-      "EPSG:3857:4",
-      "EPSG:3857:5",
-      "EPSG:3857:6",
-      "EPSG:3857:7",
-      "EPSG:3857:8",
-      "EPSG:3857:9",
-      "EPSG:3857:10",
-      "EPSG:3857:11",
-      "EPSG:3857:12",
-      "EPSG:3857:13",
-      "EPSG:3857:14",
-      "EPSG:3857:15",
-      "EPSG:3857:16",
-      "EPSG:3857:17",
-      "EPSG:3857:18",
-      "EPSG:3857:19",
-      "EPSG:3857:20",
-      "EPSG:3857:21",
-      "EPSG:3857:22",
-      "EPSG:3857:23",
-      "EPSG:3857:24",
-      "EPSG:3857:25",
-      "EPSG:3857:26",
-      "EPSG:3857:27",
-      "EPSG:3857:28",
-      "EPSG:3857:29",
-      "EPSG:3857:30",
-    ],
-    credit: "ESA WorldCover 10m 2021",
-  })
-);
-ESALandCover2021.alpha = 0.2;
-
-const WSF2019 = new Cesium.ImageryLayer(
-  new Cesium.WebMapServiceImageryProvider({
-    url: "https://geoservice.dlr.de/eoc/land/wms",
-    layers: "WSF_2019",
-    parameters: {
-      service: "WMS",
-      format: "image/png",
-      transparent: true,
-    },
-    // transparent: true,
-  })
-);
-WSF2019.alpha = 0.2;
-
-viewer.scene.imageryLayers.add(SentinelLandCover2021);
-viewer.scene.imageryLayers.add(ESALandCover);
-viewer.scene.imageryLayers.add(ESALandCover2021);
-viewer.scene.imageryLayers.add(WSF2019);
-
-SentinelLandCover2021.show = false;
-ESALandCover.show = false;
-ESALandCover2021.show = false;
-WSF2019.show = false;
-viewer.scene.imageryLayers.add(TIANDITUCN);
-
 viewer.baseLayerPicker.viewModel.selectedImagery = ESRIIMG;
 
 //天地图地理编码器
@@ -242,17 +94,18 @@ TiandituNominatimGeocoder.prototype.geocode = function (input) {
 };
 
 const handler = new Cesium.ScreenSpaceEventHandler(viewer.canvas);
-var cesiumViewerToolbar = document.querySelector(
-  "#cesiumContainer .cesium-viewer-toolbar"
-);
 
 let villageBorderImgLayer = addProvnceVillageBorderLineImg(viewer, 42);
 villageBorderImgLayer.alpha = 0.5;
 
 const lngLatScaleLabel = new LngLatWidget(viewer);
 lngLatScaleLabel.addCoordinateLabel();
-// lngLatScaleLabel.addScale();
 
+
+/**
+ * 点击后展示所拾取的entity信息
+ * @param {*} movement 
+ */
 function showPickEntityInfo(movement) {
   var pick = viewer.scene.pick(movement.position);
   if (Cesium.defined(pick)) {
@@ -267,16 +120,6 @@ function showPickEntityInfo(movement) {
     // navigator.clipboard.writeText(cesiumInput.value);
     console.log("id:" + pick.id.id + ", name:" + pick.id.name);
   }
-}
-
-function openThirdMapService() {
-  window.open("https://map.baidu.com/");
-  window.open("https://map.qq.com/");
-  window.open("https://map.tianditu.gov.cn/");
-  window.open("https://ditu.amap.com/");
-  window.open(
-    "https://dmfw.mca.gov.cn/online/map.html?keyWordPlaceName=&isIndex=true"
-  );
 }
 
 /**
@@ -358,240 +201,12 @@ function addProvnceVillageBorderLineImg(addViewer, provnCode, index = 0) {
  */
 function toggleBorderLineLayer(layer, defaultAlpha = 1) {
   console.log(layer);
+  console.log(layer);
   if (Cesium.defined(layer)) {
     layer.show = !layer.show;
     // layer.alpha = layer.alpha == 0 ? defaultAlpha : 0;
   }
 }
-
-/**
- * 在 cesium toolbar 末尾添加图标
- * @param {string} name 图标名称/ID
- * @param {array} classList 样式列表
- * @param {function} clickFn 点击函数
- * @param {string} title title
- */
-function addIconInCesiumToolbar(name, classList, clickFn, title) {
-  let iconWrapper = document.createElement("div");
-  iconWrapper.id = name;
-  iconWrapper.classList.add("cesium-button", "cesium-toolbar-button");
-  iconWrapper.title = title;
-
-  let icon = document.createElement("div");
-  icon.classList.add(...classList);
-
-  iconWrapper.appendChild(icon);
-  cesiumViewerToolbar.appendChild(iconWrapper);
-
-  iconWrapper.addEventListener("click", clickFn);
-}
-
-/**
- * 添加透明度控制按钮
- * @param {*} name
- * @param {*} title
- * @param {*} classList
- * @param {*} changFn
- */
-function addAlphaControner(
-  name,
-  title,
-  classList,
-  defaultAlpha,
-  changFn,
-  inputId
-) {
-  let alphaControlContainer = document.createElement("div");
-  alphaControlContainer.id = name;
-  alphaControlContainer.title = title;
-  alphaControlContainer.className = "alpha-control-container";
-  alphaControlContainer.classList.add(...classList);
-
-  let alphaControl = document.createElement("input");
-  alphaControl.id = inputId;
-  alphaControl.type = "range";
-  alphaControl.min = 0;
-  alphaControl.max = 100;
-  alphaControl.value = defaultAlpha;
-  alphaControl.classList.add("alpha-control");
-  alphaControl.disabled = true;
-  alphaControl.addEventListener("change", (e) => {
-    changFn(e);
-  });
-
-  alphaControlContainer.appendChild(alphaControl);
-  document
-    .querySelector("#imageryLayerControlWrapper")
-    .appendChild(alphaControlContainer);
-}
-
-// 乡村边界透明度控制
-addAlphaControner(
-  "villageBorderAlpha",
-  "村级边界透明度控制",
-  ["village-border-alpha-control-container"],
-  50,
-  (e) => {},
-  "villageBorderImgLayerControl"
-);
-
-// ESRI土地利用图层透明度控制
-addAlphaControner(
-  "ESRILandcoverAlpha",
-  "ESRI土地利用图层透明度控制",
-  ["sentinel-landCover-2021-alpha-control-container"],
-  20,
-  (e) => {
-    SentinelLandCover2021.alpha = e.target.value / 100;
-  },
-  "ESRILandcoverAlphaControl"
-);
-
-// ESA landcover 2020 透明度控制
-addAlphaControner(
-  "ESALandcoverAlpha",
-  "ESA WorldCover 2020 图层透明度控制",
-  ["ESA-landcover-alpha-control-container"],
-  20,
-  (e) => {
-    ESALandCover.alpha = e.target.value / 100;
-  },
-  "ESALandcoverAlphaControl"
-);
-
-// ESA landcover 2021 透明度控制
-addAlphaControner(
-  "ESALandcover2021Alpha",
-  "ESA WorldCover 2021 图层透明度控制",
-  ["ESA-landcover-2021-alpha-control-container"],
-  20,
-  (e) => {
-    ESALandCover2021.alpha = e.target.value / 100;
-  },
-  "ESALandcover2021AlphaControl"
-);
-
-// ESA WSF 2019 透明度控制
-addAlphaControner(
-  "WSF2019",
-  "全球居住地足迹WSF 2019",
-  ["WSF-2019-alpha-control-container"],
-  20,
-  (e) => {
-    WSF2019.alpha = e.target.value / 100;
-  },
-  "WSF2019ImgLayerControl"
-);
-
-// 添加跳转三方地图按钮
-addIconInCesiumToolbar(
-  "mapOpen",
-  ["cesium-toolbar-icon", "map-btn", "active-btn"],
-  openThirdMapService,
-  "打开第三方地图"
-);
-
-// 控制乡镇级别边界显示
-addIconInCesiumToolbar(
-  "borderLayerToggleBtn",
-  ["cesium-toolbar-icon", "border-btn", "active-btn", "inactive"],
-  (e) => {
-    e.target.classList.contains("inactive")
-      ? e.target.classList.remove("inactive")
-      : e.target.classList.add("inactive");
-  },
-  "乡镇边界数据"
-);
-
-// 控制注记显示
-addIconInCesiumToolbar(
-  "zhujiLayerToggleBtn",
-  ["cesium-toolbar-icon", "zhuji-btn", "active-btn"],
-  (e) => {
-    e.target.classList.contains("inactive")
-      ? e.target.classList.remove("inactive")
-      : e.target.classList.add("inactive");
-
-    TIANDITUCN.show = !TIANDITUCN.show;
-  },
-  "显示/关闭 注记"
-);
-
-// 控制村级别边界显示, 这里在后面加载进数据再写
-addIconInCesiumToolbar(
-  "villageBorderLayerToggleBtn",
-  ["cesium-toolbar-icon", "village-border-btn", "active-btn", "inactive"],
-  (e) => {
-    document.querySelector("#villageBorderImgLayerControl").disabled =
-      !document.querySelector("#villageBorderImgLayerControl").disabled;
-  },
-  "村级边界数据"
-);
-
-// 控制 ESRI landuse 图层显示/隐藏
-addIconInCesiumToolbar(
-  "ESRILandcoverBtn",
-  ["cesium-toolbar-icon", "landcover-btn", "active-btn", "inactive"],
-  (e) => {
-    e.target.classList.contains("inactive")
-      ? e.target.classList.remove("inactive")
-      : e.target.classList.add("inactive");
-
-    document.querySelector("#ESRILandcoverAlphaControl").disabled =
-      !document.querySelector("#ESRILandcoverAlphaControl").disabled;
-
-    SentinelLandCover2021.show = !SentinelLandCover2021.show;
-    // console.log("click");
-  },
-  "ESRI 土地利用 2021"
-);
-
-// 控制 ESA landuse 2021 图层显示/隐藏
-addIconInCesiumToolbar(
-  "ESALandcover",
-  ["cesium-toolbar-icon", "ESA-landcover-btn", "active-btn", "inactive"],
-  (e) => {
-    e.target.classList.contains("inactive")
-      ? e.target.classList.remove("inactive")
-      : e.target.classList.add("inactive");
-
-    document.querySelector("#ESALandcoverAlphaControl").disabled =
-      !document.querySelector("#ESALandcoverAlphaControl").disabled;
-
-    ESALandCover.show = !ESALandCover.show;
-  },
-  "ESA WorldCover 2020"
-);
-
-// 控制 ESA landuse 2021 图层显示/隐藏
-addIconInCesiumToolbar(
-  "ESALandcover2021",
-  ["cesium-toolbar-icon", "ESA-landcover-2021-btn", "active-btn", "inactive"],
-  (e) => {
-    e.target.classList.contains("inactive")
-      ? e.target.classList.remove("inactive")
-      : e.target.classList.add("inactive");
-
-    document.querySelector("#ESALandcover2021AlphaControl").disabled =
-      !document.querySelector("#ESALandcover2021AlphaControl").disabled;
-
-    ESALandCover2021.show = !ESALandCover2021.show;
-  },
-  "ESA WorldCover 2021"
-);
-
-// 控制 全球居住地足迹 图层显示/隐藏
-addIconInCesiumToolbar(
-  "WSF2019",
-  ["cesium-toolbar-icon", "WSF-2019-btn", "active-btn", "inactive"],
-  (e) => {
-    document.querySelector("#WSF2019ImgLayerControl").disabled =
-      !document.querySelector("#WSF2019ImgLayerControl").disabled;
-
-    WSF2019.show = !WSF2019.show;
-  },
-  "全球居住地足迹WSF2019"
-);
 
 export {
   viewer,
