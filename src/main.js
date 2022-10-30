@@ -1,19 +1,66 @@
 import "./css/style.css";
-import { queryLocalData } from "./localSelect/localSelect.js";
-// import { zipDataDownload } from "./localSelect/getZipData.js";
+
 import {
   addProvnceVillageBorderLineImg,
   addProvnceBorderLineImg,
   viewer,
-  toggleBorderLineLayer,
   villageBorderImgLayer,
+  ESRIIMG,
 } from "./cesium/cesiumInit.js";
 
-window.onload = function () {  
+window.onload = function () {
   import("./localSelect/localSelect.js").then(({ initLocalSelect }) => {
     initLocalSelect();
   });
-}
+};
+
+document.querySelector(".cesium-baseLayerPicker-selected").addEventListener(
+  "click",
+  (e) => {
+    import("./cesium/cesiumProvideModel.js").then(
+      ({
+        ESRIStreet,
+        ESRINation,
+        TIANDITUTERR,
+        TIANDITUIMG,
+        TIANDITUVECTOR,
+        AMAPImage,
+        AMAPVector,
+        AMAPVCva,
+        baiduImg,
+        baiduNormal,
+        baiduDark,
+        baiduNote,
+        GOOGLEIMG,
+        GOOGLEPATHIMG,
+        GOOGLEPATHPLUSIMG,
+      }) => {
+        viewer.baseLayerPicker.viewModel.imageryProviderViewModels.push(
+          ...[
+            // SentinelLandCover2021,
+            ESRIIMG,
+            ESRIStreet,
+            ESRINation,
+            TIANDITUTERR,
+            TIANDITUIMG,
+            TIANDITUVECTOR,
+            AMAPImage,
+            AMAPVector,
+            AMAPVCva,
+            baiduImg,
+            baiduNormal,
+            baiduDark,
+            baiduNote,
+            GOOGLEIMG,
+            GOOGLEPATHIMG,
+            GOOGLEPATHPLUSIMG,
+          ]
+        );
+      }
+    );
+  },
+  { once: true }
+);
 
 let tempImgLayer = null,
   tempVillageImgLayer = villageBorderImgLayer;
@@ -26,38 +73,37 @@ localForm.addEventListener("submit", (event) => {
 
   if (handler) {
     const localFormData = new FormData(localForm);
-    // import("./localSelect/localSelect.js").then(({ initLocalSelect }) => {
-    //   initLocalSelect();
-    // });
 
-    // 查询数据
-    queryLocalData(localFormData);
+    import("./localSelect/localSelect.js").then(({ queryLocalData }) => {
+      // 查询数据
+      queryLocalData(localFormData);
 
-    // 按省份添加边界数据
-    let provnCode = document.querySelector("#provinceSelect").value;
-    let layerAlpha = 1,
-      borderLayerAlpha = 0.5;
+      // 按省份添加边界数据
+      let provnCode = document.querySelector("#provinceSelect").value;
+      let layerAlpha = 1,
+        borderLayerAlpha = 0.5;
 
-    if (tempVillageImgLayer != null) {
-      borderLayerAlpha = tempVillageImgLayer.alpha;
-      viewer.imageryLayers.remove(tempVillageImgLayer);
-      tempVillageImgLayer = null;
-    }
-    tempVillageImgLayer = addProvnceVillageBorderLineImg(
-      viewer,
-      provnCode.split("_")[0],
-      1
-    );
-    tempVillageImgLayer.show = false;
-    tempVillageImgLayer.alpha = borderLayerAlpha;
+      if (tempVillageImgLayer != null) {
+        borderLayerAlpha = tempVillageImgLayer.alpha;
+        viewer.imageryLayers.remove(tempVillageImgLayer);
+        tempVillageImgLayer = null;
+      }
+      tempVillageImgLayer = addProvnceVillageBorderLineImg(
+        viewer,
+        provnCode.split("_")[0],
+        1
+      );
+      tempVillageImgLayer.show = false;
+      tempVillageImgLayer.alpha = borderLayerAlpha;
 
-    if (tempImgLayer != null) {
-      layerAlpha = tempImgLayer.alpha;
-      viewer.imageryLayers.remove(tempImgLayer);
-      tempImgLayer = null;
-    }
-    tempImgLayer = addProvnceBorderLineImg(viewer, provnCode.split("_")[0]);
-    tempImgLayer.alpha = layerAlpha;
+      if (tempImgLayer != null) {
+        layerAlpha = tempImgLayer.alpha;
+        viewer.imageryLayers.remove(tempImgLayer);
+        tempImgLayer = null;
+      }
+      tempImgLayer = addProvnceBorderLineImg(viewer, provnCode.split("_")[0]);
+      tempImgLayer.alpha = layerAlpha;
+    });
   } else {
     alert(
       "An unknown or unaccepted payment type was selected. Please try again.",
@@ -76,7 +122,9 @@ document.querySelector("#dataDown").addEventListener("click", function () {
 document
   .querySelector("#borderLayerToggleBtn")
   .addEventListener("click", () => {
-    toggleBorderLineLayer(tempImgLayer);
+    import("./cesium/cesiumInit.js").then(({ toggleBorderLineLayer }) => {
+      toggleBorderLineLayer(tempImgLayer);
+    });
   });
 
 document
@@ -85,7 +133,9 @@ document
     e.target.classList.contains("inactive")
       ? e.target.classList.remove("inactive")
       : e.target.classList.add("inactive");
-    toggleBorderLineLayer(tempVillageImgLayer, 0.5);
+    import("./cesium/cesiumInit.js").then(({ toggleBorderLineLayer }) => {
+      toggleBorderLineLayer(tempVillageImgLayer, 0.5);
+    });
   });
 
 document

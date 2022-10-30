@@ -11,6 +11,7 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 .transBg {
@@ -212,69 +213,54 @@ body {
   z-index: 99;
 }
 
-.map-btn {
+.cesium-toolbar-icon {
   width: 100%;
   height: 100%;
   background-size: contain;
+  background-clip: padding-box;
+  background-size: 2rem;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.map-btn {
   background-image: url('../assets/map.svg');
 }
 
 .border-btn {
-  width: 100%;
-  height: 100%;
-  background-size: contain;
   background-image: url('../assets/village-border.svg');
 
 }
 
 .zhuji-btn {
-  width: 100%;
-  height: 100%;
-  background-size: contain;
   background-image: url('../assets/text.svg');
-  background-clip: padding-box;
   background-size: 1rem;
-  background-repeat: no-repeat;
-  background-position: center;
 }
 
 .village-border-btn {
-  width: 100%;
-  height: 100%;
-  background-size: contain;
   background-image: url('../assets/border-inner.svg');
-
 }
 
 .landcover-btn {
-  width: 100%;
-  height: 100%;
-  background-clip: padding-box;
-  background-repeat: no-repeat;
   background-image: url('../assets/ESRI_landuse.png');
-  background-position: center;
 }
 
 .ESA-landcover-btn {
-  width: 100%;
-  height: 100%;
-  background-clip: padding-box;
-  background-size: 2rem;
-  background-repeat: no-repeat;
-  background-image: url('../assets/ESA_landuse.png');
-  background-position: center;
-  border-radius: 10px;
+  background-image: url('../assets/ESA_landuse_2020.png');
+}
+
+.ESA-landcover-2021-btn {
+  background-image: url('../assets/ESA_landuse_2021.png');
 }
 
 .WSF-2019-btn {
-  width: 100%;
-  height: 100%;
   background-clip: padding-box;
   background-size: 2rem;
   background-repeat: no-repeat;
   background-image: url('../assets/WSF-c.png');
   background-position: center;
   border-radius: 10px;
+
 }
 
 #cesiumContainer .cesium-baseLayerPicker-dropDown-visible {
@@ -302,31 +288,26 @@ body {
   width: 8rem;
 }
 
-.alpha-control-container {
+/* 控制图层透明度 */
+#imageryLayerControlWrapper {
   position: absolute;
-  top: 4.8rem;
+  right: 30px;
+  top: 68px;
+  /* background: #48b; */
+  transform: rotate(90deg) rotateX(180deg);
+}
+
+.alpha-control-container {
   text-align: right;
   padding: 4px;
+  /* margin: 8px 0; */
+  margin-bottom: 10px;
   border-radius: 4px;
   background-color: rgba(40, 40, 40, .7);
-  transform-origin: top left;
-  transform: rotate(0.25turn);
 }
 
-.sentinel-landCover-2021-alpha-control-container {
-  right: -3.6rem;
-}
-
-.village-border-alpha-control-container {
-  right: -1.3rem;
-}
-
-.ESA-landcover-alpha-control-container {
-  right: -6.1rem;
-}
-
-.WSF-2019-alpha-control-container {
-  right: -8.4rem;
+.alpha-control-container:last-child {
+  margin-bottom: 0;
 }
 
 .loading {
@@ -395,7 +376,7 @@ body {
   display: flex;
   max-width: 480px;
   flex-flow: row wrap;
-  justify-content: end;
+  justify-content: flex-end;
 }
 
 .cesium-viewer-geocoderContainer .cesium-geocoder-input-wide,
@@ -454,6 +435,7 @@ body {
   }
 }
 
+
 @media screen and (min-width:960px) and (max-width: 1100px) {
   .local_container {
     padding: .5rem;
@@ -479,7 +461,7 @@ body {
   color: rgb(73, 238, 235);
 }
 
-.inactive{
+.inactive {
   /* filter:invert(70%) ; */
   filter: grayscale(90%);
   /* backdrop-filter: grayscale(90%); */

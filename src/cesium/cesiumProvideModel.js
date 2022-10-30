@@ -2,21 +2,6 @@ import tdtDemMapICON from "../assets/tdt/tdtDem.jpg";
 import tdtImageMapICON from "../assets/tdt/tdtImage.jpg";
 import tdtMapICON from "../assets/tdt/tdtMap.jpg";
 
-// 影像图层
-const ESRIIMG = new Cesium.ProviderViewModel({
-  name: "ESRI ArcGIS全球影像",
-  iconUrl: Cesium.buildModuleUrl(
-    "Widgets/Images/ImageryProviders/esriWorldImagery.png"
-  ),
-  tooltip: "ESRI ArcGIS影像图层",
-  category: "ESRI ArcGIS",
-  creationFunction: function () {
-    return new Cesium.ArcGisMapServerImageryProvider({
-      url: "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer",
-    });
-  },
-});
-
 const ESRIStreet = new Cesium.ProviderViewModel({
   name: "ESRI ArcGIS街道地图",
   iconUrl: Cesium.buildModuleUrl(
@@ -256,7 +241,6 @@ const GOOGLEPATHPLUSIMG = new Cesium.ProviderViewModel({
 });
 
 export {
-  ESRIIMG,
   ESRIStreet,
   ESRINation,
   TIANDITUTERR,
