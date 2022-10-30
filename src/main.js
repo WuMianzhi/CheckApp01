@@ -14,7 +14,9 @@ import { addAlphaAndIcon } from "./cesium/customCesium.js";
 document.querySelector(".cesium-baseLayerPicker-selected").addEventListener(
   "click",
   (e) => {
-    import("./cesium/cesiumProvideModel.js").then(
+    import(
+      /* webpackChunkName: "cesiumProvideModel" */ "./cesium/cesiumProvideModel.js"
+    ).then(
       ({
         ESRIStreet,
         ESRINation,
@@ -71,7 +73,9 @@ localForm.addEventListener("submit", (event) => {
   if (handler) {
     const localFormData = new FormData(localForm);
 
-    import("./localSelect/localSelect.js").then(({ queryLocalData }) => {
+    import(
+      /* webpackChunkName: "localSelect" */ "./localSelect/localSelect.js"
+    ).then(({ queryLocalData }) => {
       // 查询数据
       queryLocalData(localFormData);
 
@@ -111,17 +115,23 @@ localForm.addEventListener("submit", (event) => {
 
 // 异步导入
 document.querySelector("#dataDown").addEventListener("click", function () {
-  import("./localSelect/getZipData.js").then(({ zipDataDownload }) => {
+  import(
+    /* webpackChunkName: "getZipData" */ "./localSelect/getZipData.js"
+  ).then(({ zipDataDownload }) => {
     zipDataDownload();
   });
 });
 
 window.onload = function () {
-  import("./localSelect/localSelect.js").then(({ initLocalSelect }) => {
+  import(
+    /* webpackChunkName: "localSelect" */ "./localSelect/localSelect.js"
+  ).then(({ initLocalSelect }) => {
     initLocalSelect();
   });
 
-  import("./cesium/cesiumImageryLayer.js").then(
+  import(
+    /* webpackChunkName: "cesiumImagerLayer" */ "./cesium/cesiumImageryLayer.js"
+  ).then(
     ({
       TIANDITUCN,
       SentinelLandCover2021,

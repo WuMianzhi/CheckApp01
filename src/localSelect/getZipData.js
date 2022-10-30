@@ -1,4 +1,4 @@
-import { cityData } from "./localData";
+import { cityData } from /* webpackChunkName: "locatData" */ "./localData";
 
 /**
  * 下载 zip 文件

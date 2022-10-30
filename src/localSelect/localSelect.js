@@ -7,15 +7,18 @@ function initLocalSelect() {
   var provinceSelect = document.querySelector("#provinceSelect");
   var citySelect = document.querySelector("#citySelect");
   var countySelect = document.querySelector("#countySelect");
+  /* webpackChunkName: "provinceData" */
   appendOpt(provinceSelect, provinceData);
 
   // select 添加监听事件
   provinceSelect.addEventListener("change", (e) => {
+    /* webpackChunkName: "cityData" */
     appendOpt(citySelect, cityData[e.target.value]);
     document.querySelector("#showStreet").checked = false;
   });
 
   citySelect.addEventListener("change", (e) => {
+    /* webpackChunkName: "countyData" */
     appendOpt(countySelect, countyData[e.target.value]);
     document.querySelector("#showStreet").checked = false;
   });

@@ -28,4 +28,8 @@ module.exports = {
       },
     ],
   },
+  externals: {
+    jquery: "jQuery",
+    echarts:'echarts'
+  },
 };

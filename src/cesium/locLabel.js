@@ -16,7 +16,6 @@ class LngLatWidget {
       "position: absolute; bottom: 2px; right: 2rem; color: white; opacity: 0.6; background-color: #bababa99; padding: 0px 5px 1px 5px; border-radius: 4px; font-size: 12px; text-shadow: 2px 2px 1px #000000;"
     );
     coordinatePanel.innerHTML = "";
-
     $(this.viewer.container).append(coordinatePanel);
 
     var _this = this;
@@ -117,10 +116,10 @@ class LngLatWidget {
     }, Cesium.ScreenSpaceEventType.WHEEL);
 
     var handler2 = new Cesium.ScreenSpaceEventHandler(this.viewer.scene.canvas);
-    var _this = this
+    var _this = this;
     handler2.setInputAction(function () {
       if (_this.viewer.scene.mode !== Cesium.SceneMode.MORPHING)
-      _this.onMeasuringScaleChanged();
+        _this.onMeasuringScaleChanged();
     }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
   }
 
