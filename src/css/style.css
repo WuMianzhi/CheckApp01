@@ -1,5 +1,5 @@
 :root {
-  --color-half-black: rgba(0, 0, 0, .4);
+  --color-half-black: rgba(0, 0, 0, 0.4);
   --spotify-green: rgb(0, 214, 104);
   --spotify-black: rgb(0, 0, 0);
   color: aliceblue;
@@ -21,7 +21,6 @@ body {
   padding: 1rem;
   color: aliceblue;
   backdrop-filter: blur(1px);
-  ;
 }
 
 #cesiumContainer {
@@ -45,7 +44,7 @@ body {
 .local_container select {
   min-width: 4rem;
   height: 2rem;
-  padding: .5rem;
+  padding: 0.5rem;
   border: solid lightcyan 1px;
   background: var(--color-half-black);
   color: aliceblue;
@@ -58,7 +57,7 @@ body {
   padding: 0;
 }
 
-.overall_container>div {
+.overall_container > div {
   width: 7rem;
   height: 7rem;
 }
@@ -85,7 +84,7 @@ body {
   font-size: 12pt !important;
   font-weight: 700;
   background: rgba(240, 248, 255, 0.1);
-  border: 1px solid rgba(240, 248, 255, .6);
+  border: 1px solid rgba(240, 248, 255, 0.6);
 }
 
 .locSelect_container .check-container {
@@ -94,7 +93,6 @@ body {
   /* justify-content: center; */
   align-items: center;
 }
-
 
 .locSelect_container button {
   cursor: pointer;
@@ -105,7 +103,7 @@ body {
   color: aliceblue;
   padding: 0;
   font-size: 1.25rem;
-  transition: all .36s ease-in-out;
+  transition: all 0.36s ease-in-out;
 }
 
 .local_container button {
@@ -115,7 +113,7 @@ body {
 .local_container button:hover,
 .locSelect_container button:hover {
   transform: scale(1.1);
-  transition: all .36s ease-in-out;
+  transition: all 0.36s ease-in-out;
   background: #48b;
   background-image: #48b;
   cursor: pointer;
@@ -123,7 +121,7 @@ body {
 
 .locSelect_container button:active {
   transform: scale(0.95);
-  transition: all .36s ease-in-out;
+  transition: all 0.36s ease-in-out;
   background: rgba(72, 72, 72, 0.2);
   cursor: pointer;
 }
@@ -170,6 +168,7 @@ body {
   width: 14rem;
   overflow: auto;
   font-size: 8pt;
+  /* overflow: hidden; */
 }
 
 #changedInfo p {
@@ -224,37 +223,36 @@ body {
 }
 
 .map-btn {
-  background-image: url('../assets/map.svg');
+  background-image: url("../assets/map.svg");
 }
 
 .border-btn {
-  background-image: url('../assets/village-border.svg');
-
+  background-image: url("../assets/village-border.svg");
 }
 
 .zhuji-btn {
-  background-image: url('../assets/text.svg');
+  background-image: url("../assets/text.svg");
   background-size: 1rem;
 }
 
 .village-border-btn {
-  background-image: url('../assets/border-inner.svg');
+  background-image: url("../assets/border-inner.svg");
 }
 
 .landcover-btn {
-  background-image: url('../assets/ESRI_landuse.png');
+  background-image: url("../assets/ESRI_landuse.png");
 }
 
 .ESA-landcover-btn {
-  background-image: url('../assets/ESA_landuse_2020.png');
+  background-image: url("../assets/ESA_landuse_2020.png");
 }
 
 .ESA-landcover-2021-btn {
-  background-image: url('../assets/ESA_landuse_2021.png');
+  background-image: url("../assets/ESA_landuse_2021.png");
 }
 
 .WSF-2019-btn {
-  background-image: url('../assets/WSF-c.png');
+  background-image: url("../assets/WSF-c.png");
 }
 
 #cesiumContainer .cesium-baseLayerPicker-dropDown-visible {
@@ -292,7 +290,7 @@ body {
   /* margin: 8px 0; */
   margin-bottom: 10px;
   border-radius: 4px;
-  background-color: rgba(40, 40, 40, .7);
+  background-color: rgba(40, 40, 40, 0.7);
 }
 
 .alpha-control-container:last-child {
@@ -390,7 +388,6 @@ body {
 }
 
 @media screen and (max-width: 960px) {
-
   .local_container {
     display: none;
   }
@@ -424,10 +421,9 @@ body {
   }
 }
 
-
-@media screen and (min-width:960px) and (max-width: 1100px) {
+@media screen and (min-width: 960px) and (max-width: 1100px) {
   .local_container {
-    padding: .5rem;
+    padding: 0.5rem;
   }
 
   #changedInfo {

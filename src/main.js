@@ -162,7 +162,8 @@ window.onload = function () {
                 "https://map.qq.com/",
                 "https://map.tianditu.gov.cn/",
                 "https://ditu.amap.com/",
-                "https://dmfw.mca.gov.cn/online/map.html?keyWordPlaceName=&isIndex=true",
+                "https://dmfw.mca.gov.cn/search.html",
+                "https://www.landcloud.org.cn/#/"
               ].map((web) => window.open(web));
             },
             title: "打开第三方地图",

@@ -1,98 +1,155 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= htmlWebpackPlugin.options.title %></title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/cesium@1.97.0/Build/Cesium/Widgets/widgets.css"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/cesium@1.97.0/Build/Cesium/Cesium.js"
+      defer
+    ></script>
+    <script
+      src="http://mizhibd.com/checkApp/backend/cesium-map.js"
+      defer
+    ></script>
+    <script
+      src="https://code.jquery.com/jquery-3.6.1.slim.min.js"
+      integrity="sha256-w8CvhFs7iHNVUtnSP0YKEg00p9Ih13rlL9zGqvLdePA="
+      crossorigin="anonymous"
+      defer
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/echarts@5.4.0/dist/echarts.min.js"
+      defer
+    ></script>
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= htmlWebpackPlugin.options.title %></title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cesium@1.97.0/Build/Cesium/Widgets/widgets.css">
-  <script src="https://cdn.jsdelivr.net/npm/cesium@1.97.0/Build/Cesium/Cesium.js" defer></script>
-  <script src="http://mizhibd.com/checkApp/backend/cesium-map.js" defer></script>
-  <script src="https://code.jquery.com/jquery-3.6.1.slim.min.js" integrity="sha256-w8CvhFs7iHNVUtnSP0YKEg00p9Ih13rlL9zGqvLdePA=" crossorigin="anonymous" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.0/dist/echarts.min.js" defer></script>
-</head>
-
-<body>
-  <div id="cesiumContainer"></div>
-  <div id="localContainer" class="transBg local_container">
-    <form id="localForm">
-      <select name="provinceCode" id="provinceSelect">
-        <option value="00">请选择省份</option>
-        <!-- <option value="23">黑龙江</option> -->
-      </select>
-      <select name="cityCode" id="citySelect">
-        <option value="0000">请选择城市</option>
-      </select>
-      <select name="countyCode" id="countySelect">
-        <option value="000000">请选择区县</option>
-      </select>
-      <button type="submit" id="localSubmit">确认</button>
-      <button type="button" id="dataDown"> 数据下载</button>
-      <div class="loading hidden" id="loadingHint">
-        <div class="right">
-          <div class="wave"></div>
-          <div class="wave"></div>
-          <div class="wave"></div>
-          <div class="wave"></div>
-          <div class="wave"></div>
-          <div class="wave"></div>
-          <div class="wave"></div>
-          <div class="wave"></div>
-          <div class="wave"></div>
-          <div class="wave"></div>
+  <body>
+    <div id="cesiumContainer"></div>
+    <div id="localContainer" class="transBg local_container">
+      <form id="localForm">
+        <select name="provinceCode" id="provinceSelect">
+          <option value="00">请选择省份</option>
+          <!-- <option value="23">黑龙江</option> -->
+        </select>
+        <select name="cityCode" id="citySelect">
+          <option value="0000">请选择城市</option>
+        </select>
+        <select name="countyCode" id="countySelect">
+          <option value="000000">请选择区县</option>
+        </select>
+        <button type="submit" id="localSubmit">确认</button>
+        <button type="button" id="dataDown">数据下载</button>
+        <div class="loading hidden" id="loadingHint">
+          <div class="right">
+            <div class="wave"></div>
+            <div class="wave"></div>
+            <div class="wave"></div>
+            <div class="wave"></div>
+            <div class="wave"></div>
+            <div class="wave"></div>
+            <div class="wave"></div>
+            <div class="wave"></div>
+            <div class="wave"></div>
+            <div class="wave"></div>
+          </div>
         </div>
-      </div>
-      <a href="http://" id="errorTips" class="hidden">尝试这个链接</a>
-
-    </form>
-  </div>
-
-  <div id="overallContainer" class="transBg overall_container">
-    <div id="overviewFig"></div>
-  </div>
-
-  <div id="locSelectContainer" class="transBg locSelect_container">
-    <!-- <input type="text" id="localName" placeholder="行政村/居委 名字" class="transBg" autofocus="false"> -->
-    <div id="manuSelect">
-      <form id="manuSelectForm">
-        <input type="text" id="updateCode" class="transBg" placeholder="请输入手动修改的 行政村/居委 Code">
-        <button type="submit" class="overview-btn"> 修改 </button>
-        <p id="errorInfo" hidden> </p>
+        <a href="http://" id="errorTips" class="hidden">尝试这个链接</a>
       </form>
     </div>
 
-    <div class="btn-group check-container " hidden>
-      <button id="checkType" class="transBg" hidden> Pick 红色 </button>
-      <button id="checkGroup" class="transBg" hidden> Pick 黄色 </button>
-      <button id="checkHandle" class="transBg" hidden>手动选取</button>
-      <button id="skipLoc" class="transBg" hidden> 跳过当前</button>
-      <button id="checkOverall" class="transBg" hidden>检查完毕</button>
+    <div id="overallContainer" class="transBg overall_container">
+      <div id="overviewFig"></div>
     </div>
 
-    <div class=" btn-group handle-picker-container" hidden>
-      <button id="cancelHandle" title="取消手动选取" class="overview-btn" hidden>取消</button>
-      <button id="errorMark" title="将此数据标记为异常数据" class="overview-btn" hidden>标记异常</button>
-      <button id="handlerConfirm" class="transBg" hidden>确认选取</button>
+    <div id="locSelectContainer" class="transBg locSelect_container">
+      <!-- <input type="text" id="localName" placeholder="行政村/居委 名字" class="transBg" autofocus="false"> -->
+      <div id="manuSelect">
+        <form id="manuSelectForm">
+          <input
+            type="text"
+            id="updateCode"
+            class="transBg"
+            placeholder="请输入手动修改的 行政村/居委 Code"
+          />
+          <button type="submit" class="overview-btn">修改</button>
+          <p id="errorInfo" hidden></p>
+        </form>
+      </div>
+
+      <div class="btn-group check-container" hidden>
+        <button id="checkType" class="transBg" hidden>Pick 红色</button>
+        <button id="checkGroup" class="transBg" hidden>Pick 黄色</button>
+        <button id="checkHandle" class="transBg" hidden>手动选取</button>
+        <button id="skipLoc" class="transBg" hidden>跳过当前</button>
+        <button id="checkOverall" class="transBg" hidden>检查完毕</button>
+      </div>
+
+      <div class="btn-group handle-picker-container" hidden>
+        <button
+          id="cancelHandle"
+          title="取消手动选取"
+          class="overview-btn"
+          hidden
+        >
+          取消
+        </button>
+        <button
+          id="errorMark"
+          title="将此数据标记为异常数据"
+          class="overview-btn"
+          hidden
+        >
+          标记异常
+        </button>
+        <button id="handlerConfirm" class="transBg" hidden>确认选取</button>
+      </div>
+
+      <div class="btn-group overcheck-container" hidden>
+        <button
+          id="overCheck"
+          title="复核当区域数据"
+          class="overview-btn"
+          hidden
+        >
+          复核数据
+        </button>
+        <button
+          id="toPrevStrret"
+          title="前一 乡镇/街道"
+          class="overview-btn"
+          hidden
+        >
+          返回前一乡镇/街道
+        </button>
+        <button
+          id="overCheckDone"
+          title="当前 乡镇/街道 检查完毕，前往下一街道"
+          class="overview-btn"
+          hidden
+        >
+          下一 乡镇/街道
+        </button>
+      </div>
+
+      <div class="checkbox">
+        <input type="checkbox" name="showStreet" id="showStreet" />
+        <label for="showStreet" id="streetLabel">显示当前 乡镇/街道 数据</label>
+      </div>
     </div>
 
-    <div class="btn-group overcheck-container" hidden>
-      <button id="overCheck" title="复核当区域数据" class="overview-btn" hidden>复核数据</button>
-      <button id="overCheckDone" title="当前 乡镇/街道 检查完毕，前往下一街道" class="overview-btn" hidden>下一 乡镇/街道 </button>
+    <div id="changedInfo" class="transBg">
+      <p hidden>
+        <span class="villageName">黑龙江什么区什么街道什么村</span> 的坐标更改为
+        <span class="location"> 124.2323 23.23232</span>
+      </p>
     </div>
 
-    <div class="checkbox">
-      <input type="checkbox" name="showStreet" id="showStreet">
-      <label for="showStreet" id="streetLabel">显示当前 乡镇/街道 数据</label>
-    </div>
-  </div>
-
-  <div id="changedInfo" class="transBg">
-    <p hidden> <span class="villageName">黑龙江什么区什么街道什么村</span> 的坐标更改为 <span class="location"> 124.2323 23.23232</span>
-    </p>
-  </div>
-
-  <div id="imageryLayerControlWrapper"></div>
-</body>
-
+    <div id="imageryLayerControlWrapper"></div>
+  </body>
 </html>

@@ -6,35 +6,6 @@ import {
 } from "./viewUpdate";
 import * as echarts from "echarts";
 
-// import * as echarts from "echarts/core";
-// // 引入柱状图图表，图表后缀都为 Chart
-// import { PieChart } from 'echarts/charts';
-// // 引入提示框，标题，直角坐标系，数据集，内置数据转换器组件，组件后缀都为 Component
-// import {
-//   TitleComponent,
-//   TooltipComponent,
-//   GridComponent,
-//   DatasetComponent,
-//   TransformComponent
-// } from 'echarts/components';
-// // 标签自动布局，全局过渡动画等特性
-// import { LabelLayout, UniversalTransition } from 'echarts/features';
-// // 引入 Canvas 渲染器，注意引入 CanvasRenderer 或者 SVGRenderer 是必须的一步
-// import { CanvasRenderer } from 'echarts/renderers';
-
-// 注册必须的组件
-// echarts.use([
-//   TitleComponent,
-//   TooltipComponent,
-//   GridComponent,
-//   DatasetComponent,
-//   TransformComponent,
-//   PieChart,
-//   LabelLayout,
-//   UniversalTransition,
-//   CanvasRenderer,
-// ]);
-
 /**
  * 存储当前数据的变量
  */
@@ -191,9 +162,15 @@ function overViewSet(geocodeData) {
     }
     // console.log(locateData[]);
   }
-  // console.log(locArray);
-  // console.log(warnData);
-  // console.log(allDataByStreet);
+
+  showInfo(
+    `当前区域有数据${geocodeData.length}条，街道/乡镇数量为 ${
+      Object.keys(allDataByStreet).length
+    }`,
+    "errorInfo"
+  );
+  console.log(allDataByStreet);
+
   overViewData[0].value = geocodeData.length - warnData.length;
   overViewData[1].value = warnData.length;
   overViewData[2].value = 0;
@@ -289,7 +266,7 @@ function showStreetData() {
       } else {
         console.log("Error!!! the  data is beyond China area");
       }
-      console.log(lngGroup, latGroup);
+      // console.log(lngGroup, latGroup);
       // document.querySelector("#checkGroup").hidden = false;
       // 添加按 聚类 判断出的结果
       var type_location = viewer.entities.add({
@@ -325,7 +302,7 @@ function showStreetData() {
                             </tbody>
                           </table>`,
       });
-      console.log(currentData);
+      // console.log(currentData);
     }
   }
 }
@@ -368,7 +345,7 @@ function checkInit(warnData) {
       document.querySelector("#checkGroup").hidden = true;
       document.querySelector("#checkType").hidden = true;
 
-      console.log("都没有结果");
+      // console.log("都没有结果");
       lon_raw = 0;
       lat_raw = 0;
       lon_group = 0;
@@ -538,10 +515,11 @@ function checkInit(warnData) {
       .querySelector("#checkHandle")
       .addEventListener("click", handlerPicker, { once: true });
   } else {
-    showInfo(
-      `当前 区/县 已全部检查完成，此 区/县 的 乡镇/街道 数据至少已经复核 ${minCheckTime} 次，最多的已经复核了 ${maxCheckTime} 次，请检查下一 区/县 或者复核当前 区/县。`,
-      "errorInfo"
-    );
+    // showInfo(``, "errorInfo");
+
+    // console.log("546", geocodeData);
+
+    // `当前 区/县 已全部检查完成，此 区/县 的 乡镇/街道 数据至少已经复核 ${minCheckTime} 次，最多的已经复核了 ${maxCheckTime} 次，请检查下一 区/县 或者复核当前 区/县。`
 
     // 显示复核对应按钮
     toggleHandlePickBtn(true);
@@ -563,10 +541,13 @@ function checkInit(warnData) {
 function overCheckFn() {
   overCheck = true;
   // 初始化视图
-  var overCheckDoneBtn = document.querySelector("#overCheckDone");
+  const overCheckDoneBtn = document.querySelector("#overCheckDone");
   overCheckDoneBtn.hidden = false;
 
-  var overCheckBtn = document.querySelector("#overCheck");
+  const toPrevStreetBtn = document.querySelector("#toPrevStrret");
+  // toPrevStreetBtn.hidden = false;
+
+  const overCheckBtn = document.querySelector("#overCheck");
   curStreetDataID = 0;
 
   var overCheckKeys = Object.keys(allDataByStreet);
@@ -583,13 +564,58 @@ function overCheckFn() {
 
   // 视图更新
   document.querySelector("#updateCode").value = overCheckKeys[curStreetDataID];
-  var overCheckStreetKeys = Object.keys(curStreetData);
 
   // 绑定跳转到下一街道事件
   overCheckDoneBtn.addEventListener("click", overCheckNextStreet);
+  toPrevStreetBtn.addEventListener("click", overCheckPrevStreet);
 
   overCheckBtn.hidden = true;
 }
+
+/**
+ * 复核数据时跳转前一街道
+ *
+ */
+const overCheckPrevStreet = function () {
+  changeView = true;
+  // document.querySelector("#showStreet").disabled = false;
+
+  viewer.entities.removeAll();
+  const overCheckKeys = Object.keys(allDataByStreet);
+
+  console.log(curStreetDataID, overCheckKeys);
+  curStreetDataID -= 1;
+
+  // 按街道数据更新图表
+  overViewData[0].value += Object.keys(
+    allDataByStreet[overCheckKeys[curStreetDataID]]
+  ).length;
+
+  overViewData[1].value -= Object.keys(
+    allDataByStreet[overCheckKeys[curStreetDataID]]
+  ).length;
+
+  updateOverviewCharts();
+
+  document.querySelector("#showStreet").checked = false;
+
+  // 溢出检测
+  if (curStreetDataID > -1) {
+    document.querySelector("#updateCode").value =
+      overCheckKeys[curStreetDataID];
+    curStreetData = allDataByStreet[overCheckKeys[curStreetDataID]];
+    // console.log(curStreetData);
+    groupViewer(curStreetData);
+    updateStreetGeocodeDB(overCheckKeys[curStreetDataID + 1]);
+
+    const toPrevStreetBtn = document.querySelector("#toPrevStrret");
+    if (curStreetDataID > 0) {
+      toPrevStreetBtn.hidden = false;
+    } else {
+      toPrevStreetBtn.hidden = true;
+    }
+  }
+};
 
 /**
  * 复核数据时跳转至下一街道
@@ -611,22 +637,29 @@ function overCheckNextStreet() {
   overViewData[1].value += Object.keys(
     allDataByStreet[overCheckKeys[curStreetDataID]]
   ).length;
-  console.log(overViewData);
+  // console.log(overViewData);
   updateOverviewCharts();
 
   curStreetDataID += 1;
   document.querySelector("#showStreet").checked = false;
+  console.log(curStreetDataID);
 
+  const toPrevStreetBtn = document.querySelector("#toPrevStrret");
+  if (curStreetDataID > 0) {
+    toPrevStreetBtn.hidden = false;
+  } else {
+    toPrevStreetBtn.hidden = true;
+  }
   // 溢出检测
   if (curStreetDataID < overCheckKeys.length) {
     document.querySelector("#updateCode").value =
       overCheckKeys[curStreetDataID];
     curStreetData = allDataByStreet[overCheckKeys[curStreetDataID]];
-    console.log(curStreetData);
+    // console.log(curStreetData);
     groupViewer(curStreetData);
     updateStreetGeocodeDB(overCheckKeys[curStreetDataID - 1]);
   } else {
-    showInfo("当前区/县数据已经复核完成，请检查下一区/县数据 ~ ");
+    showInfo("当前区/县数据已经复核完成，请检查下一区/县数据,或者重复检查 ~ ");
     document.querySelector("#overCheckDone").hidden = true;
   }
 }
@@ -812,7 +845,7 @@ function markedError() {
       }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
     }
   });
-  console.log(currentData);
+  // console.log(currentData);
 }
 
 document.getElementById("cancelHandle").addEventListener("click", cancelHandle);
@@ -843,6 +876,12 @@ function cancelHandle() {
  * @param {*} streetLocalData
  */
 function groupViewer(streetLocalData, extra) {
+  const idList = Object.keys(streetLocalData);
+  const streetName = streetLocalData[idList[0]].keyword.slice(
+    0,
+    streetLocalData[idList[0]].keyword.indexOf(streetLocalData[idList[0]].name)
+  );
+  showInfo(`正在复核 ${streetName} ，共计 ${idList.length} 条数据`);
   handler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK);
   // 样式区分
   let subImgURL = "http://mizhibd.com/checkApp/backend/ico/location-purple.png";
@@ -902,9 +941,11 @@ function groupViewer(streetLocalData, extra) {
       showlng += Math.random() * 0.002 + 0.0001;
       showlat += Math.random() * 0.002 + 0.0001;
     }
-    locateData.type > 200
-      ? console.log(locateData.keyword)
-      : console.log(locateData.keyword + "*");
+
+    // locateData.type > 200
+    //   ? console.log(locateData.keyword)
+    //   : console.log(locateData.keyword + "*");
+
     let location_label = viewer.entities.add({
       id: locateData.code + "_" + Math.random() * 10000,
       name: locateData.keyword,
@@ -1086,7 +1127,7 @@ function updateGeocode(warnData, lon, lat, code, isHandle = 0) {
           ) {
             // 进行下一次比较
             checkInit(warnData, ++current);
-            console.log(warnData[nextDataID]["streetCode"]);
+            // console.log(warnData[nextDataID]["streetCode"]);
           } else {
             showInfo(
               `现在进行 ${warnData[current]["strt"]} 区域全局比较`,
@@ -1174,7 +1215,7 @@ async function updateStreetGeocodeDB(street) {
 async function markWarnData() {
   let url = "http://mizhibd.com/checkApp/backend/warnMark.php";
   let warnMarkFD = new FormData();
-  console.log(currentData);
+  // console.log(currentData);
   warnMarkFD.append("code", currentData.code);
   warnMarkFD.append("table", document.querySelector("#provinceSelect").value);
 
