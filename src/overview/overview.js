@@ -526,6 +526,8 @@ function checkInit(warnData) {
     toggleCheckBtnGroup(true);
     toggleOvercheckBtnGroup();
 
+    document.querySelector("#midInfo").innerHTML = "";
+
     // 绑定点击事件
     var overCheckBtn = document.querySelector("#overCheck");
     overCheckBtn.addEventListener("click", overCheckFn);
@@ -609,6 +611,7 @@ const overCheckPrevStreet = function () {
     updateStreetGeocodeDB(overCheckKeys[curStreetDataID + 1]);
 
     const toPrevStreetBtn = document.querySelector("#toPrevStrret");
+    document.querySelector("#overCheckDone").hidden = false;
     if (curStreetDataID > 0) {
       toPrevStreetBtn.hidden = false;
     } else {
@@ -881,7 +884,11 @@ function groupViewer(streetLocalData, extra) {
     0,
     streetLocalData[idList[0]].keyword.indexOf(streetLocalData[idList[0]].name)
   );
+  // console.log();
+  document.querySelector("#midInfo").innerHTML =
+    streetLocalData[idList[0]].strt;
   showInfo(`正在复核 ${streetName} ，共计 ${idList.length} 条数据`);
+
   handler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK);
   // 样式区分
   let subImgURL = "http://mizhibd.com/checkApp/backend/ico/location-purple.png";

@@ -366,6 +366,16 @@ body {
   justify-content: flex-end;
 }
 
+.midInfo {
+  position: absolute;
+  top: 2rem;
+  left: 50%;
+  color: yellow;
+  font-size: 1.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(0, 0, 0, 0.2);
+}
+
 .cesium-viewer-geocoderContainer .cesium-geocoder-input-wide,
 .cesium-viewer-geocoderContainer .cesium-geocoder-input:focus,
 .cesium-viewer-geocoderContainer .cesium-geocoder-input {
