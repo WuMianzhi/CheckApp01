@@ -4,7 +4,10 @@ import {
   toggleOvercheckBtnGroup,
   toggleHandlePickBtn,
 } from "./viewUpdate";
+import { createPoint } from "./createEntity";
+import { overlayCheck } from "../overlayCheck/overlayCheck";
 import * as echarts from "echarts";
+import { groupViewer } from "./createEntity";
 
 /**
  * 存储当前数据的变量
@@ -18,7 +21,9 @@ let current,
   curStreetDataID,
   allDataByStreet = {},
   overCheck = false,
-  changeView = true;
+  changeView = true,
+  overlayCheckStatus = false;
+
 let minCheckTime = 9999999;
 let maxCheckTime = 0;
 
@@ -211,98 +216,12 @@ function showStreetData() {
     if (overCheck) {
       groupViewer(curStreetData);
     } else {
-      // console.log("not over check");
-      // 添加 entity
-      // 判断是否解析出
-      if (currentData.lon > 60 && currentData.lon_raw < 160) {
-        // document.querySelector("#checkType").hidden = false;
-        // 添加按 type 判断出的结果
-        var type_location = viewer.entities.add({
-          id: currentData.code + "_" + Math.random() * 10000,
-          name: currentData.keyword,
-          position: Cesium.Cartesian3.fromDegrees(
-            currentData.lon_raw,
-            currentData.lat_raw
-          ),
-          billboard: {
-            image: "http://mizhibd.com/checkApp/backend/ico/location-red.png",
-            width: 32,
-            height: 32,
-          },
-          label: {
-            text: `${currentData.name}_${currentData.strt}_${currentData.code}`,
-            font: "14pt monospace",
-            style: Cesium.LabelStyle.FILL_AND_OUTLINE,
-            fillColor: new Cesium.Color(228 / 255, 32 / 255, 71 / 255), // 填充颜色
-            outlineColor: Cesium.Color.WHITE, // 外边线颜色
-            outlineWidth: 4.0,
-            backgroundColor: new Cesium.Color(0.2, 0.2, 0.2, 0.2),
-            showBackground: true,
-            verticalOrigin: Cesium.VerticalOrigin.TOP,
-            pixelOffset: new Cesium.Cartesian2(0, 16),
-          },
-          description: `  <table>
-                            <tbody>
-                              <tr><td>lon：</td><td>${currentData.lon_raw}</td></tr>
-                              <tr><td>lat：</td><td>${currentData.lat_raw}</td></tr>
-                              <tr><td>type：</td><td>${currentData.type}</td></tr>
-                              <tr><td>rural_area：</td><td>${currentData.Rural_Area}</td></tr>
-                              <tr><td>rural_population：</td><td>${currentData.Rural_Population}</td></tr>
-                              <tr><td>streetCode：</td><td>${currentData.name}</td></tr>
-                              <tr><td>checked：</td><td>${currentData.checked}</td></tr>
-                            </tbody>
-                          </table>`,
-        });
-      } else {
-        console.log("Error!!! the  data is beyond China area");
-      }
-
-      let lngGroup = 0,
-        latGroup = 0;
-      // 同上
-      if (currentData.lon_group > 60 && currentData.lon_group < 160) {
-        lngGroup = currentData.lon_group;
-        latGroup = currentData.lat_group;
-      } else {
-        console.log("Error!!! the  data is beyond China area");
-      }
-      // console.log(lngGroup, latGroup);
-      // document.querySelector("#checkGroup").hidden = false;
-      // 添加按 聚类 判断出的结果
-      var type_location = viewer.entities.add({
-        id: currentData.code + "_" + Math.random() * 10000,
-        name: currentData.keyword,
-        position: Cesium.Cartesian3.fromDegrees(lngGroup, latGroup),
-        billboard: {
-          image: "http://mizhibd.com/checkApp/backend/ico/location-yellow.png",
-          width: 32,
-          height: 32,
-        },
-        label: {
-          text: `${currentData.name}_${currentData.strt}_${currentData.code}`,
-          font: "14pt monospace",
-          style: Cesium.LabelStyle.FILL_AND_OUTLINE,
-          showBackground: true,
-          backgroundColor: new Cesium.Color(0.2, 0.2, 0.2, 0.2),
-          fillColor: new Cesium.Color(252 / 255, 203 / 255, 47 / 255), // 填充颜色
-          outlineColor: Cesium.Color.WHITE, // 外边线颜色
-          outlineWidth: 4.0,
-          verticalOrigin: Cesium.VerticalOrigin.TOP,
-          pixelOffset: new Cesium.Cartesian2(0, 16),
-        },
-        description: `  <table>
-                            <tbody>
-                              <tr><td>lon：</td><td>${currentData.lon_group}</td></tr>
-                              <tr><td>lat：</td><td>${currentData.lat_group}</td></tr>
-                              <tr><td>type：</td><td>${currentData.type}</td></tr>
-                              <tr><td>rural_area：</td><td>${currentData.Rural_Area}</td></tr>
-                              <tr><td>rural_population：</td><td>${currentData.Rural_Population}</td></tr>
-                              <tr><td>streetCode：</td><td>${currentData.name}</td></tr>
-                              <tr><td>checked：</td><td>${currentData.checked}</td></tr>
-                            </tbody>
-                          </table>`,
-      });
-      // console.log(currentData);
+      const typeLocation = viewer.entities.add(
+        createPoint(currentData, "lon_raw", "lat_raw", "RED")
+      );
+      const groupLocation = viewer.entities.add(
+        createPoint(curStreetData, "lon_group", "lat_group", "YELLOW")
+      );
     }
   }
 }
@@ -357,42 +276,9 @@ function checkInit(warnData) {
         updateOverviewCharts();
         document.querySelector("#checkType").hidden = false;
         // 添加按 type 判断出的结果
-        var type_location = viewer.entities.add({
-          id: currentData.code + "_" + Math.random() * 10000,
-          name: currentData.keyword,
-          position: Cesium.Cartesian3.fromDegrees(
-            currentData.lon_raw,
-            currentData.lat_raw
-          ),
-          billboard: {
-            image: "http://mizhibd.com/checkApp/backend/ico/location-red.png",
-            width: 32,
-            height: 32,
-          },
-          label: {
-            text: `${currentData.name}_${currentData.strt}_${currentData.code}`,
-            font: "14pt monospace",
-            style: Cesium.LabelStyle.FILL_AND_OUTLINE,
-            fillColor: new Cesium.Color(228 / 255, 32 / 255, 71 / 255), // 填充颜色
-            outlineColor: Cesium.Color.WHITE, // 外边线颜色
-            outlineWidth: 4.0,
-            backgroundColor: new Cesium.Color(0.2, 0.2, 0.2, 0.2),
-            showBackground: true,
-            verticalOrigin: Cesium.VerticalOrigin.TOP,
-            pixelOffset: new Cesium.Cartesian2(0, 16),
-          },
-          description: `  <table>
-                          <tbody>
-                            <tr><td>lon：</td><td>${currentData.lon_raw}</td></tr>
-                            <tr><td>lat：</td><td>${currentData.lat_raw}</td></tr>
-                            <tr><td>type：</td><td>${currentData.type}</td></tr>
-                            <tr><td>rural_area：</td><td>${currentData.Rural_Area}</td></tr>
-                            <tr><td>rural_population：</td><td>${currentData.Rural_Population}</td></tr>
-                            <tr><td>streetCode：</td><td>${currentData.name}</td></tr>
-                            <tr><td>checked：</td><td>${currentData.checked}</td></tr>
-                          </tbody>
-                        </table>`,
-        });
+        const typeLocation = viewer.entities.add(
+          createPoint(currentData, "lon_raw", "lat_raw", "RED")
+        );
       } else {
         document.querySelector("#checkType").hidden = true;
         showInfo("方法一未解析出");
@@ -404,43 +290,9 @@ function checkInit(warnData) {
       if (lon_group > 60 && lon_group < 160) {
         document.querySelector("#checkGroup").hidden = false;
         // 添加按 聚类 判断出的结果
-        var type_location = viewer.entities.add({
-          id: currentData.code + "_" + Math.random() * 10000,
-          name: currentData.keyword,
-          position: Cesium.Cartesian3.fromDegrees(
-            currentData.lon_group,
-            currentData.lat_group
-          ),
-          billboard: {
-            image:
-              "http://mizhibd.com/checkApp/backend/ico/location-yellow.png",
-            width: 32,
-            height: 32,
-          },
-          label: {
-            text: `${currentData.name}_${currentData.strt}_${currentData.code}`,
-            font: "14pt monospace",
-            fillColor: new Cesium.Color(252 / 255, 203 / 255, 47 / 255), // 填充颜色
-            outlineColor: Cesium.Color.WHITE, // 外边线颜色
-            outlineWidth: 4.0,
-            style: Cesium.LabelStyle.FILL_AND_OUTLINE,
-            showBackground: true,
-            verticalOrigin: Cesium.VerticalOrigin.TOP,
-            backgroundColor: new Cesium.Color(0.2, 0.2, 0.2, 0.2),
-            pixelOffset: new Cesium.Cartesian2(0, 16),
-          },
-          description: `  <table>
-                          <tbody>
-                            <tr><td>lon：</td><td>${currentData.lon_group}</td></tr>
-                            <tr><td>lat：</td><td>${currentData.lat_group}</td></tr>
-                            <tr><td>type：</td><td>${currentData.type}</td></tr>
-                            <tr><td>rural_area：</td><td>${currentData.Rural_Area}</td></tr>
-                            <tr><td>rural_population：</td><td>${currentData.Rural_Population}</td></tr>
-                            <tr><td>streetCode：</td><td>${currentData.name}</td></tr>
-                            <tr><td>checked：</td><td>${currentData.checked}</td></tr>
-                          </tbody>
-                        </table>`,
-        });
+        const groupLocation = viewer.entities.add(
+          createPoint(currentData, "lon_group", "lat_group", "YELLOW")
+        );
       } else {
         document.querySelector("#checkGroup").hidden = true;
         showInfo("方法二未解析出结果");
@@ -531,11 +383,63 @@ function checkInit(warnData) {
     // 绑定点击事件
     var overCheckBtn = document.querySelector("#overCheck");
     overCheckBtn.addEventListener("click", overCheckFn);
+
+    const nearCheckBtn = document.querySelector("#nearCheck");
+
+    nearCheckBtn.addEventListener("click", overlayCheckFn);
   }
 
   // 更新 charts
   updateOverviewCharts();
 }
+
+const overlayCheckFn = () => {
+  overlayCheckStatus = true;
+  viewer.entities.removeAll();
+  // 格式化数据
+  const allData = [];
+  for (const streetData in allDataByStreet) {
+    if (Object.hasOwnProperty.call(allDataByStreet, streetData)) {
+      for (const villageData in allDataByStreet[streetData]) {
+        if (Object.hasOwnProperty.call(allDataByStreet, streetData)) {
+          allData.push(allDataByStreet[streetData][villageData]);
+        }
+      }
+    }
+  }
+  // 进行重复性检查
+  overlayCheck(allData, 50);
+
+  // 在视图中添加点
+  // 检测边界
+  let east = -Infinity,
+    north = -Infinity,
+    west = Infinity,
+    south = Infinity;
+
+  for (const pointData of allData) {
+    // 确定边界范围
+    pointData.lon > east ? (east = pointData.lon) : null;
+    pointData.lat > north ? (north = pointData.lat) : null;
+
+    pointData.lon < west ? (west = pointData.lon) : null;
+    pointData.lat < south ? (south = pointData.lat) : null;
+
+    // 添加点
+    viewer.entities.add(
+      createPoint(pointData, "lon", "lat", pointData.isRepeat ? "RED" : "GREEN")
+    );
+  }
+  console.log(west, south, east, north);
+  viewer.camera.flyTo({
+    destination: Cesium.Rectangle.fromDegrees(west, south, east, north),
+  });
+
+  // 重新绑定输入事件
+  handler.setInputAction((click) => {
+    showPickEntityInfo(click);
+  }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+};
 
 /**
  * 复核
@@ -759,7 +663,7 @@ function handlerConfirm(longitude, latitude) {
   document.getElementById("cancelHandle").hidden = false;
 
   // 展示手动选取后的点
-  var handlerPoint = viewer.entities.add({
+  let handlerPoint = viewer.entities.add({
     id: currentData.code + "_" + Math.ceil(Math.random() * 10000),
     name: currentData.keyword,
     position: Cesium.Cartesian3.fromDegrees(longitude, latitude),
@@ -804,13 +708,18 @@ function confirmUpdate(lng, lat) {
   releaseClickListener();
   // 更新按钮，回到之前的状态
   toggleHandlePickBtn(true);
-  if (overCheck) {
-    toggleOvercheckBtnGroup();
-    document.getElementById("overCheck").hidden = true;
-    document.getElementById("overCheckDone").hidden = false;
+  if (overlayCheckStatus) {
+    document.querySelector("#nearCheck").hidden = false;
   } else {
-    toggleCheckBtnGroup();
+    if (overCheck) {
+      toggleOvercheckBtnGroup();
+      document.getElementById("overCheck").hidden = true;
+      document.getElementById("overCheckDone").hidden = false;
+    } else {
+      toggleCheckBtnGroup();
+    }
   }
+
   updateGeocode(warnData, lng, lat, currentData.code, 1);
 }
 
@@ -873,146 +782,6 @@ function cancelHandle() {
   handler.setInputAction((click) => {
     showPickEntityInfo(click);
   }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
-}
-/**
- * 在 viewer 中添加 编码点
- * @param {*} streetLocalData
- */
-function groupViewer(streetLocalData, extra) {
-  const idList = Object.keys(streetLocalData);
-  const streetName = streetLocalData[idList[0]].keyword.slice(
-    0,
-    streetLocalData[idList[0]].keyword.indexOf(streetLocalData[idList[0]].name)
-  );
-  // console.log();
-  document.querySelector("#midInfo").innerHTML =
-    streetLocalData[idList[0]].strt;
-  showInfo(`正在复核 ${streetName} ，共计 ${idList.length} 条数据`);
-
-  handler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK);
-  // 样式区分
-  let subImgURL = "http://mizhibd.com/checkApp/backend/ico/location-purple.png";
-  let normalImgURL =
-    "http://mizhibd.com/checkApp/backend/ico/location-green.png";
-  let safeImgURL = "http://mizhibd.com/checkApp/backend/ico/location-blue.png";
-  let warnImgURL = "http://mizhibd.com/checkApp/backend/ico/location-rose.png";
-
-  let subBgColor = new Cesium.Color(246 / 255, 209 / 255, 253 / 255, 0.2);
-  let safeBgColor = new Cesium.Color(0.0, 0.55, 1, 0.2);
-  let normalBgColor = new Cesium.Color(0.0, 0.83, 0.41, 0.2);
-
-  let subTextColor = new Cesium.Color(246 / 255, 209 / 255, 253 / 255, 0.6);
-  let safeTextColor = new Cesium.Color(0.0, 0.55, 1, 0.6);
-  let normalTextColor = new Cesium.Color(0.0, 0.83, 0.41, 0.6);
-
-  let overImgURL = extra ? subImgURL : normalImgURL;
-  let overBgColor = extra ? subBgColor : normalBgColor;
-  let overTextColor = extra ? subTextColor : normalTextColor;
-
-  document.querySelector("#checkHandle").hidden = true;
-  document.querySelector("#skipLoc").hidden = true;
-
-  let westLng = Number.MAX_SAFE_INTEGER,
-    eastLng = Number.MIN_SAFE_INTEGER,
-    southLat = Number.MAX_SAFE_INTEGER,
-    northLat = Number.MIN_SAFE_INTEGER;
-
-  // 添加 数据点群
-  for (let locationData in streetLocalData) {
-    let locateData = streetLocalData[locationData];
-
-    // 求点群的经纬度范围
-    westLng = parseFloat(westLng < locateData.lon ? westLng : locateData.lon);
-    eastLng = parseFloat(eastLng > locateData.lon ? eastLng : locateData.lon);
-    southLat = parseFloat(
-      southLat < locateData.lat ? southLat : locateData.lat
-    );
-    northLat = parseFloat(
-      northLat > locateData.lat ? northLat : locateData.lat
-    );
-
-    // 判断采用的图标样式
-    let imgURL = locateData.isHandle ? safeImgURL : overImgURL;
-    let labelBgColor = locateData.isHandle ? safeBgColor : overBgColor;
-    let textColor = locateData.isHandle ? safeTextColor : overTextColor;
-
-    // 不偏移
-    let showlng = parseFloat(locateData.lon);
-    let showlat = parseFloat(locateData.lat);
-
-    // 重复数据偏移特殊处理
-    if (locateData.repeate && locateData.isHandle == 0) {
-      // 使用警告图标
-      imgURL = warnImgURL;
-      // 坐标随机偏移 10 到 20 米
-      showlng += Math.random() * 0.002 + 0.0001;
-      showlat += Math.random() * 0.002 + 0.0001;
-    }
-
-    // locateData.type > 200
-    //   ? console.log(locateData.keyword)
-    //   : console.log(locateData.keyword + "*");
-
-    let location_label = viewer.entities.add({
-      id: locateData.code + "_" + Math.random() * 10000,
-      name: locateData.keyword,
-      position: Cesium.Cartesian3.fromDegrees(showlng, showlat),
-      billboard: {
-        image: imgURL,
-        width: 32,
-        height: 32,
-      },
-      label: {
-        text:
-          locateData.type > 200
-            ? locateData.name
-            : " * " + locateData.name + " * ",
-        font: "14pt monospace",
-        style: Cesium.LabelStyle.FILL_AND_OUTLINE,
-        fillColor: textColor, // 填充颜色
-        outlineColor: Cesium.Color.WHITE, // 外边线颜色
-        outlineWidth: 4.0,
-        backgroundColor: labelBgColor,
-        showBackground: true,
-        verticalOrigin: Cesium.VerticalOrigin.TOP,
-        pixelOffset: new Cesium.Cartesian2(0, 16),
-        distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0, 15000),
-      },
-      description: `  <table>
-                        <tbody>
-                          <tr><td>lon：</td><td>${locateData.lon}</td></tr>
-                          <tr><td>lat：</td><td>${locateData.lat}</td></tr>
-                          <tr><td>type：</td><td>${locateData.type}</td></tr>
-                          <tr><td>rural_area：</td><td>${locateData.Rural_Area}</td></tr>
-                          <tr><td>rural_population：</td><td>${locateData.Rural_Population}</td></tr>
-                          <tr><td>Name：</td><td>${locateData.name}</td></tr>
-                          <tr><td>streetCode：</td><td>${locateData.strt}</td></tr>
-                          <tr><td>Code：</td><td>${locateData.code}</td></tr>
-                          <tr><td>checked：</td><td>${locateData.checked}</td></tr>
-                        </tbody>
-                      </table>`,
-    });
-  }
-
-  handler.setInputAction((click) => {
-    showPickEntityInfo(click);
-  }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
-
-  let lngDiff = eastLng - westLng < 0.02 ? 0.02 : eastLng - westLng;
-  let latDiff = northLat - southLat < 0.02 ? 0.02 : northLat - southLat;
-
-  if (changeView) {
-    viewer.camera.flyTo({
-      destination: Cesium.Rectangle.fromDegrees(
-        westLng - lngDiff / 2,
-        southLat - latDiff / 2,
-        eastLng + lngDiff / 2,
-        northLat + latDiff / 2
-      ),
-    });
-  } else {
-    console.log("is overcheck not change view");
-  }
 }
 
 /**
@@ -1109,7 +878,7 @@ function updateGeocode(warnData, lon, lat, code, isHandle = 0) {
         allDataByStreet[currentData.streetCode][currentData.code][
           "isHandle"
         ] = 1;
-
+        console.log(allDataByStreet[currentData.streetCode][currentData.code]);
         // 提示坐标修改
         showInfo(
           `编号 ${currentData["code"]} ${currentData["keyword"]} 的坐标已更改`,
@@ -1118,36 +887,40 @@ function updateGeocode(warnData, lon, lat, code, isHandle = 0) {
 
         let nextDataID = current + 1;
         // 如果是复核数据，重新添加数据
-        if (overCheck) {
-          viewer.entities.removeAll();
-          changeView = false;
-          groupViewer(curStreetData);
-
-          document.querySelector("#checkType").hidden = true;
-          document.querySelector("#checkGroup").hidden = true;
+        if (overlayCheckStatus) {
+          overlayCheckFn();
         } else {
-          if (
-            overViewData[1].value > 0 &&
-            nextDataID < warnData.length &&
-            warnData[nextDataID]["streetCode"] ===
-              warnData[current]["streetCode"]
-          ) {
-            // 进行下一次比较
-            checkInit(warnData, ++current);
-            // console.log(warnData[nextDataID]["streetCode"]);
-          } else {
-            showInfo(
-              `现在进行 ${warnData[current]["strt"]} 区域全局比较`,
-              "warnInfo"
-            );
-
+          if (overCheck) {
             viewer.entities.removeAll();
+            changeView = false;
+            groupViewer(curStreetData);
 
-            // 检查全区数据
-            streetGeocodeCheck(warnData[current]["streetCode"]);
+            document.querySelector("#checkType").hidden = true;
+            document.querySelector("#checkGroup").hidden = true;
+          } else {
+            if (
+              overViewData[1].value > 0 &&
+              nextDataID < warnData.length &&
+              warnData[nextDataID]["streetCode"] ===
+                warnData[current]["streetCode"]
+            ) {
+              // 进行下一次比较
+              checkInit(warnData, ++current);
+              // console.log(warnData[nextDataID]["streetCode"]);
+            } else {
+              showInfo(
+                `现在进行 ${warnData[current]["strt"]} 区域全局比较`,
+                "warnInfo"
+              );
+
+              viewer.entities.removeAll();
+
+              // 检查全区数据
+              streetGeocodeCheck(warnData[current]["streetCode"]);
+            }
+
+            document.querySelector("#showStreet").checked = false;
           }
-
-          document.querySelector("#showStreet").checked = false;
         }
       }
     })

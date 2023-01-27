@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .table {
+        border: 1px solid rgba(245, 245, 245, 0.5);
+        border-radius: 20px;
+        border-collapse: collapse;
+        width: 100%;
+      }
+      .table th,
+      .table td {
+        padding: 4px;
+        border: 1px solid rgba(12, 10, 10, 0.84);
+      }
+
+      .table tbody tr:nth-child(2n) {
+        background-color: rgba(240, 248, 255, 0.2);
+      }
+
+      .table tbody td:first-child {
+        width: 2rem;
+      }
+
+      .select {
+        padding: 2px;
+      }
+
+      iframe {
+        width: 100%;
+        height: 50rem;
+      }
+    </style>
+  </head>
+  <body>
+    <table class="table">
+      <tbody>
+        <tr>
+          <td>Lon：</td>
+          <td>${locateData.lon}</td>
+        </tr>
+        <tr>
+          <td>Lon：</td>
+          <td>${locateData.lon}</td>
+        </tr>
+        <tr>
+          <td>Lon：</td>
+          <td>${locateData.lon}</td>
+        </tr>
+        <tr>
+          <td>Lon：</td>
+          <td>${locateData.lon}</td>
+        </tr>
+        <tr>
+          <td>Lon：</td>
+          <td>${locateData.lon}</td>
+        </tr>
+        <tr>
+          <td>Lon：</td>
+          <td>${locateData.lon}</td>
+        </tr>
+        <tr>
+          <td>Lon：</td>
+          <td>${locateData.lon}</td>
+        </tr>
+        <tr>
+          <td>Lon：</td>
+          <td>${locateData.lon}</td>
+        </tr>
+        <tr>
+          <td>Lon：</td>
+          <td>${locateData.lon}</td>
+        </tr>
+        <tr>
+          <td>Lon：</td>
+          <td>${locateData.lon}</td>
+        </tr>
+        <tr>
+          <td>Lon：</td>
+          <td>${locateData.lon}</td>
+        </tr>
+        <tr>
+          <td>Lon：</td>
+          <td>${locateData.lon}</td>
+        </tr>
+        <tr>
+          <td>Lon：</td>
+          <td>${locateData.lon}</td>
+        </tr>
+        <tr>
+          <td>Lon：</td>
+          <td>${locateData.lon}</td>
+        </tr>
+        <tr>
+          <td>Lon：</td>
+          <td>${locateData.lon}</td>
+        </tr>
+        <tr>
+          <td>Lon：</td>
+          <td>${locateData.lon}</td>
+        </tr>
+        <tr>
+          <td>Lon：</td>
+          <td>${locateData.lon}</td>
+        </tr>
+        <tr>
+          <td>Lon：</td>
+          <td>${locateData.lon}</td>
+        </tr>
+        <tr>
+          <td>Lon：</td>
+          <td>${locateData.lon}</td>
+        </tr>
+        <tr>
+          <td>Lon：</td>
+          <td>${locateData.lon}</td>
+        </tr>
+        <tr>
+          <td>Lat：</td>
+          <td>${locateData.lat}</td>
+        </tr>
+        <tr>
+          <td>Rype：</td>
+          <td>${locateData.type}</td>
+        </tr>
+        <tr>
+          <td>Rural_area：</td>
+          <td>${locateData.Rural_Area}</td>
+        </tr>
+        <tr>
+          <td>Rural_population：</td>
+          <td>${locateData.Rural_Population}</td>
+        </tr>
+        <tr>
+          <td>Name：</td>
+          <td>${locateData.name}</td>
+        </tr>
+        <tr>
+          <td>StreetCode：</td>
+          <td>${locateData.strt}</td>
+        </tr>
+        <tr>
+          <td>Code：</td>
+          <td>${locateData.code}</td>
+        </tr>
+        <tr>
+          <td>Checked：</td>
+          <td>${locateData.checked}</td>
+        </tr>
+        <tr>
+          <td>Status：</td>
+          <td>
+            <span id="statusDisplay">${locateData.status}</span>
+            <button
+              id="showSelect"
+              onclick="document.querySelector('#changeTR').hidden = false"
+            >
+              点击修改
+            </button>
+          </td>
+        </tr>
+        <tr id="changeTR" hidden>
+          <td>Status：</td>
+          <td>
+            <form id="statusForm">
+              <select name="status" class="select" value="${locateData.status}">
+                <option value="0">正常点位</option>
+                <option value="1">整体搬迁</option>
+                <option value="-1">部分搬迁</option>
+                <option value="2">特殊点位</option>
+                <option value="-2">特殊点位</option>
+              </select>
+              <button type="button" onclick="updatePointStatus()">确认</button>
+            </form>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+  <script>
+    const change = function () {
+      const changeTR = document.querySelector("#changeTR");
+      changeTR.hidden = false;
+    };
+
+    const updatePointStatus = function () {
+      console.log("aaa");
+      const data = new FormData(document.querySelector("#statusForm"));
+      fetch("http://mizhibd.com/checkApp/backend/updateStatus.php", {
+        method: "POST",
+        body: data,
+      }).then(() => {
+        document.querySelector("#changeTR").hidden = true;
+        document.querySelector("#statusDisplay").innerHTML = data.get("status");
+      });
+    };
+  </script>
+</html>

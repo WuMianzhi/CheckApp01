@@ -27,6 +27,14 @@ const viewer = new Cesium.Viewer("cesiumContainer", {
   geocoder: customGeocoders, //使用定制的加强版地理编码器
 });
 
+const ifr = document.querySelector(".cesium-infoBox-iframe");
+ifr.setAttribute(
+  "sandbox",
+  "allow-same-origin allow-scripts allow-popups allow-forms"
+);
+
+ifr.setAttribute("src", "");
+
 // 影像图层
 const ESRIIMG = new Cesium.ProviderViewModel({
   name: "ESRI ArcGIS全球影像",
@@ -101,13 +109,12 @@ villageBorderImgLayer.alpha = 0.5;
 const lngLatScaleLabel = new LngLatWidget(viewer);
 lngLatScaleLabel.addCoordinateLabel();
 
-
 /**
  * 点击后展示所拾取的entity信息
- * @param {*} movement 
+ * @param {*} movement
  */
 function showPickEntityInfo(movement) {
-  var pick = viewer.scene.pick(movement.position);
+  const pick = viewer.scene.pick(movement.position);
   if (Cesium.defined(pick)) {
     document.getElementById("updateCode").value = pick.id.id.substring(0, 12);
     var cesiumInput = document.querySelector(
@@ -118,7 +125,7 @@ function showPickEntityInfo(movement) {
     cesiumInput.select();
     document.execCommand("copy");
     // navigator.clipboard.writeText(cesiumInput.value);
-    console.log("id:" + pick.id.id + ", name:" + pick.id.name);
+    // console.log("id:" + pick.id.id + ", name:" + pick.id.name);;
   }
 }
 
