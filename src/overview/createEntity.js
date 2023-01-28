@@ -105,7 +105,7 @@ const createPoint = function (
               <td>${lat}</td>
             </tr>
             <tr>
-              <td>Rype：</td>
+              <td>Type：</td>
               <td>${currentData.type}</td>
             </tr>
             <tr>
@@ -150,11 +150,11 @@ const createPoint = function (
                 <select name="status" class="select" value="${
                   currentData.status
                 }">
-                  <option value="0">正常点位</option>
-                  <option value="1">整体搬迁</option>
-                  <option value="-1">部分搬迁</option>
-                  <option value="2">特殊点位</option>
-                  <option value="-2">特殊点位</option>
+                  <option value="&nbsp;&nbsp;0"> 0：正常</option>
+                  <option value="&nbsp;&nbsp;1"> 1：整体搬迁</option>
+                  <option value="-1">-1：部分搬迁</option>
+                  <option value="&nbsp;&nbsp;2"> 2：特殊点位</option>
+                  <option value="-2">-2：特殊点位</option>
                 </select>
                 <button type="button" onclick='const data = new FormData(document.querySelector("#statusForm"));
                 fetch("http://mizhibd.com/checkApp/backend/updateStatus.php", {
@@ -321,7 +321,7 @@ const groupViewer = function (streetLocalData, extra, changeView = true) {
                 <td>${locateData.lat}</td>
               </tr>
               <tr>
-                <td>Rype：</td>
+                <td>Type：</td>
                 <td>${locateData.type}</td>
               </tr>
               <tr>
@@ -356,7 +356,7 @@ const groupViewer = function (streetLocalData, extra, changeView = true) {
               </td>
             </tr>
             <tr id="changeTR" hidden>
-              <td>Status：</td>
+              <td>Status 修改为：</td>
               <td>
                 <form id="statusForm">
                   <input name="code" value="${locateData.code}" hidden>
@@ -366,11 +366,11 @@ const groupViewer = function (streetLocalData, extra, changeView = true) {
                   <select name="status" class="select" value="${
                     locateData.status
                   }">
-                    <option value="0">正常点位</option>
-                    <option value="1">整体搬迁</option>
-                    <option value="-1">部分搬迁</option>
-                    <option value="2">特殊点位</option>
-                    <option value="-2">特殊点位</option>
+                    <option value="&nbsp;&nbsp;0"> 0：正常</option>
+                    <option value="&nbsp;&nbsp;1"> 1：整体搬迁</option>
+                    <option value="-1">-1：部分搬迁</option>
+                    <option value="&nbsp;&nbsp;2"> 2：特殊点位</option>
+                    <option value="-2">-2：特殊点位</option>
                   </select>
                   <button type="button" onclick='const data = new FormData(document.querySelector("#statusForm"));
                   fetch("http://mizhibd.com/checkApp/backend/updateStatus.php", {

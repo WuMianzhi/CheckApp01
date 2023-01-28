@@ -12,4 +12,16 @@ const showInfo = function (text, type = "defaultInfo") {
   infoWrapper.scrollTop = infoWrapper.scrollHeight;
 };
 
-export { showInfo };
+const delayToggleTopInfWrapper = function (time = 0) {
+  setTimeout(() => {
+    document.querySelector("#topInfoContainer").classList.toggle("hidden");
+  }, time);
+};
+
+const showTopInfo = function (text = "") {
+  document.querySelector("#topInfo").innerHTML = text;
+  delayToggleTopInfWrapper();
+  delayToggleTopInfWrapper(3600);
+};
+
+export { showInfo, delayToggleTopInfWrapper, showTopInfo };

@@ -30,6 +30,10 @@
   </head>
 
   <body>
+    <div class="topInfoContainer hidden" id="topInfoContainer">
+      <span class="info" id="topInfo"></span>
+      <!-- <button class="close"> X </button> -->
+    </div>
     <div id="cesiumContainer"></div>
     <div id="localContainer" class="transBg local_container">
       <form id="localForm">
@@ -136,7 +140,7 @@
           下一 乡镇/街道
         </button>
 
-        <button id="nearCheck" class="overview-btn">重复点检测</button>
+        <button id="nearCheck" class="overview-btn" hidden>重复点检测</button>
       </div>
 
       <div class="checkbox">

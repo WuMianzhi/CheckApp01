@@ -460,3 +460,29 @@ body {
 .inactive {
   filter: grayscale(90%);
 }
+
+.topInfoContainer {
+  position: absolute;
+  top: 0;
+  width: 100vw;
+  left: 0;
+  z-index: 100000000;
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.info {
+  margin: 0 auto;
+}
+
+.close {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.hidden {
+  display: none;
+}

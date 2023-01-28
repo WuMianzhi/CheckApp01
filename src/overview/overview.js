@@ -8,6 +8,7 @@ import { createPoint } from "./createEntity";
 import { overlayCheck } from "../overlayCheck/overlayCheck";
 import * as echarts from "echarts";
 import { groupViewer } from "./createEntity";
+import { delayToggleTopInfWrapper, showTopInfo } from "../showInfo/showInfo";
 
 /**
  * 存储当前数据的变量
@@ -396,6 +397,7 @@ function checkInit(warnData) {
 const overlayCheckFn = () => {
   overlayCheckStatus = true;
   viewer.entities.removeAll();
+
   // 格式化数据
   const allData = [];
   for (const streetData in allDataByStreet) {
@@ -417,6 +419,9 @@ const overlayCheckFn = () => {
     west = Infinity,
     south = Infinity;
 
+  let tip = "";
+  let repeateSite = 0;
+
   for (const pointData of allData) {
     // 确定边界范围
     pointData.lon > east ? (east = pointData.lon) : null;
@@ -429,11 +434,15 @@ const overlayCheckFn = () => {
     viewer.entities.add(
       createPoint(pointData, "lon", "lat", pointData.isRepeat ? "RED" : "GREEN")
     );
+
+    pointData.isRepeat ? repeateSite++ : null;
   }
-  console.log(west, south, east, north);
+
   viewer.camera.flyTo({
     destination: Cesium.Rectangle.fromDegrees(west, south, east, north),
   });
+
+  showTopInfo(`共计 ${repeateSite} 条重复数据`);
 
   // 重新绑定输入事件
   handler.setInputAction((click) => {
@@ -551,6 +560,7 @@ function overCheckNextStreet() {
   document.querySelector("#showStreet").checked = false;
   console.log(curStreetDataID);
 
+  // 判断是否是第一个
   const toPrevStreetBtn = document.querySelector("#toPrevStrret");
   if (curStreetDataID > 0) {
     toPrevStreetBtn.hidden = false;
@@ -568,6 +578,7 @@ function overCheckNextStreet() {
   } else {
     showInfo("当前区/县数据已经复核完成，请检查下一区/县数据,或者重复检查 ~ ");
     document.querySelector("#overCheckDone").hidden = true;
+    document.querySelector("#nearCheck").hidden = false;
   }
 }
 
