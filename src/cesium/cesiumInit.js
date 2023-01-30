@@ -1,3 +1,4 @@
+import { showRightInfo } from "../showInfo/showInfo";
 import { LngLatWidget } from "./locLabel";
 // 导入备用图像
 // import { ESRIIMG } from "./cesiumProvideModel";
@@ -124,6 +125,8 @@ function showPickEntityInfo(movement) {
     cesiumInput.classList.add("cesium-geocoder-input-wide");
     cesiumInput.select();
     document.execCommand("copy");
+
+    showRightInfo(pick.id.extraInfo);
     // navigator.clipboard.writeText(cesiumInput.value);
     // console.log("id:" + pick.id.id + ", name:" + pick.id.name);;
   }

@@ -89,11 +89,19 @@ const createPoint = function (
         }
 
         .select {
-          padding: 2px;
+          padding: 4px;
+          margin: 4px;
+        }
+
+        button {
+          padding: 4px 8px;
+          margin: 4px;
+          border: solid rgba(128, 128, 128, 0.5) 1px;
+          border-radius: 2px;
         }
       </style>
       </head>
-      <body>
+      <body >
         <table class="table">
           <tbody>
             <tr>
@@ -135,8 +143,18 @@ const createPoint = function (
             <tr>
             <td>Status：</td>
             <td>
-              <span id="statusDisplay">${currentData.status}</span>
-              <button id="showSelect" onclick="document.querySelector('#changeTR').hidden = false">点击修改</button>
+              <span id="statusDisplay"></span>
+              <button id="showSelect" onclick="document.querySelector('#changeTR').hidden = false; 
+              fetch('http://mizhibd.com/checkApp/backend/queryOneSite.php', {
+                method: 'POST',
+                body: new FormData(document.querySelector('#statusForm')),
+              })
+                .then((res) => res.json())
+                .then((res) => {
+                  document.querySelector('#statusDisplay').innerHTML =
+                    res.affected_rows[0].status;
+                });
+              "> 点击显示或修改 </button>
             </td>
           </tr>
           <tr id="changeTR" hidden>
@@ -147,20 +165,45 @@ const createPoint = function (
                 <input name="table" value="${
                   document.querySelector("#provinceSelect").value
                 }" hidden>
+                <input name="provinceCode" value="${
+                  document.querySelector("#provinceSelect").value
+                }" hidden>
                 <select name="status" class="select" value="${
                   currentData.status
                 }">
-                  <option value="&nbsp;&nbsp;0"> 0：正常</option>
-                  <option value="&nbsp;&nbsp;1"> 1：整体搬迁</option>
-                  <option value="-1">-1：部分搬迁</option>
-                  <option value="&nbsp;&nbsp;2"> 2：特殊点位</option>
-                  <option value="-2">-2：特殊点位</option>
+                <option value="0" title="0：正常">&nbsp;0：正常</option>
+                <option value="1" title="1：整体搬迁，图斑、人口设定为 0">
+                  &nbsp;1：整体搬迁，图斑、人口设定为 0
+                </option>
+                <option value="-1" title="-1：部分搬迁，图斑、人口不为0">
+                  -1：部分搬迁，图斑、人口不为0
+                </option>
+                <option
+                  value="2"
+                  title="2：特殊点位，（如军队、监狱、拘留所、劳改农场等），图斑、人口设定为
+                0"
+                >
+                  &nbsp;2：特殊点位，图斑、人口设定为 0
+                </option>
+                <option
+                  value="-2"
+                  title="-2：特殊点位，（如军队、监狱、拘留所、劳改农场等），图斑、人口不为0特殊点位"
+                >
+                  -2：特殊点位，图斑、人口不为0特殊点位
+                </option>
+                <option
+                  value="-2"
+                  title="-2：特殊点位，（如军队、监狱、拘留所、劳改农场等），图斑、人口不为0特殊点位"
+                >
+                  -2：特殊点位，图斑、人口不为0特殊点位
+                </option>
                 </select>
                 <button type="button" onclick='const data = new FormData(document.querySelector("#statusForm"));
                 fetch("http://mizhibd.com/checkApp/backend/updateStatus.php", {
                   method: "POST",
                   body: data,
                 }).then(() => {
+                  window.parent.postMessage(message, "*");
                   document.querySelector("#changeTR").hidden = true;
                   document.querySelector("#statusDisplay").innerHTML = data.get("status");
                 });'>确认</button>
@@ -172,6 +215,7 @@ const createPoint = function (
       </body>
     </html>
     `,
+    extraInfo: locateData,
   };
 };
 
@@ -305,8 +349,17 @@ const groupViewer = function (streetLocalData, extra, changeView = true) {
           }
 
           .select {
-            padding: 2px;
+            padding: 4px;
+            margin: 4px;
           }
+
+          button {
+            padding: 4px 8px;
+            margin: 4px;
+            border: solid rgba(128, 128, 128, 0.5) 1px;
+            border-radius: 2px;
+          }
+          
         </style>
         </head>
         <body>
@@ -351,8 +404,18 @@ const groupViewer = function (streetLocalData, extra, changeView = true) {
               <tr>
               <td>Status：</td>
               <td>
-                <span id="statusDisplay">${locateData.status}</span>
-                <button id="showSelect" onclick="document.querySelector('#changeTR').hidden = false">点击修改</button>
+                <span id="statusDisplay"></span>
+                <button id="showSelect" onclick="document.querySelector('#changeTR').hidden = false
+                fetch('http://mizhibd.com/checkApp/backend/queryOneSite.php', {
+                method: 'POST',
+                body: new FormData(document.querySelector('#statusForm')),
+              })
+                .then((res) => res.json())
+                .then((res) => {
+                  document.querySelector('#statusDisplay').innerHTML =
+                    res.affected_rows[0].status;
+                });
+                ">点击显示或修改</button>
               </td>
             </tr>
             <tr id="changeTR" hidden>
@@ -363,14 +426,32 @@ const groupViewer = function (streetLocalData, extra, changeView = true) {
                   <input name="table" value="${
                     document.querySelector("#provinceSelect").value
                   }" hidden>
+                  <input name="provinceCode" value="${
+                    document.querySelector("#provinceSelect").value
+                  }" hidden>
                   <select name="status" class="select" value="${
                     locateData.status
                   }">
-                    <option value="&nbsp;&nbsp;0"> 0：正常</option>
-                    <option value="&nbsp;&nbsp;1"> 1：整体搬迁</option>
-                    <option value="-1">-1：部分搬迁</option>
-                    <option value="&nbsp;&nbsp;2"> 2：特殊点位</option>
-                    <option value="-2">-2：特殊点位</option>
+                  <option value="0" title="0：正常">&nbsp;0：正常</option>
+                <option value="1" title="1：整体搬迁，图斑、人口设定为 0">
+                  &nbsp;1：整体搬迁，图斑、人口设定为 0
+                </option>
+                <option value="-1" title="-1：部分搬迁，图斑、人口不为0">
+                  -1：部分搬迁，图斑、人口不为0
+                </option>
+                <option
+                  value="2"
+                  title="2：特殊点位，（如军队、监狱、拘留所、劳改农场等），图斑、人口设定为
+                0"
+                >
+                  &nbsp;2：特殊点位，图斑、人口设定为 0
+                </option>
+                <option
+                  value="-2"
+                  title="-2：特殊点位，（如军队、监狱、拘留所、劳改农场等），图斑、人口不为0特殊点位"
+                >
+                  -2：特殊点位，图斑、人口不为0特殊点位
+                </option>
                   </select>
                   <button type="button" onclick='const data = new FormData(document.querySelector("#statusForm"));
                   fetch("http://mizhibd.com/checkApp/backend/updateStatus.php", {
@@ -388,6 +469,7 @@ const groupViewer = function (streetLocalData, extra, changeView = true) {
         </body>
       </html>
       `,
+      extraInfo: locateData,
     });
   }
 

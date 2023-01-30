@@ -27,7 +27,15 @@
       }
 
       .select {
-        padding: 2px;
+        padding: 4px;
+        font-size: medium;
+      }
+
+      button {
+        padding: 4px 8px;
+        margin: 4px;
+        border: solid rgba(128, 128, 128, 0.5) 1px;
+        border-radius: 2px;
       }
 
       iframe {
@@ -36,85 +44,19 @@
       }
     </style>
   </head>
-  <body>
+  <body
+    onload='fetch("http://mizhibd.com/checkApp/backend/queryOneSite.php", {
+    method: "POST",
+    body: new FormData(document.querySelector("#statusForm")),
+  })
+    .then((res) => res.json())
+    .then((res) => {
+      document.querySelector("#statusDisplay").innerHTML =
+        res.affected_rows[0].status;
+    });'
+  >
     <table class="table">
       <tbody>
-        <tr>
-          <td>Lon：</td>
-          <td>${locateData.lon}</td>
-        </tr>
-        <tr>
-          <td>Lon：</td>
-          <td>${locateData.lon}</td>
-        </tr>
-        <tr>
-          <td>Lon：</td>
-          <td>${locateData.lon}</td>
-        </tr>
-        <tr>
-          <td>Lon：</td>
-          <td>${locateData.lon}</td>
-        </tr>
-        <tr>
-          <td>Lon：</td>
-          <td>${locateData.lon}</td>
-        </tr>
-        <tr>
-          <td>Lon：</td>
-          <td>${locateData.lon}</td>
-        </tr>
-        <tr>
-          <td>Lon：</td>
-          <td>${locateData.lon}</td>
-        </tr>
-        <tr>
-          <td>Lon：</td>
-          <td>${locateData.lon}</td>
-        </tr>
-        <tr>
-          <td>Lon：</td>
-          <td>${locateData.lon}</td>
-        </tr>
-        <tr>
-          <td>Lon：</td>
-          <td>${locateData.lon}</td>
-        </tr>
-        <tr>
-          <td>Lon：</td>
-          <td>${locateData.lon}</td>
-        </tr>
-        <tr>
-          <td>Lon：</td>
-          <td>${locateData.lon}</td>
-        </tr>
-        <tr>
-          <td>Lon：</td>
-          <td>${locateData.lon}</td>
-        </tr>
-        <tr>
-          <td>Lon：</td>
-          <td>${locateData.lon}</td>
-        </tr>
-        <tr>
-          <td>Lon：</td>
-          <td>${locateData.lon}</td>
-        </tr>
-        <tr>
-          <td>Lon：</td>
-          <td>${locateData.lon}</td>
-        </tr>
-        <tr>
-          <td>Lon：</td>
-          <td>${locateData.lon}</td>
-        </tr>
-        <tr>
-          <td>Lon：</td>
-          <td>${locateData.lon}</td>
-        </tr>
-        <tr>
-          <td>Lon：</td>
-          <td>${locateData.lon}</td>
-        </tr>
         <tr>
           <td>Lon：</td>
           <td>${locateData.lon}</td>
@@ -163,18 +105,72 @@
             </button>
           </td>
         </tr>
-        <tr id="changeTR" hidden>
+        <tr id="changeTR" hidden onload="">
           <td>Status 修改为</td>
           <td>
             <form id="statusForm">
-              <select name="status" class="select" value="${locateData.status}">
-                <option value="0">正常点位</option>
-                <option value="1">整体搬迁</option>
-                <option value="-1">部分搬迁</option>
-                <option value="2">特殊点位</option>
-                <option value="-2">特殊点位</option>
+              <input name="code" value="110101017001" hidden />
+              <input name="provinceCode" value="11_beijing" hidden />
+              <select
+                name="status"
+                class="select"
+                value="${
+                locateData.status
+              }"
+              >
+                <option value="0" title="0：正常">&nbsp;0：正常</option>
+                <option value="1" title="1：整体搬迁，图斑、人口设定为 0">
+                  &nbsp;1：整体搬迁，图斑、人口设定为 0
+                </option>
+                <option value="-1" title="-1：部分搬迁，图斑、人口不为0">
+                  -1：部分搬迁，图斑、人口不为0
+                </option>
+                <option
+                  value="2"
+                  title="2：特殊点位，（如军队、监狱、拘留所、劳改农场等），图斑、人口设定为
+                0"
+                >
+                  &nbsp;2：特殊点位，图斑、人口设定为 0
+                </option>
+                <option
+                  value="-2"
+                  title="-2：特殊点位，（如军队、监狱、拘留所、劳改农场等），图斑、人口不为0特殊点位"
+                >
+                  -2：特殊点位，图斑、人口不为0特殊点位
+                </option>
               </select>
-              <button type="button" onclick="updatePointStatus()">确认</button>
+
+              <!-- <input type="radio" name="status" id="" value="0" /><label for=""
+                >0：正常点位</label
+              >
+              <br />
+              <input type="radio" name="status" id="" value="1" /><label for=""
+                >1：整体搬迁</label
+              >
+              <input type="radio" name="status" id="" value="-1" /><label for=""
+                >-1：部分搬迁</label
+              >
+              <br />
+              <input type="radio" name="status" id="" value="2" /><label for=""
+                >2：特殊点位</label
+              >
+              <input type="radio" name="status" id="" value="-2" /><label for=""
+                >-2：特殊点位</label
+              > -->
+
+              <button
+                type="button"
+                onclick='const data = new FormData(document.querySelector("#statusForm"));
+              fetch("http://mizhibd.com/checkApp/backend/updateStatus.php", {
+                method: "POST",
+                body: data,
+              }).then(() => {
+                document.querySelector("#changeTR").hidden = true;
+                document.querySelector("#statusDisplay").innerHTML = data.get("status");
+              });'
+              >
+                确认
+              </button>
             </form>
           </td>
         </tr>
@@ -188,7 +184,6 @@
     };
 
     const updatePointStatus = function () {
-      console.log("aaa");
       const data = new FormData(document.querySelector("#statusForm"));
       fetch("http://mizhibd.com/checkApp/backend/updateStatus.php", {
         method: "POST",
@@ -197,6 +192,18 @@
         document.querySelector("#changeTR").hidden = true;
         document.querySelector("#statusDisplay").innerHTML = data.get("status");
       });
+    };
+
+    const getStatusInfo = function () {
+      fetch("http://mizhibd.com/checkApp/backend/queryOneSite.php", {
+        method: "POST",
+        body: new FormData(document.querySelector("#statusForm")),
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          document.querySelector("#statusDisplay").innerHTML =
+            res.affected_rows[0].status;
+        });
     };
   </script>
 </html>

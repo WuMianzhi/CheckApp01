@@ -62,4 +62,18 @@ async function markWarnData() {
   return response.json();
 }
 
-export { markWarnData, updateStreetGeocodeDB, updateGeocodeDB };
+/**
+ * 
+ */
+const updateStatus = function () {
+  const data = new FormData(document.querySelector("#statusForm"));
+  fetch("http://mizhibd.com/checkApp/backend/updateStatus.php", {
+    method: "POST",
+    body: data,
+  }).then(() => {
+    document.querySelector("#centerInfoContainer").classList.add("hidden");
+    document.querySelector("#leftInfoStatus").innerHTML = data.get("status");
+  });
+};
+
+export { markWarnData, updateStreetGeocodeDB, updateGeocodeDB, updateStatus };

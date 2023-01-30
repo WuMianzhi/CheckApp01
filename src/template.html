@@ -159,5 +159,124 @@
     <div class="midInfo" id="midInfo"></div>
 
     <div id="imageryLayerControlWrapper"></div>
+
+    <div id="rightSideWrapper" class="rightSideWrapper hidden">
+      <span
+        class="closeBtn"
+        onclick="document.querySelector('#rightSideWrapper').classList.add('hidden')"
+      >
+        X
+      </span>
+      <table class="table">
+        <tbody>
+          <tr>
+            <td>Lon：</td>
+            <td id="leftInfoLng"></td>
+          </tr>
+          <tr>
+            <td>Lat：</td>
+            <td id="leftInfoLat"></td>
+          </tr>
+          <tr>
+            <td>Type：</td>
+            <td id="leftInfoType"></td>
+          </tr>
+          <tr>
+            <td>Rural_area：</td>
+            <td id="leftInfoRuralArea"></td>
+          </tr>
+          <tr>
+            <td>Rural_population：</td>
+            <td id="leftInfoRuralPopulation"></td>
+          </tr>
+          <tr>
+            <td>Name：</td>
+            <td id="leftInfoName"></td>
+          </tr>
+          <tr>
+            <td>StreetCode：</td>
+            <td id="leftInfoStreetCode"></td>
+          </tr>
+          <tr>
+            <td>Code：</td>
+            <td id="leftInfoCode"></td>
+          </tr>
+          <tr>
+            <td>Checked：</td>
+            <td id="leftInfoChecked"></td>
+          </tr>
+          <tr>
+            <td>Status：</td>
+            <td>
+              <span id="leftInfoStatus"></span>
+              <button id="showSelect">点击修改</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="centerInfoContainer" class="centerInfoContainer hidden">
+      <span
+        class="closeBtn"
+        onclick="document.querySelector('#centerInfoContainer').classList.add('hidden')"
+      >
+        X
+      </span>
+      <form id="statusForm" class="statusForm">
+        <input id="centerInfoCode" name="code" value="110101017001" hidden />
+        <input id="centerInfoTable" name="table" hidden />
+        <input
+          id="centerInfoprovinceCode"
+          name="provinceCode"
+          value="11_beijing"
+          hidden
+        />
+        <!-- <select name="status" class="select">
+          <option value="0" title="0：正常">&nbsp;0：正常</option>
+          <option value="1" title="1：整体搬迁，图斑、人口设定为 0">
+            &nbsp;1：整体搬迁，图斑、人口设定为 0
+          </option>
+          <option value="-1" title="-1：部分搬迁，图斑、人口不为0">
+            -1：部分搬迁，图斑、人口不为0
+          </option>
+          <option
+            value="2"
+            title="2：特殊点位，（如军队、监狱、拘留所、劳改农场等），图斑、人口设定为
+          0"
+          >
+            &nbsp;2：特殊点位，图斑、人口设定为 0
+          </option>
+          <option
+            value="-2"
+            title="-2：特殊点位，（如军队、监狱、拘留所、劳改农场等），图斑、人口不为0特殊点位"
+          >
+            -2：特殊点位，图斑、人口不为0特殊点位
+          </option>
+        </select> -->
+        <input type="radio" name="status" id="" value="0" /><label for="">
+          0：正常点位</label
+        >
+        <br />
+        <input type="radio" name="status" id="" value="1" /><label for=""
+          >1：整体搬迁，图斑、人口设定为0</label
+        >
+        <br />
+        <input type="radio" name="status" id="" value="-1" /><label for=""
+          >-1：部分搬迁，图斑、人口不为0</label
+        >
+        <br />
+        <input type="radio" name="status" id="" value="2" /><label for="">
+          2：特殊点位（如军队、监狱、拘留所、劳改农场等），图斑、人口设定为0</label
+        >
+        <br />
+        <input type="radio" name="status" id="" value="-2" /><label for=""
+          >-2：特殊点位（如军队、监狱、拘留所、劳改农场等），图斑、人口不为0</label
+        >
+        <div id="centerWrapperBottom">
+          <button type="button" id="updateStatus">确认</button>
+        </div>
+      </form>
+    </div>
   </body>
 </html>

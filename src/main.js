@@ -1,4 +1,5 @@
 import "./css/style.css";
+import "./css/rightSideContainer.css";
 
 import {
   addProvnceVillageBorderLineImg,
@@ -9,6 +10,7 @@ import {
   ESRIIMG,
 } from "./cesium/cesiumInit.js";
 import { addAlphaAndIcon } from "./cesium/customCesium.js";
+import { updateStatus } from "./mark/mark";
 
 // 点击展开图层的时候异步加载对应的 js 模块
 document.querySelector(".cesium-baseLayerPicker-selected").addEventListener(
@@ -121,6 +123,11 @@ document.querySelector("#dataDown").addEventListener("click", function () {
     zipDataDownload();
   });
 });
+
+// updateStatus
+document
+  .querySelector("#updateStatus")
+  .addEventListener("click", () => updateStatus());
 
 window.onload = function () {
   import(

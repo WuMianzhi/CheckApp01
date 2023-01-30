@@ -5,7 +5,7 @@ $database = new Mysql();
 
 // 接收前端信息
 $status = $_POST['status'];
-$code = $_POST['code'];
+$code = (int)$_POST['code'];
 $table = $_POST['table'];
 
 $updatedInfo = array(
