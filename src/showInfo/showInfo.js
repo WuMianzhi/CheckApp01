@@ -29,6 +29,9 @@ const showRightInfo = function (codeInfo) {
     .querySelector(".cesium-infoBox-visible")
     ?.classList.remove("cesium-infoBox-visible");
 
+  document.querySelector("#rightHeaderCenter").innerHTML = codeInfo.name;
+  document.querySelector("#centerHeadercenter").innerHTML = codeInfo.name;
+
   document.querySelector("#centerInfoCode").value = codeInfo.code;
   document.querySelector("#centerInfoprovinceCode").value =
     document.querySelector("#provinceSelect").value;

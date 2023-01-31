@@ -161,68 +161,110 @@
     <div id="imageryLayerControlWrapper"></div>
 
     <div id="rightSideWrapper" class="rightSideWrapper hidden">
-      <span
-        class="closeBtn"
-        onclick="document.querySelector('#rightSideWrapper').classList.add('hidden')"
-      >
-        X
-      </span>
-      <table class="table">
-        <tbody>
-          <tr>
-            <td>Lon：</td>
-            <td id="leftInfoLng"></td>
-          </tr>
-          <tr>
-            <td>Lat：</td>
-            <td id="leftInfoLat"></td>
-          </tr>
-          <tr>
-            <td>Type：</td>
-            <td id="leftInfoType"></td>
-          </tr>
-          <tr>
-            <td>Rural_area：</td>
-            <td id="leftInfoRuralArea"></td>
-          </tr>
-          <tr>
-            <td>Rural_population：</td>
-            <td id="leftInfoRuralPopulation"></td>
-          </tr>
-          <tr>
-            <td>Name：</td>
-            <td id="leftInfoName"></td>
-          </tr>
-          <tr>
-            <td>StreetCode：</td>
-            <td id="leftInfoStreetCode"></td>
-          </tr>
-          <tr>
-            <td>Code：</td>
-            <td id="leftInfoCode"></td>
-          </tr>
-          <tr>
-            <td>Checked：</td>
-            <td id="leftInfoChecked"></td>
-          </tr>
-          <tr>
-            <td>Status：</td>
-            <td>
-              <span id="leftInfoStatus"></span>
-              <button id="showSelect">点击修改</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="InfoWrapperHeader">
+        <span> </span>
+        <span id="rightHeaderCenter"> XXXXXXXXXXXXXXXXXX </span>
+        <span
+          class="closeBtn"
+          onclick="document.querySelector('#rightSideWrapper').classList.add('hidden')"
+        >
+          <svg
+            t="1675165360469"
+            class="icon"
+            viewBox="0 0 1024 1024"
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            p-id="2695"
+            width="24"
+            height="24"
+          >
+            <path
+              d="M504.224 470.288l207.84-207.84a16 16 0 0 1 22.608 0l11.328 11.328a16 16 0 0 1 0 22.624l-207.84 207.824 207.84 207.84a16 16 0 0 1 0 22.608l-11.328 11.328a16 16 0 0 1-22.624 0l-207.824-207.84-207.84 207.84a16 16 0 0 1-22.608 0l-11.328-11.328a16 16 0 0 1 0-22.624l207.84-207.824-207.84-207.84a16 16 0 0 1 0-22.608l11.328-11.328a16 16 0 0 1 22.624 0l207.824 207.84z"
+              fill="#e6e6e6"
+              p-id="2696"
+            ></path>
+          </svg>
+        </span>
+      </div>
+
+      <div class="InfoWrapperBody">
+        <table class="table">
+          <tbody>
+            <tr>
+              <td>Lon：</td>
+              <td id="leftInfoLng"></td>
+            </tr>
+            <tr>
+              <td>Lat：</td>
+              <td id="leftInfoLat"></td>
+            </tr>
+            <tr>
+              <td>Type：</td>
+              <td id="leftInfoType"></td>
+            </tr>
+            <tr>
+              <td>Rural_area：</td>
+              <td id="leftInfoRuralArea"></td>
+            </tr>
+            <tr>
+              <td>Rural_population：</td>
+              <td id="leftInfoRuralPopulation"></td>
+            </tr>
+            <tr>
+              <td>Name：</td>
+              <td id="leftInfoName"></td>
+            </tr>
+            <tr>
+              <td>StreetCode：</td>
+              <td id="leftInfoStreetCode"></td>
+            </tr>
+            <tr>
+              <td>Code：</td>
+              <td id="leftInfoCode"></td>
+            </tr>
+            <tr>
+              <td>Checked：</td>
+              <td id="leftInfoChecked"></td>
+            </tr>
+            <tr>
+              <td>Status：</td>
+              <td>
+                <span id="leftInfoStatus"></span>
+                <button id="showSelect" class="confirmButton">点击修改</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <div id="centerInfoContainer" class="centerInfoContainer hidden">
-      <span
-        class="closeBtn"
-        onclick="document.querySelector('#centerInfoContainer').classList.add('hidden')"
-      >
-        X
-      </span>
+      <div class="InfoWrapperHeader">
+        <span> </span>
+        <span id="centerHeadercenter"> XXXXXXXXXXXXXXXXXX </span>
+        <span
+          class="closeBtn"
+          onclick="document.querySelector('#centerInfoContainer').classList.add('hidden')"
+        >
+          <svg
+            t="1675165360469"
+            class="icon"
+            viewBox="0 0 1024 1024"
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            p-id="2695"
+            width="24"
+            height="24"
+          >
+            <path
+              d="M504.224 470.288l207.84-207.84a16 16 0 0 1 22.608 0l11.328 11.328a16 16 0 0 1 0 22.624l-207.84 207.824 207.84 207.84a16 16 0 0 1 0 22.608l-11.328 11.328a16 16 0 0 1-22.624 0l-207.824-207.84-207.84 207.84a16 16 0 0 1-22.608 0l-11.328-11.328a16 16 0 0 1 0-22.624l207.84-207.824-207.84-207.84a16 16 0 0 1 0-22.608l11.328-11.328a16 16 0 0 1 22.624 0l207.824 207.84z"
+              fill="#e6e6e6"
+              p-id="2696"
+            ></path>
+          </svg>
+        </span>
+      </div>
+
       <form id="statusForm" class="statusForm">
         <input id="centerInfoCode" name="code" value="110101017001" hidden />
         <input id="centerInfoTable" name="table" hidden />
@@ -274,7 +316,9 @@
           >-2：特殊点位（如军队、监狱、拘留所、劳改农场等），图斑、人口不为0</label
         >
         <div id="centerWrapperBottom">
-          <button type="button" id="updateStatus">确认</button>
+          <button type="button" id="updateStatus" class="confirmButton">
+            确认修改
+          </button>
         </div>
       </form>
     </div>

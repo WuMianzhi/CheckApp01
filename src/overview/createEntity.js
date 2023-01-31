@@ -215,7 +215,7 @@ const createPoint = function (
       </body>
     </html>
     `,
-    extraInfo: locateData,
+    extraInfo: currentData,
   };
 };
 
