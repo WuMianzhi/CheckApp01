@@ -25,9 +25,9 @@ const showTopInfo = function (text = "") {
 };
 
 const showRightInfo = function (codeInfo) {
-  document
-    .querySelector(".cesium-infoBox-visible")
-    ?.classList.remove("cesium-infoBox-visible");
+  // document
+  //   .querySelector(".cesium-infoBox-visible")
+  //   ?.classList.remove("cesium-infoBox-visible");
 
   document.querySelector("#rightHeaderCenter").innerHTML = codeInfo.name;
   document.querySelector("#centerHeadercenter").innerHTML = codeInfo.name;
@@ -67,6 +67,15 @@ const showRightInfo = function (codeInfo) {
     .then((res) => {
       document.querySelector("#leftInfoStatus").innerHTML =
         res.affected_rows[0].status;
+
+      const allRadio = document.querySelectorAll(
+        '#statusForm>input[name="status"]'
+      );
+      allRadio.forEach((radioItem) => {
+        if (res.affected_rows[0].status == radioItem.value) {
+          radioItem.checked = true;
+        }
+      });
     });
 };
 

@@ -434,15 +434,21 @@ const overlayCheckFn = () => {
     viewer.entities.add(
       createPoint(pointData, "lon", "lat", pointData.isRepeat ? "RED" : "GREEN")
     );
-
-    pointData.isRepeat ? repeateSite++ : null;
+    if (pointData.isRepeat) {
+      repeateSite++;
+      repeateSite === 1
+        ? showInfo(`正在检测重复数据，以下是距离过近的点：`, "errorInfo")
+        : null;
+      showInfo(`${pointData.keyword}(code:${pointData.code})`, "warnInfo");
+    }
   }
 
   viewer.camera.flyTo({
     destination: Cesium.Rectangle.fromDegrees(west, south, east, north),
   });
-
-  showTopInfo(`共计 ${repeateSite} 条重复数据`);
+  repeateSite
+    ? showInfo(`共计 ${repeateSite} 条重复数据`, "errorInfo")
+    : showInfo(`检查完毕，未发现重复数据`, "errorInfo");
 
   // 重新绑定输入事件
   handler.setInputAction((click) => {

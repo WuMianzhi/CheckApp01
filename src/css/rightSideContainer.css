@@ -14,7 +14,7 @@
   -o-border-radius: 8px;
 }
 
-.InfoWrapperBody{
+.InfoWrapperBody {
   padding: 8px;
 }
 
@@ -103,11 +103,19 @@ button {
   -o-border-radius: 50%;
   cursor: pointer;
 } */
+.cancelButton {
+  cursor: pointer;
+  color: rgba(0, 255, 89, 0.6);
+  background: rgba(188, 249, 209, 0.4);
+  border: 1px solid rgba(0, 255, 89, 0.5);
+  padding: 4px 12px;
+}
 
 .confirmButton {
   cursor: pointer;
-  background: rgb(231, 255, 239);
-  border: 1px solid rgba(226, 255, 236, 0.4);
+  color: aliceblue;
+  background: rgba(0, 255, 89, 0.5);
+  border: 1px solid rgba(0, 255, 89, 0.6);
   padding: 4px 12px;
 }
 
@@ -131,6 +139,7 @@ button {
   -o-transform: rotate(0.5turn);
 }
 
+.cancelButton:hover,
 .confirmButton:hover {
   transition: all 0.36s ease-in-out;
   -webkit-transition: all 0.36s ease-in-out;
