@@ -296,22 +296,44 @@
             -2：特殊点位，图斑、人口不为0特殊点位
           </option>
         </select> -->
-        <input type="radio" name="status" id="" value="0" /><label for="">&nbsp;0：正常点位</label
+        <input type="radio" name="status" id="normalPoint" value="0" /><label
+          for="normalPoint"
+          >&nbsp;0：正常点位</label
         >
         <br />
-        <input type="radio" name="status" id="" value="1" /><label for="">&nbsp;1：整体搬迁，图斑、人口设定为0</label
+        <input type="radio" name="status" id="removePoint" value="1" /><label
+          for="removePoint"
+          >&nbsp;1：整体搬迁，图斑、人口设定为0</label
         >
         <br />
-        <input type="radio" name="status" id="" value="-1" /><label for="">-1：部分搬迁，图斑、人口不为0</label
+        <input
+          type="radio"
+          name="status"
+          id="partRemovePoint"
+          value="-1"
+        /><label for="partRemovePoint">-1：部分搬迁，图斑、人口不为0</label>
+        <br />
+        <input type="radio" name="status" id="specialPoint" value="2" /><label
+          for="specialPoint"
+          >&nbsp;2：特殊点位（如军队、监狱、拘留所、劳改农场等），图斑、人口设定为0</label
         >
         <br />
-        <input type="radio" name="status" id="" value="2" /><label for="">&nbsp;2：特殊点位（如军队、监狱、拘留所、劳改农场等），图斑、人口设定为0</label
-        >
-        <br />
-        <input type="radio" name="status" id="" value="-2" /><label for="">-2：特殊点位（如军队、监狱、拘留所、劳改农场等），图斑、人口不为0</label
+        <input
+          type="radio"
+          name="status"
+          id="partSpecialPoint"
+          value="-2"
+        /><label for="partSpecialPoint"
+          >-2：特殊点位（如军队、监狱、拘留所、劳改农场等），图斑、人口不为0</label
         >
         <div id="centerWrapperBottom">
-          <button type="button" class="cancelButton">取消</button>
+          <button
+            type="button"
+            class="cancelButton"
+            onclick="document.querySelector('#centerInfoContainer').classList.add('hidden')"
+          >
+            取消
+          </button>
           <button
             type="button"
             id="updateStatus"
