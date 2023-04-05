@@ -115,6 +115,7 @@ function overViewSet(geocodeData) {
   let warnNum = 0;
   var preStreetCode = 0;
   let locArray = [];
+  overlayCheckStatus = false
   // 重置某些数据
   minCheckTime = Infinity;
   maxCheckTime = -Infinity;

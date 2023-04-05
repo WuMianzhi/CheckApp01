@@ -240,7 +240,121 @@ const GOOGLEPATHPLUSIMG = new Cesium.ProviderViewModel({
   },
 });
 
+const googleCNImg = new Cesium.ProviderViewModel({
+  name: "谷歌中国影像",
+  iconUrl: Cesium.buildModuleUrl(
+    "Widgets/Images/ImageryProviders/esriWorldStreetMap.png"
+  ),
+  tooltip: "GOOGLE",
+  category: "GOOGLE_CN",
+  creationFunction: function () {
+    return new Cesium.UrlTemplateImageryProvider({
+      url: "http://gac-geo.googlecnapps.cn/maps/vt?lyrs=s&x={x}&y={y}&z={z}", //影像图 (中国范围无偏移)
+      tilingScheme: new Cesium.WebMercatorTilingScheme(),
+      minimumLevel: 1,
+      maximumLevel: 200,
+      credit: "Google Earth",
+    });
+  },
+});
+
+const googleCNRoad = new Cesium.ProviderViewModel({
+  name: "谷歌中国道路图（有偏移）",
+  iconUrl: Cesium.buildModuleUrl(
+    "Widgets/Images/ImageryProviders/esriWorldStreetMap.png"
+  ),
+  tooltip: "GOOGLE",
+  category: "GOOGLE_CN",
+  creationFunction: function () {
+    return new Cesium.UrlTemplateImageryProvider({
+      url: "http://gac-geo.googlecnapps.cn/maps/vt?lyrs=m&x={x}&y={y}&z={z}", //影像图 (中国范围无偏移)
+      tilingScheme: new Cesium.WebMercatorTilingScheme(),
+      minimumLevel: 1,
+      maximumLevel: 200,
+      credit: "Google Earth",
+    });
+  },
+});
+
+const googleCNTerr = new Cesium.ProviderViewModel({
+  name: "谷歌中国地形图",
+  iconUrl: Cesium.buildModuleUrl(
+    "Widgets/Images/ImageryProviders/esriWorldStreetMap.png"
+  ),
+  tooltip: "GOOGLE",
+  category: "GOOGLE_CN",
+  creationFunction: function () {
+    return new Cesium.UrlTemplateImageryProvider({
+      url: "http://gac-geo.googlecnapps.cn/maps/vt?lyrs=t&x={x}&y={y}&z={z}", //影像图 (中国范围无偏移)
+      tilingScheme: new Cesium.WebMercatorTilingScheme(),
+      minimumLevel: 1,
+      maximumLevel: 200,
+      credit: "Google Earth",
+    });
+  },
+});
+
+const googleCNPro = new Cesium.ProviderViewModel({
+  name: "谷歌中国带地名标注的地形图",
+  iconUrl: Cesium.buildModuleUrl(
+    "Widgets/Images/ImageryProviders/esriWorldStreetMap.png"
+  ),
+  tooltip: "GOOGLE",
+  category: "GOOGLE_CN",
+  creationFunction: function () {
+    return new Cesium.UrlTemplateImageryProvider({
+      url: "http://gac-geo.googlecnapps.cn/maps/vt?lyrs=p&x={x}&y={y}&z={z}", 
+      tilingScheme: new Cesium.WebMercatorTilingScheme(),
+      minimumLevel: 1,
+      maximumLevel: 200,
+      credit: "Google Earth",
+    });
+  },
+});
+
+const googleCNY = new Cesium.ProviderViewModel({
+  name: "谷歌中国带地名标注的影像图",
+  iconUrl: Cesium.buildModuleUrl(
+    "Widgets/Images/ImageryProviders/esriWorldStreetMap.png"
+  ),
+  tooltip: "GOOGLE",
+  category: "GOOGLE_CN",
+  creationFunction: function () {
+    return new Cesium.UrlTemplateImageryProvider({
+      url: "http://gac-geo.googlecnapps.cn/maps/vt?lyrs=y&x={x}&y={y}&z={z}", 
+      tilingScheme: new Cesium.WebMercatorTilingScheme(),
+      minimumLevel: 1,
+      maximumLevel: 200,
+      credit: "Google Earth",
+    });
+  },
+});
+
+const googleCNH = new Cesium.ProviderViewModel({
+  name: "谷歌中国地名标注层（路名、地名等）",
+  iconUrl: Cesium.buildModuleUrl(
+    "Widgets/Images/ImageryProviders/esriWorldStreetMap.png"
+  ),
+  tooltip: "GOOGLE",
+  category: "GOOGLE_CN",
+  creationFunction: function () {
+    return new Cesium.UrlTemplateImageryProvider({
+      url: "http://gac-geo.googlecnapps.cn/maps/vt?lyrs=h&x={x}&y={y}&z={z}", 
+      tilingScheme: new Cesium.WebMercatorTilingScheme(),
+      minimumLevel: 1,
+      maximumLevel: 200,
+      credit: "Google Earth",
+    });
+  },
+});
+
 export {
+  googleCNH,
+  googleCNY,
+  googleCNPro,
+  googleCNTerr,
+  googleCNRoad,
+  googleCNImg,
   ESRIStreet,
   ESRINation,
   TIANDITUTERR,

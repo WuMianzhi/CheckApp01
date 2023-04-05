@@ -278,9 +278,9 @@ const groupViewer = function (streetLocalData, extra, changeView = true) {
     );
 
     // 判断采用的图标样式
-    let imgURL = locateData.isHandle ? safeImgURL : overImgURL;
-    let labelBgColor = locateData.isHandle ? safeBgColor : overBgColor;
-    let textColor = locateData.isHandle ? safeTextColor : overTextColor;
+    let imgURL = locateData.isHandle > 0 ? safeImgURL : overImgURL;
+    let labelBgColor = locateData.isHandle > 0 ? safeBgColor : overBgColor;
+    let textColor = locateData.isHandle > 0 ? safeTextColor : overTextColor;
 
     // 不偏移
     let showlng = parseFloat(locateData.lon);

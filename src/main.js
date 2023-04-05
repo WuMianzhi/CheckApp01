@@ -35,6 +35,12 @@ document.querySelector(".cesium-baseLayerPicker-selected").addEventListener(
         GOOGLEIMG,
         GOOGLEPATHIMG,
         GOOGLEPATHPLUSIMG,
+        googleCNH,
+        googleCNY,
+        googleCNPro,
+        googleCNTerr,
+        googleCNRoad,
+        googleCNImg,
       }) => {
         viewer.baseLayerPicker.viewModel.imageryProviderViewModels.push(
           ...[
@@ -52,9 +58,7 @@ document.querySelector(".cesium-baseLayerPicker-selected").addEventListener(
             baiduNormal,
             baiduDark,
             baiduNote,
-            GOOGLEIMG,
-            GOOGLEPATHIMG,
-            GOOGLEPATHPLUSIMG,
+            googleCNImg,
           ]
         );
       }
@@ -80,6 +84,8 @@ localForm.addEventListener("submit", (event) => {
     ).then(({ queryLocalData }) => {
       // 查询数据
       queryLocalData(localFormData);
+      document.querySelector("#nearCheck").hidden = true;
+      document.querySelector("#toPrevStrret").hidden = true;
 
       // 按省份添加边界数据
       let provnCode = document.querySelector("#provinceSelect").value;

@@ -5,18 +5,25 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><%= htmlWebpackPlugin.options.title %></title>
+
     <link
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/cesium@1.97.0/Build/Cesium/Widgets/widgets.css"
+      href="http://124.89.71.141:8062/CesiumJS/CesiumCurrent/Build/Cesium/Widgets/widgets.css"
     />
     <script
-      src="https://cdn.jsdelivr.net/npm/cesium@1.97.0/Build/Cesium/Cesium.js"
+      src="http://124.89.71.141:8062/CesiumJS/CesiumCurrent/Build/Cesium/Cesium.js"
       defer
     ></script>
+
+    <!-- <link
+      rel="stylesheet"
+      href="http://mizhibd.com/checkApp/static/cesium_1104/Build/Cesium/Widgets/widgets.css"
+    />
     <script
-      src="http://mizhibd.com/checkApp/backend/cesium-map.js"
+      src="http://mizhibd.com/checkApp/static/cesium_1104/Build/Cesium/Cesium.js"
       defer
-    ></script>
+    ></script> -->
+
     <script
       src="https://code.jquery.com/jquery-3.6.1.slim.min.js"
       integrity="sha256-w8CvhFs7iHNVUtnSP0YKEg00p9Ih13rlL9zGqvLdePA="
@@ -24,7 +31,8 @@
       defer
     ></script>
     <script
-      src="https://cdn.jsdelivr.net/npm/echarts@5.4.0/dist/echarts.min.js"
+      src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/echarts/5.3.0-rc.1/echarts.min.js"
+      type="application/javascript"
       defer
     ></script>
   </head>
@@ -298,12 +306,18 @@
         </select> -->
         <input type="radio" name="status" id="normalPoint" value="0" /><label
           for="normalPoint"
-          >&nbsp;0：正常点位</label
+          >&nbsp;0：正常点位（无搬迁）；
+          <br />
+          &nbsp;
+          &nbsp;或：该乡村整体搬迁至其它乡村地区，定点于新位置。图斑、人口不为0</label
         >
         <br />
         <input type="radio" name="status" id="removePoint" value="1" /><label
           for="removePoint"
-          >&nbsp;1：整体搬迁，图斑、人口设定为0</label
+          >&nbsp;1：该乡村整体搬迁至城镇地区，定点于新位置；
+          <br />
+          &nbsp;
+          &nbsp;或：无法判定该乡村整体搬迁位置，定点于原位置。（图斑、人口设定为0）</label
         >
         <br />
         <input
@@ -311,11 +325,13 @@
           name="status"
           id="partRemovePoint"
           value="-1"
-        /><label for="partRemovePoint">-1：部分搬迁，图斑、人口不为0</label>
+        /><label for="partRemovePoint"
+          >-1：部分搬迁，定点于原村界未搬迁建筑地块。（图斑、人口不为0）</label
+        >
         <br />
         <input type="radio" name="status" id="specialPoint" value="2" /><label
           for="specialPoint"
-          >&nbsp;2：特殊点位（如军队、监狱、拘留所、劳改农场等），图斑、人口设定为0</label
+          >&nbsp;2：特殊点位（如军队、监狱、拘留所、劳改农场等）。图斑、人口设定为0</label
         >
         <br />
         <input
@@ -324,7 +340,7 @@
           id="partSpecialPoint"
           value="-2"
         /><label for="partSpecialPoint"
-          >-2：特殊点位（如军队、监狱、拘留所、劳改农场等），图斑、人口不为0</label
+          >-2：特殊点位（如军队、监狱、拘留所、劳改农场等）。图斑、人口不为0</label
         >
         <div id="centerWrapperBottom">
           <button
